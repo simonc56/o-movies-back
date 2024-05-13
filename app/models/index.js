@@ -1,0 +1,1 @@
+export { Role, Media, User, Playlist, Rating, Review, sequelize } from "./associations.js";
