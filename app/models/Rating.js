@@ -4,10 +4,10 @@ import { sequelize } from "./sequelizeClient.js";
 export class Rating extends Model {}
 
 Rating.init({
-    content: {
-        value: DataTypes.DECIMAL,
+    value: {
+        type: DataTypes.DECIMAL,
         allowNull: false,
-    },
+    }},{
         sequelize,
         tableName:"rating"
     

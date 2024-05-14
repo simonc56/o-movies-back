@@ -4,12 +4,15 @@ import { sequelize } from "./sequelizeClient.js";
 export class Media extends Model {}
 
 Media.init({
-    firstname: {
+    tmdb_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         unique: true
+        }
     },
+       {
         sequelize,
         tableName:"media"
     
 });
+

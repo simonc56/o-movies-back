@@ -8,8 +8,9 @@ Role.init({
         type: DataTypes.TEXT,
         allowNull: false,
         unique: true
-    }
-}, {
+    }},
+    {
     sequelize, 
     tableName: "role"
 });
+

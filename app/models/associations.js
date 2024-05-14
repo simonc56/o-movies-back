@@ -3,10 +3,9 @@ import { Media } from "./Media.js";
 import { User } from "./User.js";
 import { Playlist } from "./Playlist.js";
 import { Rating } from "./Rating.js";
-import { Review} from "./Review.js";
+import { Review } from "./Review.js";
 
 import { sequelize } from "./sequelizeClient.js";
-
 
 //User VALIDER
 User.belongsTo(Role,{
@@ -22,36 +21,36 @@ Playlist.belongsTo(User,{
 
 //View
 User.belongsToMany(Media, {
-    as:"medias",
+    as:"medias_view",
     through:"view",
     foreignKey:"user_id"
 });
 Media.belongsToMany(User, {
-    as:"Users",
+    as:"users_view",
     through:"view",
     foreignKey:"media_id"
 });
 
 //Rating
 User.belongsToMany(Media, {
-    as:"medias",
+    as:"medias_rating",
     through:"rating",
     foreignKey:"user_id"
 });
 Media.belongsToMany(User, {
-    as:"Users",
+    as:"users_rating",
     through:"rating",
     foreignKey:"media_id"
 });
 
 //Review
 User.belongsToMany(Media, {
-    as:"medias",
+    as:"medias_review",
     through:"review",
     foreignKey:"user_id"
 });
 Media.belongsToMany(User, {
-    as:"Users",
+    as:"users_review",
     through:"review",
     foreignKey:"media_id"
 });

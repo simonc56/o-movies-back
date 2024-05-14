@@ -7,8 +7,8 @@ Review.init({
     content: {
         type: DataTypes.TEXT,
         allowNull: false,
-    },
+    }},   
+    {
         sequelize,
-        tableName:"review"
-    
+        tableName:"review"  
 });

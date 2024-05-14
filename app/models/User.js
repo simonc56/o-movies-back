@@ -24,7 +24,8 @@ User.init({
     birthdate: {
         type: DataTypes.DATEONLY,
         allowNull: false,
-    },
+    }},
+    {
         sequelize,
         tableName:"user"
     

@@ -7,7 +7,9 @@ Playlist.init({
     name: {
         type: DataTypes.TEXT,
         allowNull: false,
-    },
+    }},
+    {
         sequelize,
-        tableName:"playlist"
+        tableName:"playlist"       
 });
+
