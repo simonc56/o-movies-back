@@ -8,9 +8,8 @@ Media.init({
         type: DataTypes.INTEGER,
         allowNull: false,
         unique: true
-        }
-    },
-       {
+     }},
+     {
         sequelize,
         tableName:"media"
     
