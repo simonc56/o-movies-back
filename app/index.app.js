@@ -12,4 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(router);
 
+app.use((req, res) => {
+    res.status(404).json({ error: "Ressource not found"});
+  });
+  
 export default app;
