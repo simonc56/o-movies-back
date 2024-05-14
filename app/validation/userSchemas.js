@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
+// Define the schema for the user object
 const schema = {
     postUser : z.object({       
             email: z.string().email(),

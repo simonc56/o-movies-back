@@ -5,11 +5,14 @@ import schema from "../validation/userSchemas.js";
 const userController = {
     async createUser(req, res) {
         try {
+            //get data from request body and validate it 
             const data = req.body;
             const { parsedData, errors } = validateData(data, schema.postUser);
+            // if there are errors, return them to the client
             if (errors) {
                 return res.status(400).json({ data: errors });
             }
+            // create the user
             return res.json({ status: 'success', data: `user: ${parsedData.email} created`});
         } catch (error) {
             console.error(error);
