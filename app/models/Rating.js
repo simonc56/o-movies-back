@@ -7,7 +7,8 @@ Rating.init({
     value: {
         type: DataTypes.DECIMAL,
         allowNull: false,
-    }},{
+    }},
+    {
         sequelize,
         tableName:"rating"
     

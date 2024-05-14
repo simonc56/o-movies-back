@@ -4,6 +4,7 @@ import { initSwagger } from './services/swagger.js';
 
 const app = express();
 
+// Initilisation de swagger sur l'app
 initSwagger(app)
 
 app.use(express.json());
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(router);
 
+//Middleware d'error 404 
 app.use((req, res) => {
     res.status(404).json({ error: "Ressource not found"});
   });
