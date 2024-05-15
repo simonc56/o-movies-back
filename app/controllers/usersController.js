@@ -7,6 +7,7 @@ const userController = {
         try {
             //get data from request body and validate it 
             const data = req.body;
+            // i deconstruct the parsedData and errors from the validateData function
             const { parsedData, errors } = validateData(data, schema.postUser);
             // if there are errors, return them to the client
             if (errors) {
