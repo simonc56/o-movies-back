@@ -7,13 +7,13 @@ import { Review } from "./Review.js";
 
 import { sequelize } from "./sequelizeClient.js";
 
-//User VALIDER
+//User 
 User.belongsTo(Role,{
     as:"role",
     foreignKey:"role_id"
 });
 
-//Playlist VALIDER
+//Playlist 
 Playlist.belongsTo(User,{
     as:"user",
     foreignKey:"user_id"
@@ -55,7 +55,7 @@ Media.belongsToMany(User, {
     foreignKey:"media_id"
 });
 
-//Playlist has media VALIDER
+//Playlist has media 
 Playlist.belongsToMany(Media,{
     as: "medias",
     through:"playlist_has_media",

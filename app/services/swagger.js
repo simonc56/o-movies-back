@@ -21,4 +21,4 @@ const options = {
 function initSwagger(app) {
     expressJSDocSwagger(app)(options);
 }
-export { initSwagger };
+export { initSwagger }; 
