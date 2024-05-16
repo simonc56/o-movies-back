@@ -36,15 +36,16 @@ const router = express.Router();
  * @return {ApiError} 500 - internal server error response
  */
 router.get('/movie/:id', moviesController.getMoviesById );
-/**
- * POST /api/user
- * @summary Create a user
+
+
+/** POST /api/auth/login
+ * @summary Login a user
  * @param {User} request.body.required - user info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post('/user', userController.createUser );
+router.post('/auth/login', authController.loginUser );
 
 /**
  * POST /api/auth/register

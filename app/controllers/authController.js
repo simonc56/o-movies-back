@@ -1,14 +1,16 @@
 import { User } from "../models/User.js";   // import the User model from the models folder
-import bcrypt from "bcrypt"; // import the bcrypt package  
+import bcrypt from "bcrypt"; // import the bcrypt package 
+import jwt from "jsonwebtoken"; // import the jsonwebtoken package
 import userSchemas from "../validation/userSchemas.js"; // import the userSchemas file from the validation folder
 import validateData from "../validation/validator.js";  // import the validateData file from the validation folder
+
 
 const authController = {
     async registerUser(req, res) {
         try {
             // get data from request body
             const data = req.body;
-            
+            // validate the data
             const { parsedData, errors } = validateData(data, userSchemas.registerSchema);
             // check if the email format is valid
             if (errors) {
@@ -40,8 +42,45 @@ const authController = {
             console.error(error);
             return res.status(400).json({ error: error.message });
         }
+    },
+
+    async loginUser(req, res) {
+        try {
+            // get data from request body
+            const data = req.body;
+            // validate the data 
+            const { parsedData, errors } = validateData(data, userSchemas.signInSchema);
+            
+            // check if the email format is valid
+            if (errors) {
+                return res.status(400).json({ error: errors });
+            };
+            
+            // check if the email exists
+            const user = await User.findOne({ where: { email: parsedData.email } });
+            if (!user) {
+                return res.status(400).json({ status: 'error', data: "Email not found" });
+            };
+            
+            // check if the password is correct
+            const validPassword = await bcrypt.compare(parsedData.password, user.password);
+            if (!validPassword) {
+                return res.status(400).json({ status: 'error', data: "Invalid password" });
+            };
+            
+            // create a token
+            const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET);
+            
+            // return the token
+            return res.header('auth-token', token).json({ status: 'success', data: token });
+        } catch (error) {
+            console.error(error);
+            return res.status(400).json({ error: error.message });
+        }
     }
+
 };
+
 
 export default authController;
 

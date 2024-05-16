@@ -11,6 +11,11 @@ const schema = {
             lastname: z.string().min(2).max(30),
             birthdate: z.string().min(10).max(10),        
     }).required(),
+
+    signInSchema : z.object({
+        email: z.string().email(),
+        password: z.string().min(6)
+    }).required(),
 };
 
 export default schema;
