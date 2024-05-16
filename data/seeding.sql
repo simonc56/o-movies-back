@@ -13,16 +13,19 @@ INSERT INTO "playlist" ("name", "user_id") VALUES
 ('Watch Later', 2);
 
 INSERT INTO "media" ("tmdb_id") VALUES
-(123456),
-(789012);
+(519182),
+(157336);
 
 INSERT INTO "playlist_has_media" ("playlist_id", "media_id") VALUES
 (1, 1),
 (2, 2);
 
 INSERT INTO "review" ("content", "user_id", "media_id") VALUES
+('So bad', 2, 1),
+('Lets gooo', 1, 2),
 ('Great movie!', 1, 1),
 ('Awesome show!', 2, 2);
+
 
 INSERT INTO "view" ("user_id", "media_id") VALUES
 (1, 1),
