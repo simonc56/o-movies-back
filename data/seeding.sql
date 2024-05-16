@@ -21,18 +21,18 @@ INSERT INTO "playlist_has_media" ("playlist_id", "media_id") VALUES
 (2, 2);
 
 INSERT INTO "review" ("content", "user_id", "media_id") VALUES
-('So bad', 2, 2),
-('Lets gooo', 1, 2),
-('Great movie!', 1, 2),
-('Awesome show!', 2, 2),
-('Exciting stuff!', 1, 2),
-('Fantastic movie, loved it!', 2, 2),
-('So bad', 2, 1),
-('Lets gooo', 1, 1),
-('Great movie!', 1, 1),
-('Awesome show!', 2, 1),
-('Exciting stuff!', 1, 1),
-('Fantastic movie, loved it!', 2, 1);
+('Horrible experience!', 2, 2),
+('Amazing performance!', 1, 2),
+('Fantastic storyline!', 1, 2),
+('Brilliantly executed!', 2, 2),
+('Thrilling moments!', 1, 2),
+('A masterpiece of cinema!', 2, 2),
+('Disappointing plot.', 2, 1),
+('Absolutely thrilling!', 1, 1),
+('A cinematic gem!', 1, 1),
+('Outstanding series!', 2, 1),
+('Heart-pounding scenes!', 1, 1),
+('A beautiful film!', 2, 1);
 
 INSERT INTO "view" ("user_id", "media_id") VALUES
 (1, 1),
