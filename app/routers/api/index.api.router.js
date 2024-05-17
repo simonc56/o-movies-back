@@ -1,6 +1,7 @@
 import express from 'express';
-import moviesController from '../../controllers/moviesController.js'
+import moviesController from '../../controllers/moviesController.js';
 import userController from '../../controllers/usersController.js';
+import authController from '../../controllers/authController.js';
 
 const router = express.Router();
 /**
@@ -62,5 +63,15 @@ router.get('/movie/:id', moviesController.getMoviesById );
  * @return {ApiError} 500 - internal server error response
  */
 router.post('/user', userController.createUser );
+
+/**
+ * POST /api/auth/register
+ * @summary Register a user
+ * @param {User} request.body.required - user info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.post('/auth/register', authController.registerUser );
 
 export default router;
