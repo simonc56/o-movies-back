@@ -1,6 +1,5 @@
 import express from 'express';
 import moviesController from '../../controllers/moviesController.js';
-import userController from '../../controllers/usersController.js';
 import authController from '../../controllers/authController.js';
 
 const router = express.Router();
@@ -54,6 +53,24 @@ const router = express.Router();
  * @return {ApiError} 500 - internal server error response
  */
 router.get('/movie/:id', moviesController.getMoviesById );
+
+/**get /api/movies 
+ * @summary get movies with parameters
+ * @param {string} title.query - movie title
+ * @param {string} genre.query - movie genre
+ * @param {string} language.query - movie language
+ * @param {string} adult.query - movie adult
+ * @param {string} year.query - movie year
+ * @param {string} rating.query - movie rating
+ * @param {string} popularity.query - movie popularity
+ * @param {string} budget.query - movie budget
+ * @return {[array<Movie>]} 200 - success response
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ * 
+ */ 
+router.get('/movies', moviesController.getMovies ); 
 
 
 /** POST /api/auth/login

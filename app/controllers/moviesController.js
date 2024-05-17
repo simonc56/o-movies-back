@@ -24,7 +24,7 @@ const moviesController = {
             const cast = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${parsedData}/credits?language=fr-FR`);
             // doing a query to get the reviews of the movie with user information
             const reviews = await sequelize.query(`
-                SELECT "review".id AS review_id, "review".content,  "user".email AS user_email, "user".firstname AS user_firstname, "user".lastname AS user_lastname
+                SELECT "review".id AS review_id, "review".content,  "user".email AS user_email, "user".firstname AS user_firstname, "user".lastname AS user_lastname,"media".id
                 FROM media
                 JOIN "review" ON "media".id = "review".media_id
                 JOIN "user" ON review.user_id = "user".id
@@ -33,26 +33,31 @@ const moviesController = {
             replacements: { tmdb_id: parsedData },
             type: sequelize.QueryTypes.SELECT
             });        
-            // restructered data to send to the client                     
+            // restructered data to send to the client                  
             const data = {
                 tmdb_id: movie.id,
+                id: reviews.length > 0 ? reviews[0].id : null,
                 title_fr: movie.title,
+                status: movie.status,
                 original_title: movie.original_title,
                 adult: movie.adult,
+                original_language: movie.original_language,               
                 release_date: movie.release_date,
+                runtime: movie.runtime,
                 budget: movie.budget,
                 popularity: movie.popularity,
                 rating: movie.vote_average,
+                country: movie.origin_country,
                 genres: movie.genres,
                 tagline : movie.tagline,
                 overview: movie.overview,
-                poster_path: `https://image.tmdb.org/t/p/w300_and_h450_bestv2/${movie.poster_path}`,
+                poster_path: movie.poster_path ?`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${movie.poster_path}` : null,
                 cast: cast.cast.map(actor => {
                      return { 
                         id : actor.cast_id,
                         name: actor.name, 
                         character: actor.character, 
-                        profile_path: `https://image.tmdb.org/t/p/w300_and_h450_bestv2${actor.profile_path}` } }),
+                        profile_path: actor.profile_path ? `https://image.tmdb.org/t/p/w300_and_h300_bestv2${actor.profile_path}` : null } }).slice(0,5),
                 crew: cast.crew
                 // i filter for getting only the director of the movie
                 .filter(crew => crew.job === 'Director')
@@ -61,7 +66,7 @@ const moviesController = {
                         id: crew.id,
                         name: crew.name,
                         job: crew.job,
-                        profile_path: `https://image.tmdb.org/t/p/w300_and_h450_bestv2${crew.profile_path}`
+                        profile_path: crew.profile_path ? `https://image.tmdb.org/t/p/w300_and_h300_bestv2${crew.profile_path}` : null
                     };
                 }),
                 reviews: reviews 
@@ -72,7 +77,16 @@ const moviesController = {
         catch (error) {
             return res.status(400).json(error.message);
         };
-    }
+    },
+    async getMovies(req, res) {
+        try {
+            console.log(req.query)
+            const movies = await fetchMovieTMDB(`https://api.themoviedb.org/3/search/movie?query=star&include_adult=true&language=fr-Fr&region=france`);
+            res.json(movies);
+        } catch (error) {
+            return res.status(400).json(error.message);
+        }
+    }   
 };
 
 export default moviesController;
