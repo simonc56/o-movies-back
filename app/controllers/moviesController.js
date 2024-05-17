@@ -38,8 +38,10 @@ const moviesController = {
                 tmdb_id: movie.id,
                 id: reviews.length > 0 ? reviews[0].id : null,
                 title_fr: movie.title,
+                status: movie.status,
                 original_title: movie.original_title,
                 adult: movie.adult,
+                original_language: movie.original_language,               
                 release_date: movie.release_date,
                 runtime: movie.runtime,
                 budget: movie.budget,
@@ -55,7 +57,7 @@ const moviesController = {
                         id : actor.cast_id,
                         name: actor.name, 
                         character: actor.character, 
-                        profile_path: actor.profile_path ? `https://image.tmdb.org/t/p/w300_and_h450_bestv2${actor.profile_path}` : null } }).slice(0,5),
+                        profile_path: actor.profile_path ? `https://image.tmdb.org/t/p/w300_and_h300_bestv2${actor.profile_path}` : null } }).slice(0,5),
                 crew: cast.crew
                 // i filter for getting only the director of the movie
                 .filter(crew => crew.job === 'Director')
@@ -64,7 +66,7 @@ const moviesController = {
                         id: crew.id,
                         name: crew.name,
                         job: crew.job,
-                        profile_path: crew.profile_path ? `https://image.tmdb.org/t/p/w300_and_h450_bestv2${crew.profile_path}` : null
+                        profile_path: crew.profile_path ? `https://image.tmdb.org/t/p/w300_and_h300_bestv2${crew.profile_path}` : null
                     };
                 }),
                 reviews: reviews 
