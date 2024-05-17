@@ -14,7 +14,7 @@ const schema = {
 
     signInSchema : z.object({
         email: z.string().email(),
-        password: z.string().min(6)
+        password: z.string().regex(passwordRegex)// Valide le mot de passe
     }).required(),
 };
 
