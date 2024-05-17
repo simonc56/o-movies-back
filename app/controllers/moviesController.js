@@ -4,8 +4,6 @@ import validateData from '../validation/validator.js';
 import { fetchMovieTMDB } from '../services/axios.js';
 import axios from 'axios';
 
-// todo limit actor to 5 and director to 1 and fix if null poster path
-
 const moviesController = {    
     async getMoviesById(req, res) {
         try  {
@@ -35,7 +33,6 @@ const moviesController = {
             replacements: { tmdb_id: parsedData },
             type: sequelize.QueryTypes.SELECT
             });        
-            console.log(reviews)
             // restructered data to send to the client                  
             const data = {
                 tmdb_id: movie.id,
