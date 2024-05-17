@@ -33,12 +33,11 @@ const reviewsController = {
             if (errors) {
                 return res.status(400).json({ error: errors });
             }
-            const review = await Review.create({
+            await Review.create({
                 content: parsedData.content,
                 user_id: parsedData.user_id,
                 media_id: parsedData.media_id
             })
-            console.log(review);
             return res.json({ status: "success", data: review.id });
         } catch (error) {
             console.error(error);

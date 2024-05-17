@@ -20,3 +20,5 @@ Review.init({
         sequelize,
         tableName:"review"  
 });
+
+
