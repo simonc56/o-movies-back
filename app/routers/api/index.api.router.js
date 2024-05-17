@@ -1,6 +1,5 @@
 import express from 'express';
 import moviesController from '../../controllers/moviesController.js';
-import userController from '../../controllers/usersController.js';
 import authController from '../../controllers/authController.js';
 
 const router = express.Router();
