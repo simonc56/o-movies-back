@@ -27,10 +27,28 @@ const router = express.Router();
  * @property {string} lastname - The user lastname
  * @property {string} birthdate - The user birthdate
  */
+/**
+ * A movie object
+ * @typedef {object} Movie
+ * @property {string} id - The movie id
+ * @property {string} title_fr - The movie title in french
+ * @property {string} original_title - The movie original title
+ * @property {boolean} adult - The movie adult
+ * @property {string} release_date - The movie release date
+ * @property {number} budget - The movie budget
+ * @property {number} popularity - The movie popularity
+ * @property {string} genres - The movie genres
+ * @property {string} overview - The movie overview
+ * @property {string} poster_path - The movie poster path
+ * @property {string} cast - The movie cast
+ * @property {string} crew - The movie crew
+ */
 
 /**
  * GET /api/movie/:id
  * @summary get a movie
+ * @param {integer} id.params.required - movie id
+ * @return {Movie} 200 - success response
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response

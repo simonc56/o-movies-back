@@ -1,6 +1,6 @@
 import { ZodError } from 'zod';
 
-// A function to validate data against a schema using Zod and return the parsed data or errors
+// A function to validate data against a schema using Zod and return the parsed data or errors (schema and data are passed as arguments)
 const validateData = (data, schema) => {
     try {
         const parsedData = schema.parse(data);
