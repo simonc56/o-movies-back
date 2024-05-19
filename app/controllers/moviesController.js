@@ -80,8 +80,11 @@ const moviesController = {
     },
     async getMovies(req, res) {
         try {
-            console.log(req.query)
-            const movies = await fetchMovieTMDB(`https://api.themoviedb.org/3/search/movie?query=star&include_adult=true&language=fr-Fr&region=france`);
+            console.log (req.query);
+            
+            const query = Object.entries(req.query).map(([key, value]) => `${key}=${value}`).join('&')
+            console.log(query);
+            const movies = await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
             res.json(movies);
         } catch (error) {
             return res.status(400).json(error.message);
