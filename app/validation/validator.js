@@ -7,7 +7,7 @@ const validateData = (data, schema) => {
         return { parsedData };
     } catch (error) {
         if (error instanceof ZodError) {
-            return { errors: error.errors.map(err => err.message) };
+            return { errors: error };
         }
         throw error;
     }

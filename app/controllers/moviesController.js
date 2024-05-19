@@ -81,19 +81,21 @@ const moviesController = {
     },
     async getMovies(req, res) {
         try {
-            console.log (req.query);   
-            const query = querystring.stringify(req.query)        
+            const {parsedData, errors} = validateData(req.query, schema.getMoviesWithQueries); 
+            if (errors) {
+                return res.status(400).json({status: 'fail', data: errors });
+            }    
+            const query = querystring.stringify(parsedData)                
             const dataFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
+            // need to add poster or backdrop path to the data
             const movies = dataFetchFromTheApi.results.map(movie => {
                 return {
                     id: movie.id,
                     title: movie.title,
-                    overview: movie.overview,
-                    release_date: movie.release_date,
-                    language: movie.original_language,                   
+                    release_date: movie.release_date,                  
                 };
             });
-            res.json(movies);
+            return res.json({status: 'success', data: movies });
         } catch (error) {
             return res.status(400).json(error.message);
         }
