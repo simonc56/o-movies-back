@@ -85,14 +85,18 @@ const moviesController = {
             if (errors) {
                 return res.status(400).json({status: 'fail', data: errors });
             }    
+            // node function to convert the object to a query string u need to import querystring
             const query = querystring.stringify(parsedData)                
             const dataFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
-            // need to add poster or backdrop path to the data
             const movies = dataFetchFromTheApi.results.map(movie => {
                 return {
                     id: movie.id,
                     title: movie.title,
-                    release_date: movie.release_date,                  
+                    release_date: movie.release_date,
+                    poster_path: movie.poster_path ? `https://image.tmdb.org/t/p/w300_and_h450_bestv2${movie.poster_path}` : null,   
+                    genre_ids: movie.genre_ids,        
+                    vote_average: movie.vote_average,
+                    vote_count: movie.vote_count,     
                 };
             });
             return res.json({status: 'success', data: movies });
