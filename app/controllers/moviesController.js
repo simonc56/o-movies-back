@@ -3,6 +3,7 @@ import { sequelize } from '../models/associations.js';
 import validateData from '../validation/validator.js';
 import { fetchMovieTMDB } from '../services/axios.js';
 import axios from 'axios';
+import querystring from 'node:querystring';
 
 const moviesController = {    
     async getMoviesById(req, res) {
@@ -80,11 +81,18 @@ const moviesController = {
     },
     async getMovies(req, res) {
         try {
-            console.log (req.query);
-            
-            const query = Object.entries(req.query).map(([key, value]) => `${key}=${value}`).join('&')
-            console.log(query);
-            const movies = await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
+            console.log (req.query);   
+            const query = querystring.stringify(req.query)        
+            const dataFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
+            const movies = dataFetchFromTheApi.results.map(movie => {
+                return {
+                    id: movie.id,
+                    title: movie.title,
+                    overview: movie.overview,
+                    release_date: movie.release_date,
+                    language: movie.original_language,                   
+                };
+            });
             res.json(movies);
         } catch (error) {
             return res.status(400).json(error.message);
