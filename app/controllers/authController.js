@@ -19,8 +19,8 @@ const authController = {
             // check if the email already exists 
             const existingUser = await User.findOne({where: {email: parsedData.email},});        
             if (existingUser) {
-                return res.status(400).json({status: 'success', data: "Email already exists"});
-            };     
+                return res.status(400).json({status: 'error', data: "Email already exists"});
+            };
             // hash the password
             const hashedPassword = await bcrypt.hash(parsedData.password, 10);           
             // create the user
