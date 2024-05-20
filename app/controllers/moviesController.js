@@ -8,7 +8,7 @@ import querystring from 'node:querystring';
 const moviesController = {    
     async getMoviesById(req, res) {
         try  {
-            const id = req.params.id;         
+            const id = req.params.id; 
             // Validate the id parameter   
             const  { parsedData , errors }= validateData(parseInt(id), schema.getId);
             // If there are errors, return a 400 response with the errors
@@ -84,10 +84,9 @@ const moviesController = {
             const {parsedData, errors} = validateData(req.query, schema.getMoviesWithQueries); 
             if (errors) {
                 return res.status(400).json({status: 'fail', data: errors });
-            };
-            
+            };            
             // node function to convert the object to a query string u need to import querystring
-            const query = querystring.stringify(parsedData);             
+            const query = querystring.stringify(parsedData);            
             const moviesFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
             const categoriesFetchFromTheapi = await fetchMovieTMDB('https://api.themoviedb.org/3/genre/movie/list?language=fr');
             const movies = moviesFetchFromTheApi.results.map(movie => {
