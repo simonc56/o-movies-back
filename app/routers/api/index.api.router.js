@@ -54,7 +54,6 @@ const router = express.Router();
  * @summary get a movie
  * @param {integer} id.params.required - movie id
  * @return {Movie} 200 - success response
- * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */

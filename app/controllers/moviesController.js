@@ -8,9 +8,9 @@ import querystring from 'node:querystring';
 const moviesController = {    
     async getMoviesById(req, res) {
         try  {
-            const id = req.params.id; 
+            const id = parseInt(req.params.id); 
             // Validate the id parameter   
-            const  { parsedData , errors }= validateData(parseInt(id), schema.getId);
+            const  { parsedData , errors }= validateData(id, schema.getId);
             // If there are errors, return a 400 response with the errors
             if (errors) {
                 return res.status(400).json({status: 'fail', data: errors });
