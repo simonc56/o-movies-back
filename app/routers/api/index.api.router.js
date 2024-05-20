@@ -70,6 +70,7 @@ router.get('/movie/:id', moviesController.getMoviesById );
  *           'vote_average.asc', 'vote_average.desc', 'vote_count.asc', 'vote_count.desc']
  * @param {string} page.query - movie page
  * @param {string} include_adult.query - include adult movie
+ *        ['true', 'false']
  * @return {Array<Movie>} 200 - success response
  * 
  */ 
