@@ -84,17 +84,23 @@ const moviesController = {
             const {parsedData, errors} = validateData(req.query, schema.getMoviesWithQueries); 
             if (errors) {
                 return res.status(400).json({status: 'fail', data: errors });
-            }    
+            };
+            
             // node function to convert the object to a query string u need to import querystring
-            const query = querystring.stringify(parsedData)                
-            const dataFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
-            const movies = dataFetchFromTheApi.results.map(movie => {
+            const query = querystring.stringify(parsedData);             
+            const moviesFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
+            const categoriesFetchFromTheapi = await fetchMovieTMDB('https://api.themoviedb.org/3/genre/movie/list?language=fr');
+            const movies = moviesFetchFromTheApi.results.map(movie => {
                 return {
-                    id: movie.id,
-                    title: movie.title,
+                    tmdb_id: movie.id,
+                    title_fr: movie.title,
                     release_date: movie.release_date,
-                    poster_path: movie.poster_path ? `https://image.tmdb.org/t/p/w300_and_h450_bestv2${movie.poster_path}` : null,   
-                    genre_ids: movie.genre_ids,        
+                    poster_path: movie.poster_path ? `https://image.tmdb.org/t/p/w300_and_h450_bestv2${movie.poster_path}` : null, 
+                    genres: movie.genre_ids.map(genre_id => {
+                        const genre = categoriesFetchFromTheapi.genres.find(genre => genre.id === genre_id);
+                        return { id: genre.id, name: genre.name };
+                    }
+                    ),        
                     vote_average: movie.vote_average,
                     vote_count: movie.vote_count,     
                 };
@@ -102,8 +108,8 @@ const moviesController = {
             return res.json({status: 'success', data: movies });
         } catch (error) {
             return res.status(400).json(error.message);
-        }
-    }   
+        };
+    } 
 };
 
 export default moviesController;
