@@ -20,6 +20,9 @@ module.exports = {
     "ecmaVersion": "latest",
     "sourceType": "module",
   },
+  "globals": {
+    "process": "readonly",
+  },
   "rules": {
     "indent": ["error", 2],
     "quotes": ["error", "double"],
