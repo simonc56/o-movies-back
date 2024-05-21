@@ -14,64 +14,85 @@ const reviewsController = {
             return res.json({ status: "success", data: true });
         } catch (error) {
             console.error(error);
-            return res.status(400).json({ error: error.message });
+            return res.status(400).json({status :"fail", error: error.message });
         }
     },
-
     async createReview(req, res) {
         try {
+            let media
+            const userId = req.userId;
             const data = req.body;  
-            const { parsedData, errors } = validateData(data, reviewSchema.reviewSchema);
+            const { parsedData, errors } = validateData(data, reviewSchema.createReviewSchema);
             if (errors) {
                 return res.status(400).json({status: "fail", error: errors });
-            }
-            if(!data.id) {
-                await Media.create({
+            }           
+            media = await Media.findOne({
+                where: {
+                    tmdb_id: parsedData.tmdb_id
+                }
+            });            
+            if (!media) {
+                media = await Media.create({
                     tmdb_id: parsedData.tmdb_id,
-                });    
+                });
             }
             const review = await Review.create({
                 content: parsedData.content,
-                media_id: parsedData.media_id,
-                user_id: parsedData.user_id
-            })
-            return res.json({ status: "success", data: review.id });
+                media_id: media.id,
+                user_id: userId
+            });
+            res.json({ status: "success", data: { review_id: review.id } });
         } catch (error) {
             console.error(error);
-            return res.status(400).json({ error: error.message });
+            return res.status(400).json({status :"fail",  error: error.message });
         }
     },
-
+    // reviewid et le content à renvoyer dans le body 
     async updateReview(req, res) {
         try {
-            const data = req.body;
-            const { parsedData, errors } = validateData(data, reviewSchema.reviewSchema);
+            const userId = req.userId;
+            const reviewId = parseInt(req.params.id);
+            const reviewContent = req.body;
+            const data = {userId , reviewId, ...reviewContent}
+            const { parsedData, errors } = validateData(data, reviewSchema.updateReviewSchema);
             if (errors) {
-                return res.status(400).json({ error: errors });
+                return res.status(400).json({status: "fail",  error: errors });
             }
-            const review = await Review.findByPk(req.params.id);
+            const review = await Review.findOne({ 
+                where: {
+                    id: reviewId,
+                    user_id: userId
+                }
+            });
             if (!review) {
-                return res.status(404).json({ error: "Review not found" });
+                return res.status(404).json({status: "fail", error: "Review not found for this user " });
             }
-            await review.update(parsedData);
+            await review.update({
+                content: parsedData.content             
+            });
             return res.json({ status: "success", data: true });
         } catch (error) {
             console.error(error);
-            return res.status(400).json({ error: error.message });
+            return res.status(400).json({status :"fail", error: error.message });
         }
     },
-
     async deleteReview(req, res) {
         try {
-            const review = await Review.findByPk(req.params.id);
+            const userId = req.userId;                    
+            const review = await Review.findOne({
+                where: {
+                    id: req.params.id,
+                    user_id: userId
+                }
+            });
             if (!review) {
-                return res.status(404).json({ error: "Review not found" });
+                return res.status(404).json({ status :"fail", error: "Review not found for this user" });
             }
             await review.destroy();
             return res.json({ status: "success", data: true });
         } catch (error) {
             console.error(error);
-            return res.status(400).json({ error: error.message });
+            return res.status(400).json({status :"fail", error: error.message });
         }
     },
 };
