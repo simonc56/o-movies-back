@@ -1,6 +1,8 @@
 import express from 'express';
 import moviesController from '../../controllers/moviesController.js';
 import authController from '../../controllers/authController.js';
+import reviewsController from '../../controllers/reviewsController.js';
+import verifyToken from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 /**
@@ -93,5 +95,36 @@ router.post('/auth/login', authController.loginUser );
  * @return {ApiError} 500 - internal server error response
  */
 router.post('/auth/register', authController.registerUser );
+
+/**
+ * POST /api/review
+ * @summary Create a review
+ * @param {Review} request.body.required - review info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.post('/review', verifyToken, reviewsController.createReview );
+
+/**
+ * PATCH /api/review/:id
+ * @summary Update a review
+ * @param {integer} id.params.required - review id
+ * @param {Review} request.body.required - review info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.patch('/review/:id', verifyToken, reviewsController.updateReview );
+
+/** 
+ * DELETE /api/review/:id
+ * @summary Delete a review
+ * @param {integer} id.params.required - review id
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+*/
+router.delete('/review/:id', verifyToken, reviewsController.deleteReview );
 
 export default router;

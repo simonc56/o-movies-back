@@ -8,3 +8,5 @@
 - Sequelize > https://sequelize.org/docs/v6/getting-started/
 - bcrypt > https://www.npmjs.com/package/bcrypt
 - regex > https://regex101.com/  
+- AXIOS > https://axios-http.com/docs/intro 
+- JWT > https://www.npmjs.com/package/jsonwebtoken 

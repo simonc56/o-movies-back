@@ -76,7 +76,7 @@ const moviesController = {
             return res.json({status: 'success', data: data });
         }
         catch (error) {
-            return res.status(400).json(error.message);
+            return res.status(400).json( {status : "fail", data :error.message});
         };
     },
     async getMovies(req, res) {
