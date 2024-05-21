@@ -69,7 +69,4 @@ Media.belongsToMany(Playlist,{
 });
 
 
-
-
-
-export {Role, Media, User, Playlist, Rating, Review, sequelize};
+export { Role, Media, User, Playlist, Rating, Review, sequelize };

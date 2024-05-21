@@ -1,6 +1,12 @@
+
 import express from "express";
 import moviesController from "../../controllers/moviesController.js";
 import authController from "../../controllers/authController.js";
+import express from 'express';
+import moviesController from '../../controllers/moviesController.js';
+import authController from '../../controllers/authController.js';
+import reviewsController from '../../controllers/reviewsController.js';
+import verifyToken from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 /**
@@ -26,10 +32,11 @@ const router = express.Router();
  * @property {string} lastname - The user lastname
  * @property {string} birthdate - The user birthdate
  */
+
 /**
  * A movie object
  * @typedef {object} Movie
- * @property {string} id - The movie id
+ * @property {number} id - The movie id
  * @property {string} title_fr - The movie title in french
  * @property {string} original_title - The movie original title
  * @property {boolean} adult - The movie adult
@@ -43,12 +50,16 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
+// drop down menu for sorting criteria
+/**
+ * @typedef {string} Sort_by
+ * @enum {string}
+ */
 /**
  * GET /api/movie/:id
  * @summary get a movie
  * @param {integer} id.params.required - movie id
  * @return {Movie} 200 - success response
- * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
@@ -56,22 +67,19 @@ router.get("/movie/:id", moviesController.getMoviesById );
 
 /**get /api/movies 
  * @summary get movies with parameters
- * @param {string} title.query - movie title
- * @param {string} genre.query - movie genre
- * @param {string} language.query - movie language
- * @param {string} adult.query - movie adult
- * @param {string} year.query - movie year
- * @param {string} rating.query - movie rating
- * @param {string} popularity.query - movie popularity
- * @param {string} budget.query - movie budget
- * @return {[array<Movie>]} 200 - success response
- * @return {ApiSuccess} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
+ * @param {string} sort_by.query - Sorting criteria
+ *       ['popularity.asc', 'popularity.desc',
+ *        'release_date.asc', 'release_date.desc',
+ *         'revenue.asc', 'revenue.desc', 'primary_release_date.asc',
+ *          'primary_release_date.desc', 'title.asc', 'title.desc',
+ *           'vote_average.asc', 'vote_average.desc', 'vote_count.asc', 'vote_count.desc']
+ * @param {string} page.query - movie page
+ * @param {string} include_adult.query - include adult movie
+ *        ['true', 'false']
+ * @return {Array<Movie>} 200 - success response
  * 
  */ 
 router.get("/movies", moviesController.getMovies ); 
-
 
 /** POST /api/auth/login
  * @summary Login a user
@@ -91,5 +99,36 @@ router.post("/auth/login", authController.loginUser );
  * @return {ApiError} 500 - internal server error response
  */
 router.post("/auth/register", authController.registerUser );
+
+/**
+ * POST /api/review
+ * @summary Create a review
+ * @param {Review} request.body.required - review info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.post('/review', verifyToken, reviewsController.createReview );
+
+/**
+ * PATCH /api/review/:id
+ * @summary Update a review
+ * @param {integer} id.params.required - review id
+ * @param {Review} request.body.required - review info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.patch('/review/:id', verifyToken, reviewsController.updateReview );
+
+/** 
+ * DELETE /api/review/:id
+ * @summary Delete a review
+ * @param {integer} id.params.required - review id
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+*/
+router.delete('/review/:id', verifyToken, reviewsController.deleteReview );
 
 export default router;
