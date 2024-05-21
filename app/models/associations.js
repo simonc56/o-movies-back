@@ -9,63 +9,63 @@ import { sequelize } from "./sequelizeClient.js";
 
 //User 
 User.belongsTo(Role,{
-    as:"role",
-    foreignKey:"role_id"
+  as:"role",
+  foreignKey:"role_id"
 });
 
 //Playlist 
 Playlist.belongsTo(User,{
-    as:"user",
-    foreignKey:"user_id"
+  as:"user",
+  foreignKey:"user_id"
 });
 
 //View
 User.belongsToMany(Media, {
-    as:"medias_view",
-    through:"view",
-    foreignKey:"user_id"
+  as:"medias_view",
+  through:"view",
+  foreignKey:"user_id"
 });
 Media.belongsToMany(User, {
-    as:"users_view",
-    through:"view",
-    foreignKey:"media_id"
+  as:"users_view",
+  through:"view",
+  foreignKey:"media_id"
 });
 
 //Rating
 User.belongsToMany(Media, {
-    as:"medias_rating",
-    through:"rating",
-    foreignKey:"user_id"
+  as:"medias_rating",
+  through:"rating",
+  foreignKey:"user_id"
 });
 Media.belongsToMany(User, {
-    as:"users_rating",
-    through:"rating",
-    foreignKey:"media_id"
+  as:"users_rating",
+  through:"rating",
+  foreignKey:"media_id"
 });
 
 //Review
 User.belongsToMany(Media, {
-    as:"medias_review",
-    through:"review",
-    foreignKey:"user_id"
+  as:"medias_review",
+  through:"review",
+  foreignKey:"user_id"
 });
 Media.belongsToMany(User, {
-    as:"users_review",
-    through:"review",
-    foreignKey:"media_id"
+  as:"users_review",
+  through:"review",
+  foreignKey:"media_id"
 });
 
 //Playlist has media 
 Playlist.belongsToMany(Media,{
-    as: "medias",
-    through:"playlist_has_media",
-    foreignKey: "playlist_id"
+  as: "medias",
+  through:"playlist_has_media",
+  foreignKey: "playlist_id"
 });
 
 Media.belongsToMany(Playlist,{
-    as:"playlists",
-    through:"playlist_has_media",
-    foreignKey: "media_id"
+  as:"playlists",
+  through:"playlist_has_media",
+  foreignKey: "media_id"
 });
 
 

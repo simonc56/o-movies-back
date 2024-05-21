@@ -1,12 +1,9 @@
-
+// Initialize express router
 import express from "express";
 import moviesController from "../../controllers/moviesController.js";
 import authController from "../../controllers/authController.js";
-import express from 'express';
-import moviesController from '../../controllers/moviesController.js';
-import authController from '../../controllers/authController.js';
-import reviewsController from '../../controllers/reviewsController.js';
-import verifyToken from '../../middlewares/authMiddleware.js';
+import reviewsController from "../../controllers/reviewsController.js";
+import verifyToken from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 /**
@@ -108,7 +105,7 @@ router.post("/auth/register", authController.registerUser );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post('/review', verifyToken, reviewsController.createReview );
+router.post("/review", verifyToken, reviewsController.createReview );
 
 /**
  * PATCH /api/review/:id
@@ -119,7 +116,7 @@ router.post('/review', verifyToken, reviewsController.createReview );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch('/review/:id', verifyToken, reviewsController.updateReview );
+router.patch("/review/:id", verifyToken, reviewsController.updateReview );
 
 /** 
  * DELETE /api/review/:id
@@ -129,6 +126,6 @@ router.patch('/review/:id', verifyToken, reviewsController.updateReview );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
 */
-router.delete('/review/:id', verifyToken, reviewsController.deleteReview );
+router.delete("/review/:id", verifyToken, reviewsController.deleteReview );
 
 export default router;

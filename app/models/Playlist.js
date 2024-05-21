@@ -4,12 +4,12 @@ import { sequelize } from "./sequelizeClient.js";
 export class Playlist extends Model {}
 
 Playlist.init({
-    name: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    }},
-    {
-        sequelize,
-        tableName:"playlist"       
+  name: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  }},
+{
+  sequelize,
+  tableName:"playlist"       
 });
 

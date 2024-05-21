@@ -1,12 +1,12 @@
-import cors from 'cors';
-import express from 'express';
-import router from './routers/index.router.js';
-import { initSwagger } from './services/swagger.js';
+import cors from "cors";
+import express from "express";
+import router from "./routers/index.router.js";
+import { initSwagger } from "./services/swagger.js";
 
 const app = express();
 
 // Initilisation de swagger sur l'app
-initSwagger(app)
+initSwagger(app);
 
 // Autoriser les requêtes Cross-Origin
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
@@ -19,7 +19,7 @@ app.use(router);
 
 //Middleware d'error 404 
 app.use((req, res) => {
-    res.status(404).json({ error: "Ressource not found"});
-  });
+  res.status(404).json({ error: "Ressource not found"});
+});
   
 export default app;
