@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken"; // import the jsonwebtoken package
 import userSchemas from "../validation/userSchemas.js"; // import the userSchemas file from the validation folder
 import validateData from "../validation/validator.js";  // import the validateData file from the validation folder
 
+
 const authController = {
   async registerUser(req, res) {
     try {
@@ -13,12 +14,12 @@ const authController = {
       const { parsedData, errors } = validateData(data, userSchemas.registerSchema);
       // check if the email format is valid
       if (errors) {
-        return res.status(400).json({status: "fail", error: errors});
+        return res.status(400).json({status: "fail", error: errors}); 
       }
       // check if the email already exists 
       const existingUser = await User.findOne({where: {email: parsedData.email},});        
       if (existingUser) {
-        return res.status(400).json({status: "fail", data: "Email already exists"});
+        return res.status(400).json({status: "fail", error: "Email already exists"});
       }
       // hash the password
       const hashedPassword = await bcrypt.hash(parsedData.password, 10);           
@@ -35,7 +36,7 @@ const authController = {
       return res.json({ status: "success", data: true });
     } catch (error) {
       console.error(error);
-      return res.status(400).json({status : "fail", error: error.message });
+      return res.status(400).json({status: "fail", error: error.message });
     }
   },
 
@@ -52,12 +53,12 @@ const authController = {
       // check if the email exists
       const user = await User.findOne({ where: { email: parsedData.email } });           
       if (!user) {
-        return res.status(400).json({ status: "fail", data: "Unknown account" });
+        return res.status(400).json({ status: "fail", error: "Unknown account" });
       }           
       // check if the password is correct
       const validPassword = await bcrypt.compare(parsedData.password, user.password);
       if (!validPassword) {
-        return res.status(400).json({ status: "fail", data: "Unknown account" });
+        return res.status(400).json({ status: "fail", error: "Unknown account" });
       }           
       // create a token
       const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET);  
@@ -81,4 +82,3 @@ const authController = {
 
 
 export default authController;
-
