@@ -47,7 +47,6 @@ const reviewsController = {
       return res.status(400).json({status :"fail",  error: error.message });
     }
   },
-  // reviewid et le content à renvoyer dans le body 
   async updateReview(req, res) {
     try {
       const userId = req.userId;
