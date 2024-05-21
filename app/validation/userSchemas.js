@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
-
+// Define the regex for the password
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,}$/;
 // Define the schema for the user object
 const schema = {
   registerSchema : z.object({       
     email: z.string().email(),
-    password: z.string().regex(passwordRegex, "Password must be at least 6 characters long and contain at least one uppercase letter and one number"), // Valide le mot de passe
+    password: z.string().regex(passwordRegex, "password need to be : Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character: "), // Valide le mot de passe
     firstname: z.string().min(2).max(30), 
     lastname: z.string().min(2).max(30),
     birthdate: z.string().min(10).max(10),        
