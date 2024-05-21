@@ -2,6 +2,7 @@ import { Review } from "../models/Review.js";   // import the Review model from 
 import reviewSchema from "../validation/reviewSchemas.js";  // import the reviewSchema object from the validation folder
 import validateData from "../validation/validator.js";  // import the validateData file from the validation folder
 
+
 const reviewsController = {
     async getReviews(req, res) {
         try {
@@ -33,7 +34,7 @@ const reviewsController = {
             if (errors) {
                 return res.status(400).json({ error: errors });
             }
-            await Review.create({
+            const review = await Review.create({
                 content: parsedData.content,
                 user_id: parsedData.user_id,
                 media_id: parsedData.media_id
