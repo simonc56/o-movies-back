@@ -1,19 +1,10 @@
 import { Review } from "../models/Review.js";   // import the Review model from the models folder
+import { Media } from "../models/Media.js";   // import the Media model from the models folder
 import reviewSchema from "../validation/reviewSchemas.js";  // import the reviewSchema object from the validation folder
 import validateData from "../validation/validator.js";  // import the validateData file from the validation folder
 
-
 const reviewsController = {
-    async getReviews(req, res) {
-        try {
-            const reviews = await Review.findAll();
-            return res.json({ status: "success", data: reviews });
-        } catch (error) {
-            console.error(error);
-            return res.status(400).json({ error: error.message });
-        }
-    },
-
+    
     async getReviewById(req, res) {
         try {
             const review = await Review.findByPk(req.params.id);
@@ -29,15 +20,20 @@ const reviewsController = {
 
     async createReview(req, res) {
         try {
-            const data = req.body;
+            const data = req.body;  
             const { parsedData, errors } = validateData(data, reviewSchema.reviewSchema);
             if (errors) {
-                return res.status(400).json({ error: errors });
+                return res.status(400).json({status: "fail", error: errors });
+            }
+            if(!data.id) {
+                await Media.create({
+                    tmdb_id: parsedData.tmdb_id,
+                });    
             }
             const review = await Review.create({
                 content: parsedData.content,
-                user_id: parsedData.user_id,
-                media_id: parsedData.media_id
+                media_id: parsedData.media_id,
+                user_id: parsedData.user_id
             })
             return res.json({ status: "success", data: review.id });
         } catch (error) {
