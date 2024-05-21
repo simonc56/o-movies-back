@@ -3,7 +3,7 @@ import { z } from 'zod';
 const schema = {
     getId: z.number().int().min(1),
     getMoviesWithQueries : z.object({           
-        page : z.string().refine(value => !isNaN(parseInt(value)), { message: 'page must be a number' }).optional(),
+        page : z.string().refine(value => parseInt(value) > 0, { message: 'page must be a positive integer' }).optional(),
         include_adult: z.string().refine(value => ['true', 'false'].includes(value), { message: 'include_adult must be true or false' }).optional(),
         sort_by: z.string().refine(value => ['popularity.asc', 'popularity.desc',
          'release_date.asc', 'release_date.desc',

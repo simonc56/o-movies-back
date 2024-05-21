@@ -86,20 +86,26 @@ const moviesController = {
                 return res.status(400).json({status: 'fail', data: errors });
             };            
             // node function to convert the object to a query string u need to import querystring
-            const query = querystring.stringify(parsedData);            
+            const query = querystring.stringify(parsedData);   
             const moviesFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
+            // if the response is an error, return a 400 response with the error message
+            if (!moviesFetchFromTheApi.results) {
+                return res.status(400).json({status: 'fail', data: "No page found" });
+            };
             const categoriesFetchFromTheapi = await fetchMovieTMDB('https://api.themoviedb.org/3/genre/movie/list?language=fr');
+            // if movies exist in the response, restructure the data to send to the client
             const movies = moviesFetchFromTheApi.results.map(movie => {
                 return {
                     tmdb_id: movie.id,
                     title_fr: movie.title,
                     release_date: movie.release_date,
                     poster_path: movie.poster_path ? `https://image.tmdb.org/t/p/w300_and_h450_bestv2${movie.poster_path}` : null, 
-                    genres: movie.genre_ids.map(genre_id => {
-                        const genre = categoriesFetchFromTheapi.genres.find(genre => genre.id === genre_id);
-                        return { id: genre.id, name: genre.name };
-                    }
-                    ),        
+                    // i map the genre_ids to get the genre name and id
+                    genres: movie.genre_ids ? movie.genre_ids.map(genre_id => { 
+                        // i find the genre with the genre_id
+                        const genre = categoriesFetchFromTheapi.genres.find(category => category.id === genre_id)
+                            return { id: genre.id, name: genre.name };
+                    }) : null,        
                     vote_average: movie.vote_average,
                     vote_count: movie.vote_count,     
                 };
