@@ -19,7 +19,7 @@ app.use(router);
 
 //Middleware d'error 404 
 app.use((req, res) => {
-  res.status(404).json({ error: "Ressource not found"});
+  res.status(404).json({status: "fail", error: "Ressource not found"});
 });
   
 export default app;

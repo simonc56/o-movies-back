@@ -13,13 +13,13 @@ const moviesController = {
       const  { parsedData , errors }= validateData(id, schema.getId);
       // If there are errors, return a 400 response with the errors
       if (errors) {
-        return res.status(400).json({status: "fail", data: errors });
+        return res.status(400).json({status: "fail", error: errors });
       }
       // Fetch the movie from the TMDB API
       const movie = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${parsedData}?language=fr-FR`);
       // If the response is an error, return a 400 response with the error message
       if (axios.isAxiosError(movie)) {
-        return res.status(400).json({status: "fail", data: movie.message });
+        return res.status(400).json({status: "fail", error: movie.message });
       }      
       // Fetch the cast of the movie from the TMDB API
       const cast = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${parsedData}/credits?language=fr-FR`);
@@ -76,21 +76,21 @@ const moviesController = {
       return res.json({status: "success", data: data });
     }
     catch (error) {
-      return res.status(400).json( {status : "fail", data :error.message});
+      return res.status(400).json( {status : "fail", error :error.message});
     }
   },
   async getMovies(req, res) {
     try {
       const {parsedData, errors} = validateData(req.query, schema.getMoviesWithQueries); 
       if (errors) {
-        return res.status(400).json({status: "fail", data: errors });
+        return res.status(400).json({status: "fail", error: errors });
       }            
       // node function to convert the object to a query string u need to import querystring
       const query = querystring.stringify(parsedData);   
       const moviesFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
       // if the response is an error, return a 400 response with the error message
       if (!moviesFetchFromTheApi.results) {
-        return res.status(400).json({status: "fail", data: "No page found" });
+        return res.status(400).json({status: "fail", error: "No page found" });
       }
       const categoriesFetchFromTheapi = await fetchMovieTMDB("https://api.themoviedb.org/3/genre/movie/list?language=fr");
       // if movies exist in the response, restructure the data to send to the client
@@ -112,7 +112,7 @@ const moviesController = {
       });
       return res.json({status: "success", data: movies });
     } catch (error) {
-      return res.status(400).json(error.message);
+      return res.status(400).json({status :"fail", error: error.message});
     }
   } 
 };

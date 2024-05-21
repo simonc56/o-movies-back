@@ -9,7 +9,7 @@ const reviewsController = {
     try {
       const review = await Review.findByPk(req.params.id);
       if (!review) {
-        return res.status(404).json({ error: "Review not found" });
+        return res.status(404).json({status: "fail", error: "Review not found" });
       }
       return res.json({ status: "success", data: true });
     } catch (error) {
@@ -47,6 +47,7 @@ const reviewsController = {
       return res.status(400).json({status :"fail",  error: error.message });
     }
   },
+  // reviewid et le content à renvoyer dans le body 
   async updateReview(req, res) {
     try {
       const userId = req.userId;
