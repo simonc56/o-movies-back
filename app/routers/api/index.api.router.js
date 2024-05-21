@@ -1,3 +1,7 @@
+
+import express from "express";
+import moviesController from "../../controllers/moviesController.js";
+import authController from "../../controllers/authController.js";
 import express from 'express';
 import moviesController from '../../controllers/moviesController.js';
 import authController from '../../controllers/authController.js';
@@ -59,7 +63,7 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get('/movie/:id', moviesController.getMoviesById );
+router.get("/movie/:id", moviesController.getMoviesById );
 
 /**get /api/movies 
  * @summary get movies with parameters
@@ -75,7 +79,7 @@ router.get('/movie/:id', moviesController.getMoviesById );
  * @return {Array<Movie>} 200 - success response
  * 
  */ 
-router.get('/movies', moviesController.getMovies ); 
+router.get("/movies", moviesController.getMovies ); 
 
 /** POST /api/auth/login
  * @summary Login a user
@@ -84,7 +88,7 @@ router.get('/movies', moviesController.getMovies );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post('/auth/login', authController.loginUser );
+router.post("/auth/login", authController.loginUser );
 
 /**
  * POST /api/auth/register
@@ -94,7 +98,7 @@ router.post('/auth/login', authController.loginUser );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post('/auth/register', authController.registerUser );
+router.post("/auth/register", authController.registerUser );
 
 /**
  * POST /api/review

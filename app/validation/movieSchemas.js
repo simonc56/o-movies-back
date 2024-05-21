@@ -1,6 +1,7 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const schema = {
+  getId: z.number().int().min(1).max(1000000000),
     getId: z.number().int().min(1),
     getMoviesWithQueries : z.object({           
         page : z.string().refine(value => parseInt(value) > 0, { message: 'page must be a positive integer' }).optional(),
@@ -14,5 +15,6 @@ const schema = {
             .optional(),
     }), 
 };
+
 export default schema;  
 
