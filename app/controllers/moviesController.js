@@ -1,5 +1,5 @@
 import schema from "../validation/movieSchemas.js";
-import { sequelize } from "../models/associations.js";
+import { Media, sequelize } from "../models/associations.js";
 import validateData from "../validation/validator.js";
 import { fetchMovieTMDB } from "../services/axios.js";
 import axios from "axios";
@@ -33,7 +33,27 @@ const moviesController = {
             `, {
         replacements: { tmdb_id: parsedData },
         type: sequelize.QueryTypes.SELECT
-      });       
+      });
+
+      const movieInDb = await Media.findOne({ where: { tmdb_id: parsedData } });
+      // if the movie is in the database, get the average rating of the movie 
+      // i use a query to get the average rating of the movie
+      // i use the function find_average_rating to get the average rating of the movie 
+      // i pass the media_id of the movie to the function
+      // i initialize the average rating to null
+      let averageRating = null; 
+      
+      if (movieInDb) {
+        averageRating = await sequelize.query(`
+              SELECT * FROM find_average_rating(_media_id => :id)
+            `, {
+          replacements: { id: movieInDb.id},
+          type: sequelize.QueryTypes.SELECT
+        });
+        // i get the average rating of the movie
+        averageRating = averageRating[0].movie_average_rating;
+      }        
+
       // restructered data to send to the client                  
       const data = {
         tmdb_id: movie.id,
@@ -42,6 +62,7 @@ const moviesController = {
         status: movie.status,
         original_title: movie.original_title,
         adult: movie.adult,
+        average_rating: averageRating ,
         original_language: movie.original_language,               
         release_date: movie.release_date,
         runtime: movie.runtime,
@@ -70,7 +91,7 @@ const moviesController = {
               profile_path: crew.profile_path ? `https://image.tmdb.org/t/p/w300_and_h300_bestv2${crew.profile_path}` : null
             };
           }),
-        reviews: reviews 
+        reviews: reviews     
       };            
       // return the data to the client
       return res.json({status: "success", data: data });
