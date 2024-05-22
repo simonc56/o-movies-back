@@ -4,23 +4,10 @@ import ratingSchema from "../validation/ratingSchemas.js";  // import the rating
 import validateData from "../validation/validator.js";  // import the validateData file from the validation folder  
 
 const ratingsController = {
-  async getRatingById(req, res) {
-    try {
-      const rating = await Rating.findByPk(req.params.id);
-      if (!rating) {
-        return res.status(404).json({status: "fail", error: "Rating not found"});
-      }
-      return res.json({status: "success", data: rating});
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({status: "fail", error: error.message});
-    }
-  },
   async createRating (req,res){
     try {
       let media;
       const userId = parseInt(req.userId);
-      console.log(userId);
       const data = req.body; 
       const {parsedData, errors} = validateData(data, ratingSchema.createRatingSchema);
       if (errors) {
@@ -36,13 +23,18 @@ const ratingsController = {
           tmdb_id : parsedData.tmdb_id
         });
       }
+      const ratingAlreadyExist = await Rating.findOne({ where:{ media_id : media.id,
+        user_id : userId}
+      });
+      if (ratingAlreadyExist) {
+        return res.status(400).json({status:"fail", error: "this user already rated this movie" });
+      }     
       const rating = await Rating.create({
         value: parsedData.value,
         media_id: media.id,
         user_id: userId
       });
-      res.json({status: "success", data : {rating_id:rating.id}});
-      
+      res.json({status: "success", data : {ratingId:rating.id}}); 
     } catch (error ){
       console.error(error);
       return res.status(400).json({status: "fail", error: error.message});
@@ -78,20 +70,26 @@ const ratingsController = {
     }
   },
   
-  
-  // async deleteRating(req, res) {
-    
-  // }
+  async deleteRating(req, res) {
+    try {
+      const ratingId = parseInt(req.params.id);
+      const userId = req.userId;                    
+      const rating = await Rating.findOne({
+        where: {
+          id: ratingId,
+          user_id: userId
+        }
+      });
+      if (!rating) {
+        return res.status(404).json({ status :"fail", error: "Rating not found for this user" });
+      }
+      await rating.destroy();
+      return res.json({ status: "success", data: true });
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({status :"fail", error: error.message });
+    }
+  },
 };
-
-
-
-
-
-
-
-
-
-
 
 export default ratingsController;  // export the ratingsController object

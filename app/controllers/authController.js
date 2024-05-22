@@ -61,8 +61,7 @@ const authController = {
         return res.status(400).json({ status: "fail", error: "Unknown account" });
       }           
       // create a token
-      const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET);  
-      console.log(token);          
+      const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET);           
       // create the data user
       const dataUser = {
         firstname: user.firstname,

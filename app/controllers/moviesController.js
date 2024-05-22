@@ -33,7 +33,7 @@ const moviesController = {
             `, {
         replacements: { tmdb_id: parsedData },
         type: sequelize.QueryTypes.SELECT
-      });        
+      });       
       // restructered data to send to the client                  
       const data = {
         tmdb_id: movie.id,

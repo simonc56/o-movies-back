@@ -158,6 +158,6 @@ router.patch ("/rating/:id", verifyToken, ratingsController.updateRating);
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-// router.delete ("rating/:id", verifyToken, ratingsController.deleteRating);
+router.delete ("/rating/:id", verifyToken, ratingsController.deleteRating);
 
 export default router;
