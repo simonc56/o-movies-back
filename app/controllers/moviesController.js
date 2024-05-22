@@ -34,15 +34,13 @@ const moviesController = {
         replacements: { tmdb_id: parsedData },
         type: sequelize.QueryTypes.SELECT
       });
-
       const movieInDb = await Media.findOne({ where: { tmdb_id: parsedData } });
       // if the movie is in the database, get the average rating of the movie 
       // i use a query to get the average rating of the movie
       // i use the function find_average_rating to get the average rating of the movie 
       // i pass the media_id of the movie to the function
       // i initialize the average rating to null
-      let averageRating = null; 
-      
+      let averageRating = null;       
       if (movieInDb) {
         averageRating = await sequelize.query(`
               SELECT * FROM find_average_rating(_media_id => :id)
@@ -53,7 +51,6 @@ const moviesController = {
         // i get the average rating of the movie
         averageRating = averageRating[0].movie_average_rating;
       }        
-
       // restructered data to send to the client                  
       const data = {
         tmdb_id: movie.id,
