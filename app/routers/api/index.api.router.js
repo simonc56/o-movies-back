@@ -4,6 +4,7 @@ import moviesController from "../../controllers/moviesController.js";
 import authController from "../../controllers/authController.js";
 import reviewsController from "../../controllers/reviewsController.js";
 import verifyToken from "../../middlewares/authMiddleware.js";
+import ratingsController from "../../controllers/ratingsController.js";
 
 const router = express.Router();
 /**
@@ -127,5 +128,36 @@ router.patch("/review/:id", verifyToken, reviewsController.updateReview );
  * @return {ApiError} 500 - internal server error response
 */
 router.delete("/review/:id", verifyToken, reviewsController.deleteReview );
+
+/**
+ * POST /api/rating
+ * @summary Create a rating
+ * @param {Rating} request.body.required - rating info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.post ("/rating",verifyToken, ratingsController.createRating );
+
+/**
+ * PATCH /api/rating/:id
+ * @summary Update a rating
+ * @param {integer} id.params.required - rating id
+ * @param {Rating} request.body.required - rating info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.patch ("/rating/:id", verifyToken, ratingsController.updateRating);
+
+/**
+ * DELETE /api/rating/:id
+ * @summary Delete a rating
+ * @param {integer} id.params.required - rating id
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.delete ("/rating/:id", verifyToken, ratingsController.deleteRating);
 
 export default router;

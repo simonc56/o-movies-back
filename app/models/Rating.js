@@ -7,6 +7,14 @@ Rating.init({
   value: {
     type: DataTypes.DECIMAL,
     allowNull: false,
+  },
+  media_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   }},
 {
   sequelize,
