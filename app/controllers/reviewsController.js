@@ -21,6 +21,7 @@ const reviewsController = {
     try {
       let media;
       const userId = req.userId;
+      console.log(userId);
       const data = req.body;  
       const { parsedData, errors } = validateData(data, reviewSchema.createReviewSchema);
       if (errors) {
