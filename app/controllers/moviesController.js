@@ -80,17 +80,26 @@ const moviesController = {
       // i use the function find_average_rating to get the average rating of the movie 
       // i pass the media_id of the movie to the function
       // i initialize the average rating to null
-      let averageRating = null;       
-      if (movieInDb) {
-        averageRating = await sequelize.query(`
-              SELECT * FROM find_average_rating(_media_id => :id)
-            `, {
-          replacements: { id: movieInDb.id},
+       
+      let averageRating = null;
+      if (movieInDb) {           
+        const result = await sequelize.query(`
+            SELECT * FROM find_average_rating(_media_id => :id)
+        `, {
+          replacements: { id: movieInDb.id },
           type: sequelize.QueryTypes.SELECT
         });
-        // i get the average rating of the movie
-        averageRating = parseFloat(averageRating[0].movie_average_rating).toFixed(1);
-      }        
+  
+        // Si le résultat n'est pas vide, on extrait et formate la note moyenne
+        if (result.length > 0) {
+          averageRating = parseFloat(result[0].movie_average_rating).toFixed(1);
+        } else {
+          // Si le résultat est vide, on peut définir une valeur par défaut
+          averageRating = null; // ou '0.0' si vous préférez
+        }
+      }
+
+      
       // restructered data to send to the client                  
       const data = {
         tmdb_id: movie.id,
@@ -135,6 +144,7 @@ const moviesController = {
       return res.json({status: "success", data: data });
     }
     catch (error) {
+      console.log(error);
       return res.status(400).json( {status : "fail", error :error.message});
     }
   },
