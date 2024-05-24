@@ -89,7 +89,7 @@ const moviesController = {
           type: sequelize.QueryTypes.SELECT
         });
         // i get the average rating of the movie
-        averageRating = averageRating[0].movie_average_rating;
+        averageRating = parseFloat(averageRating[0].movie_average_rating).toFixed(1);
       }        
       // restructered data to send to the client                  
       const data = {
