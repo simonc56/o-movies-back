@@ -7,7 +7,6 @@ import querystring from "node:querystring";
 import jwt from "jsonwebtoken";
 
 
-
 const moviesController = {    
   async getMoviesById(req, res) {
     try  {
@@ -28,7 +27,7 @@ const moviesController = {
       const cast = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${parsedData}/credits?language=fr-FR`);
       // doing a query to get the reviews of the movie with user information
       const reviews = await sequelize.query(`
-                SELECT "review".id AS review_id, "review".content,  "user".email AS user_email, "user".firstname AS user_firstname, "user".lastname AS user_lastname,"media".id
+                SELECT "review".id AS review_id, "review".content,  "user".firstname AS user_firstname,"media".id
                 FROM media
                 JOIN "review" ON "media".id = "review".media_id
                 JOIN "user" ON review.user_id = "user".id
@@ -39,18 +38,22 @@ const moviesController = {
       });
       const movieInDb = await Media.findOne({ where: { tmdb_id: parsedData } });
       let userData = null;
+      // if the user is authenticated and the movie is in the database, get the user's rating and review of the movie
+
       if(req.headers["authorization"] && movieInDb){
+        // get the token from the header
         const token = req.headers["authorization"]?.slice(7);
+        // verify the token
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
         req.userId = decoded.id;
-        // in my table rating i want to get the id 
-        const userInput = await User.findAll({
-          attributes: ["id", "firstname"],
+        // get the user's rating and review of the movie
+        const userInput = await User.findOne({
+          attributes: ["id"],
           where: { id: req.userId },
           include: [
             {
               association: "medias_rating",
-              attributes: ["id"], 
+              attributes: [["id","mediaId"]] , 
               through: { attributes: ["value", "id"] },
               where: { id: movieInDb.id },
               required: false
@@ -58,22 +61,19 @@ const moviesController = {
             },
             {
               association: "medias_review", 
-              attributes: ["id"], 
+              attributes: [["id","mediaId"]] , 
               through: { attributes: ["content", "id"] },
               where: { id: movieInDb.id },
               required: false
             }
           ]
         });
-        console.log(JSON.stringify(userInput, null, 2));
-        userData = userInput.map(user => {
-          return {
-            id: user.id,
-            rating: user.medias_rating.length > 0 ? user.medias_rating[0].rating : null,
-            review: user.medias_review.length > 0 ? user.medias_review[0].review : null
-          };
-        });
-        console.log(userData);       
+        // restructered data to send to the client
+        userData = {
+          userId: userInput.id,
+          rating: userInput.medias_rating[0] ? userInput.medias_rating[0].rating  : null,
+          review: userInput.medias_review[0] ? userInput.medias_review[0].review : null 
+        };        
       }
       // if the movie is in the database, get the average rating of the movie 
       // i use a query to get the average rating of the movie
