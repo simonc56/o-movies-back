@@ -1,9 +1,12 @@
 import schema from "../validation/movieSchemas.js";
-import { Media, sequelize } from "../models/associations.js";
+import {User , Media, sequelize } from "../models/associations.js";
 import validateData from "../validation/validator.js";
 import { fetchMovieTMDB } from "../services/axios.js";
 import axios from "axios";
 import querystring from "node:querystring";
+import jwt from "jsonwebtoken";
+
+
 
 const moviesController = {    
   async getMoviesById(req, res) {
@@ -35,6 +38,43 @@ const moviesController = {
         type: sequelize.QueryTypes.SELECT
       });
       const movieInDb = await Media.findOne({ where: { tmdb_id: parsedData } });
+      let userData = null;
+      if(req.headers["authorization"] && movieInDb){
+        const token = req.headers["authorization"]?.slice(7);
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+        req.userId = decoded.id;
+        // in my table rating i want to get the id 
+        const userInput = await User.findAll({
+          attributes: ["id", "firstname"],
+          where: { id: req.userId },
+          include: [
+            {
+              association: "medias_rating",
+              attributes: ["id"], 
+              through: { attributes: ["value", "id"] },
+              where: { id: movieInDb.id },
+              required: false
+              
+            },
+            {
+              association: "medias_review", 
+              attributes: ["id"], 
+              through: { attributes: ["content", "id"] },
+              where: { id: movieInDb.id },
+              required: false
+            }
+          ]
+        });
+        console.log(JSON.stringify(userInput, null, 2));
+        userData = userInput.map(user => {
+          return {
+            id: user.id,
+            rating: user.medias_rating.length > 0 ? user.medias_rating[0].rating : null,
+            review: user.medias_review.length > 0 ? user.medias_review[0].review : null
+          };
+        });
+        console.log(userData);       
+      }
       // if the movie is in the database, get the average rating of the movie 
       // i use a query to get the average rating of the movie
       // i use the function find_average_rating to get the average rating of the movie 
@@ -88,7 +128,8 @@ const moviesController = {
               profile_path: crew.profile_path ? `https://image.tmdb.org/t/p/w300_and_h300_bestv2${crew.profile_path}` : null
             };
           }),
-        reviews: reviews     
+        reviews: reviews,
+        userData: userData     
       };            
       // return the data to the client
       return res.json({status: "success", data: data });
