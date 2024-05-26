@@ -64,18 +64,10 @@ const router = express.Router();
  */
 
 /**
- * @typedef {string} Sort_by
- * @enum {string}
- */
-
-/**
- * @route GET /api/movie...
- */
-
-/**
  * GET /api/movie/:id
  * @summary get a movie
- * @param {integer} id.params.required - movie id
+ * @tags Movies
+ * @param {string} id.params.required - movie id
  * @return {Movie} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -83,8 +75,9 @@ const router = express.Router();
 
 router.get("/movie/:id", controllerWrapper(moviesController.getMoviesById) );
 
-/**get /api/movies 
+/**get /api/movie 
  * @summary get movies with parameters
+ * @tags Movies
  * @param {string} sort_by.query - Sorting criteria
  *       ['popularity.asc', 'popularity.desc',
  *        'release_date.asc', 'release_date.desc',
@@ -97,10 +90,11 @@ router.get("/movie/:id", controllerWrapper(moviesController.getMoviesById) );
  * @return {Array<Movie>} 200 - success response
  * 
  */ 
-router.get("/movies",validationMiddleware(movieSchema.getMoviesWithQueries, "query"), controllerWrapper(moviesController.getMovies) ); 
+router.get("/movie",validationMiddleware(movieSchema.getMoviesWithQueries, "query"), controllerWrapper(moviesController.getMovies) ); 
 
 /** POST /api/auth/login
  * @summary Login a user
+ * @tags Auth
  * @param {UserLogin} request.body.required - user info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -111,6 +105,7 @@ router.post("/auth/login",validationMiddleware(userSchema.signInSchema, "body"),
 /**
  * POST /api/auth/register
  * @summary Register a user
+ * @tags Auth
  * @param {UserRegister} request.body.required - user info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -121,6 +116,7 @@ router.post("/auth/register",validationMiddleware(userSchema.registerSchema, "bo
 /**
  * POST /api/review
  * @summary Create a review
+ * @tags Reviews
  * @param {Review} request.body.required - review info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -132,7 +128,8 @@ router.post("/review", verifyToken,validationMiddleware(reviewSchema.createRevie
 /**
  * PATCH /api/review/:id
  * @summary Update a review
- * @param {integer} id.params.required - review id
+ * @tags Reviews
+ * @param {string} id.params.required - review id
  * @param {Review} request.body.required - review info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -143,7 +140,8 @@ router.patch("/review/:id", verifyToken,validationMiddleware(reviewSchema.update
 /** 
  * DELETE /api/review/:id
  * @summary Delete a review
- * @param {integer} id.params.required - review id
+ * @tags Reviews
+ * @param {string} id.params.required - review id
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -154,6 +152,7 @@ router.delete("/review/:id", verifyToken, controllerWrapper(reviewsController.de
 /**
  * POST /api/rating
  * @summary Create a rating
+ * @tags Ratings
  * @param {Rating} request.body.required - rating info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -164,7 +163,8 @@ router.post ("/rating",verifyToken,validationMiddleware(ratingSchema.createRatin
 /**
  * PATCH /api/rating/:id
  * @summary Update a rating
- * @param {integer} id.params.required - rating id
+ * @tags Ratings
+ * @param {string} id.params.required - rating id
  * @param {Rating} request.body.required - rating info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -175,7 +175,8 @@ router.patch ("/rating/:id", verifyToken,validationMiddleware(ratingSchema.updat
 /**
  * DELETE /api/rating/:id
  * @summary Delete a rating
- * @param {integer} id.params.required - rating id
+ * @tags Ratings
+ * @param {string} id.params.required - rating id
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
