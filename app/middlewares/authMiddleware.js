@@ -10,7 +10,7 @@ function verifyToken (req, res, next) {
     req.userId = decoded.id; // add the user id to the request
     next();
   } catch (error){
-    console.log(error);
+    console.error(error);
     return res.status(401).send({status :"fail", error: "Unauthorized!" });
   }
 }

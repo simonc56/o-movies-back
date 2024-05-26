@@ -25,7 +25,6 @@ const authController = {
     });            
     // return the user
     return res.json({ status: "success", data: true });
-
   },
 
   async loginUser(req, res) {

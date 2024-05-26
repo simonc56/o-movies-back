@@ -25,17 +25,25 @@ const router = express.Router();
  * A api error object
  * @typedef {object} ApiError
  * @property {string} status - The Json status Property
- * @property {string} message - Error description
+ * @property {string} error - Error description
  */
 
 /**
  * A user object 
- * @typedef {object} User
+ * @typedef {object} UserRegister
  * @property {string} email - The user email
  * @property {string} password - The user password
  * @property {string} firstname - The user firstname
  * @property {string} lastname - The user lastname
  * @property {string} birthdate - The user birthdate
+ */
+
+
+/**
+ * A user object 
+ * @typedef {object} UserLogin
+ * @property {string} email - The user email
+ * @property {string} password - The user password
  */
 
 /**
@@ -55,11 +63,15 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
-// drop down menu for sorting criteria
 /**
  * @typedef {string} Sort_by
  * @enum {string}
  */
+
+/**
+ * @route GET /api/movie...
+ */
+
 /**
  * GET /api/movie/:id
  * @summary get a movie
@@ -89,7 +101,7 @@ router.get("/movies",validationMiddleware(movieSchema.getMoviesWithQueries, "que
 
 /** POST /api/auth/login
  * @summary Login a user
- * @param {User} request.body.required - user info
+ * @param {UserLogin} request.body.required - user info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -99,7 +111,7 @@ router.post("/auth/login",validationMiddleware(userSchema.signInSchema, "body"),
 /**
  * POST /api/auth/register
  * @summary Register a user
- * @param {User} request.body.required - user info
+ * @param {UserRegister} request.body.required - user info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -114,7 +126,8 @@ router.post("/auth/register",validationMiddleware(userSchema.registerSchema, "bo
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/review", verifyToken,validationMiddleware(reviewSchema.createReviewSchema, "body"), reviewsController.createReview );
+router.post("/review", verifyToken,validationMiddleware(reviewSchema.createReviewSchema, "body"), controllerWrapper(reviewsController.createReview) );
+
 
 /**
  * PATCH /api/review/:id
@@ -125,7 +138,7 @@ router.post("/review", verifyToken,validationMiddleware(reviewSchema.createRevie
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch("/review/:id", verifyToken,validationMiddleware(reviewSchema.updateReviewSchema, "body"), reviewsController.updateReview );
+router.patch("/review/:id", verifyToken,validationMiddleware(reviewSchema.updateReviewSchema, "body"), controllerWrapper(reviewsController.updateReview) );
 
 /** 
  * DELETE /api/review/:id
@@ -135,7 +148,8 @@ router.patch("/review/:id", verifyToken,validationMiddleware(reviewSchema.update
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
 */
-router.delete("/review/:id", verifyToken, reviewsController.deleteReview );
+router.delete("/review/:id", verifyToken, controllerWrapper(reviewsController.deleteReview) );
+
 
 /**
  * POST /api/rating
@@ -145,7 +159,7 @@ router.delete("/review/:id", verifyToken, reviewsController.deleteReview );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post ("/rating",verifyToken,validationMiddleware(ratingSchema.createRatingSchema, "body"), ratingsController.createRating );
+router.post ("/rating",verifyToken,validationMiddleware(ratingSchema.createRatingSchema, "body"), controllerWrapper(ratingsController.createRating) );
 
 /**
  * PATCH /api/rating/:id
@@ -156,7 +170,7 @@ router.post ("/rating",verifyToken,validationMiddleware(ratingSchema.createRatin
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch ("/rating/:id", verifyToken,validationMiddleware(ratingSchema.updateRatingSchema, "body"), ratingsController.updateRating);
+router.patch ("/rating/:id", verifyToken,validationMiddleware(ratingSchema.updateRatingSchema, "body"), controllerWrapper(ratingsController.updateRating));
 
 /**
  * DELETE /api/rating/:id
@@ -166,6 +180,6 @@ router.patch ("/rating/:id", verifyToken,validationMiddleware(ratingSchema.updat
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete ("/rating/:id", verifyToken, ratingsController.deleteRating);
+router.delete ("/rating/:id", verifyToken, controllerWrapper(ratingsController.deleteRating));
 
 export default router;

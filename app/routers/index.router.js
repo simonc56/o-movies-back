@@ -4,8 +4,10 @@ import errorMiddleware from "../middlewares/errorMiddleware.js";
 
 const router = express.Router();
 
+
 router.use("/api", apiRouter);
 
 router.use(errorMiddleware);
+
 
 export default router;
