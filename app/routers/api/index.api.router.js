@@ -5,6 +5,7 @@ import authController from "../../controllers/authController.js";
 import reviewsController from "../../controllers/reviewsController.js";
 import verifyToken from "../../middlewares/authMiddleware.js";
 import ratingsController from "../../controllers/ratingsController.js";
+import controllerWrapper from "../../middlewares/controllerWrapper.js";
 
 const router = express.Router();
 /**
@@ -61,7 +62,7 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/movie/:id", moviesController.getMoviesById );
+router.get("/movie/:id", controllerWrapper(moviesController.getMoviesById) );
 
 /**get /api/movies 
  * @summary get movies with parameters
@@ -77,7 +78,7 @@ router.get("/movie/:id", moviesController.getMoviesById );
  * @return {Array<Movie>} 200 - success response
  * 
  */ 
-router.get("/movies", moviesController.getMovies ); 
+router.get("/movies", controllerWrapper(moviesController.getMovies) ); 
 
 /** POST /api/auth/login
  * @summary Login a user
@@ -86,7 +87,7 @@ router.get("/movies", moviesController.getMovies );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/auth/login", authController.loginUser );
+router.post("/auth/login", controllerWrapper(authController.loginUser) );
 
 /**
  * POST /api/auth/register
@@ -96,7 +97,7 @@ router.post("/auth/login", authController.loginUser );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/auth/register", authController.registerUser );
+router.post("/auth/register", controllerWrapper(authController.registerUser) );
 
 /**
  * POST /api/review
