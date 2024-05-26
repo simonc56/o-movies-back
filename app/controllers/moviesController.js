@@ -53,20 +53,19 @@ const moviesController = {
           include: [
             {
               association: "medias_rating",
-              attributes: [["id","mediaId"]] , 
-              through: { attributes: ["value", "id"] },
+              attributes: [["id", "mediaId"]],
+              through: { attributes: ["value", ["id", "rating_id"]] },
               where: { id: movieInDb.id },
-              required: false
-              
+              required: false,
             },
             {
-              association: "medias_review", 
-              attributes: [["id","mediaId"]] , 
-              through: { attributes: ["content", "id"] },
+              association: "medias_review",
+              attributes: [["id", "mediaId"]],
+              through: { attributes: ["content", ["id", "review_id"]] },
               where: { id: movieInDb.id },
-              required: false
-            }
-          ]
+              required: false,
+            },
+          ],
         });
         // restructered data to send to the client
         userData = {
