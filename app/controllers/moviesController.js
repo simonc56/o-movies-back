@@ -137,7 +137,7 @@ const moviesController = {
     const moviesFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
     // if the response is an error, return a 400 response with the error message
     if (!moviesFetchFromTheApi.results) {
-      return next (new ApiError(404, "No page found"));
+      return next (new ApiError(404, "No movie found"));
     }
     
     const categoriesFetchFromTheapi = await fetchMovieTMDB("https://api.themoviedb.org/3/genre/movie/list?language=fr");
