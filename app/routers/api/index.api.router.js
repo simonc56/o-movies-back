@@ -6,6 +6,12 @@ import reviewsController from "../../controllers/reviewsController.js";
 import verifyToken from "../../middlewares/authMiddleware.js";
 import ratingsController from "../../controllers/ratingsController.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
+import validationMiddleware from "../../middlewares/validationMiddleware.js";
+import userSchema from "../../validation/userSchemas.js";
+import movieSchema from "../../validation/movieSchemas.js";
+import reviewSchema from "../../validation/reviewSchemas.js";
+import ratingSchema from "../../validation/ratingSchemas.js";
+
 
 const router = express.Router();
 /**
@@ -62,6 +68,7 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
+
 router.get("/movie/:id", controllerWrapper(moviesController.getMoviesById) );
 
 /**get /api/movies 
@@ -78,7 +85,7 @@ router.get("/movie/:id", controllerWrapper(moviesController.getMoviesById) );
  * @return {Array<Movie>} 200 - success response
  * 
  */ 
-router.get("/movies", controllerWrapper(moviesController.getMovies) ); 
+router.get("/movies",validationMiddleware(movieSchema.getMoviesWithQueries, "query"), controllerWrapper(moviesController.getMovies) ); 
 
 /** POST /api/auth/login
  * @summary Login a user
@@ -87,7 +94,7 @@ router.get("/movies", controllerWrapper(moviesController.getMovies) );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/auth/login", controllerWrapper(authController.loginUser) );
+router.post("/auth/login",validationMiddleware(userSchema.signInSchema, "body"), controllerWrapper(authController.loginUser) );
 
 /**
  * POST /api/auth/register
@@ -97,7 +104,7 @@ router.post("/auth/login", controllerWrapper(authController.loginUser) );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/auth/register", controllerWrapper(authController.registerUser) );
+router.post("/auth/register",validationMiddleware(userSchema.registerSchema, "body"), controllerWrapper(authController.registerUser) );
 
 /**
  * POST /api/review
@@ -107,7 +114,7 @@ router.post("/auth/register", controllerWrapper(authController.registerUser) );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/review", verifyToken, reviewsController.createReview );
+router.post("/review", verifyToken,validationMiddleware(reviewSchema.createReviewSchema, "body"), reviewsController.createReview );
 
 /**
  * PATCH /api/review/:id
@@ -118,7 +125,7 @@ router.post("/review", verifyToken, reviewsController.createReview );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch("/review/:id", verifyToken, reviewsController.updateReview );
+router.patch("/review/:id", verifyToken,validationMiddleware(reviewSchema.updateReviewSchema, "body"), reviewsController.updateReview );
 
 /** 
  * DELETE /api/review/:id
@@ -138,7 +145,7 @@ router.delete("/review/:id", verifyToken, reviewsController.deleteReview );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post ("/rating",verifyToken, ratingsController.createRating );
+router.post ("/rating",verifyToken,validationMiddleware(ratingSchema.createRatingSchema, "body"), ratingsController.createRating );
 
 /**
  * PATCH /api/rating/:id
@@ -149,7 +156,7 @@ router.post ("/rating",verifyToken, ratingsController.createRating );
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch ("/rating/:id", verifyToken, ratingsController.updateRating);
+router.patch ("/rating/:id", verifyToken,validationMiddleware(ratingSchema.updateRatingSchema, "body"), ratingsController.updateRating);
 
 /**
  * DELETE /api/rating/:id

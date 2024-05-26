@@ -1,28 +1,20 @@
-import schema from "../validation/movieSchemas.js";
 import {User , Media, sequelize } from "../models/associations.js";
-import validateData from "../validation/validator.js";
 import { fetchMovieTMDB } from "../services/axios.js";
 import axios from "axios";
 import querystring from "node:querystring";
 import jwt from "jsonwebtoken";
 
 const moviesController = {    
-  async getMoviesById(req, res) { 
+  async getMoviesById(req, res) {   
     const id = parseInt(req.params.id); 
-    // Validate the id parameter   
-    const  { parsedData , errors }= validateData(id, schema.getId);
-    // If there are errors, return a 400 response with the errors
-    if (errors) {
-      return res.status(400).json({status: "fail", error: errors });
-    }
     // Fetch the movie from the TMDB API
-    const movie = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${parsedData}?language=fr-FR`);
+    const movie = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${id}?language=fr-FR`);
     // If the response is an error, return a 400 response with the error message
     if (axios.isAxiosError(movie)) {
       return res.status(400).json({status: "fail", error: movie.message });
     }      
     // Fetch the cast of the movie from the TMDB API
-    const cast = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${parsedData}/credits?language=fr-FR`);
+    const cast = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${id}/credits?language=fr-FR`);
     // doing a query to get the reviews of the movie with user information
     const reviews = await sequelize.query(`
                 SELECT "review".id AS review_id, "review".content,  "user".firstname AS user_firstname,"media".id
@@ -31,13 +23,12 @@ const moviesController = {
                 JOIN "user" ON review.user_id = "user".id
                 WHERE "media".tmdb_id = :tmdb_id;
             `, {
-      replacements: { tmdb_id: parsedData },
+      replacements: { tmdb_id: id },
       type: sequelize.QueryTypes.SELECT
     });
-    const movieInDb = await Media.findOne({ where: { tmdb_id: parsedData } });
+    const movieInDb = await Media.findOne({ where: { tmdb_id: id } });
     let userData = null;
     // if the user is authenticated and the movie is in the database, get the user's rating and review of the movie
-
     if(req.headers["authorization"] && movieInDb){
       // get the token from the header
       const token = req.headers["authorization"]?.slice(7);
@@ -78,7 +69,6 @@ const moviesController = {
     // i use the function find_average_rating to get the average rating of the movie 
     // i pass the media_id of the movie to the function
     // i initialize the average rating to null
-       
     let averageRating = null;
     if (movieInDb) {           
       const result = await sequelize.query(`
@@ -140,13 +130,9 @@ const moviesController = {
     return res.json({status: "success", data: data });   
   },
   async getMovies(req, res) {
-
-    const {parsedData, errors} = validateData(req.query, schema.getMoviesWithQueries); 
-    if (errors) {
-      return res.status(400).json({status: "fail", error: errors });
-    }            
+    const data = req.query;
     // node function to convert the object to a query string u need to import querystring
-    const query = querystring.stringify(parsedData);   
+    const query = querystring.stringify(data);   
     const moviesFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
     // if the response is an error, return a 400 response with the error message
     if (!moviesFetchFromTheApi.results) {

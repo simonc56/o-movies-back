@@ -1,4 +1,3 @@
-import validateData from "../validation/validator.js";
 
 export default (err, req, res, next) => {
   let { status, message } = err;

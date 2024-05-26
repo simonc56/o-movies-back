@@ -1,36 +1,27 @@
 import { User } from "../models/User.js";   // import the User model from the models folder
 import bcrypt from "bcrypt"; // import the bcrypt package 
 import jwt from "jsonwebtoken"; // import the jsonwebtoken package
-import userSchemas from "../validation/userSchemas.js"; // import the userSchemas file from the validation folder
-import validateData from "../validation/validator.js";  // import the validateData file from the validation folder
-
-
 
 const authController = {
   async registerUser(req, res) {
     // get data from request body
     const data = req.body;
     // validate the data
-    const { parsedData, errors } = validateData(data, userSchemas.registerSchema);
-    // check if the email format is valid
-    if (errors) {
-      return res.status(400).json({status: "fail", error: errors}); 
-    }
     // check if the email already exists 
-    const existingUser = await User.findOne({where: {email: parsedData.email},});        
+    const existingUser = await User.findOne({where: {email: data.email},});        
     if (existingUser) {
       return res.status(400).json({status: "fail", error: "Email already exists"});
     }
     // hash the password
-    const hashedPassword = await bcrypt.hash(parsedData.password, 10);           
+    const hashedPassword = await bcrypt.hash(data.password, 10);           
     // create the user
     await User.create({
       role_id: 2,
-      firstname: parsedData.firstname,
-      lastname: parsedData.lastname,
-      email: parsedData.email, 
+      firstname: data.firstname,
+      lastname: data.lastname,
+      email: data.email, 
       password: hashedPassword, 
-      birthdate: parsedData.birthdate
+      birthdate: data.birthdate
     });            
     // return the user
     return res.json({ status: "success", data: true });
@@ -40,19 +31,15 @@ const authController = {
   async loginUser(req, res) {
     // get data from request body
     const data = req.body;
-    // validate the data 
-    const { parsedData, errors } = validateData(data, userSchemas.signInSchema);            
-    // check if the email format is valid
-    if (errors) {
-      return res.status(400).json({status: "fail", error: errors });
-    }           
+    // validate the data          
+    // check if the email format is valid       
     // check if the email exists
-    const user = await User.findOne({ where: { email: parsedData.email } });           
+    const user = await User.findOne({ where: { email: data.email } });           
     if (!user) {
       return res.status(400).json({ status: "fail", error: "Unknown account" });
     }           
     // check if the password is correct
-    const validPassword = await bcrypt.compare(parsedData.password, user.password);
+    const validPassword = await bcrypt.compare(data.password, user.password);
     if (!validPassword) {
       return res.status(400).json({ status: "fail", error: "Unknown account" });
     }           
