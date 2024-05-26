@@ -1,13 +1,13 @@
 import { Review } from "../models/Review.js";   // import the Review model from the models folder
 import { Media } from "../models/Media.js";   // import the Media model from the models folder
+import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
 
 
 const reviewsController = {
-  async createReview(req, res) {
+  async createReview(req, res ) {
     let media;
     const userId = req.userId;
     const data = req.body;  
-
     media = await Media.findOne({
       where: {
         tmdb_id: data.tmdb_id
@@ -26,7 +26,7 @@ const reviewsController = {
     res.json({ status: "success", data: { reviewId: review.id } });
   },
   // reviewid et le content à renvoyer dans le body 
-  async updateReview(req, res) {
+  async updateReview(req, res,next) {
     const userId = req.userId;
     const reviewId = parseInt(req.params.id);
     const reviewContent = req.body;
@@ -38,14 +38,14 @@ const reviewsController = {
       }
     });
     if (!review) {
-      return res.status(404).json({status: "fail", error: "Review not found for this user " });
+      return next (new ApiError(404, "Review not found for this user"));
     }
     await review.update({
       content: data.content             
     });
     return res.json({ status: "success", data: true });
   },
-  async deleteReview(req, res) {
+  async deleteReview(req, res,next) {
     const reviewId = parseInt(req.params.id);
     const userId = req.userId;                    
     const review = await Review.findOne({
@@ -55,7 +55,7 @@ const reviewsController = {
       }
     });
     if (!review) {
-      return res.status(404).json({ status :"fail", error: "Review not found for this user" });
+      return next(new ApiError(404, "Review not found for this user"));
     }
     await review.destroy();
     return res.json({ status: "success", data: true });

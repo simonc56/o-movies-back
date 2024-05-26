@@ -1,11 +1,12 @@
+import ApiError from "../errors/ApiError.js";
+// Desc: Middleware to validate request body using schema from zod package and a request property(ex: body, query, params)
 export function validationMiddleware(schema, requestProperty){
   return (req , res , next )=> {
     try {
       schema.parse(req[requestProperty]);
       next();
     } catch (error){      
-      console.error(error);      
-      return res.status(400).json({status:"fail", error: error.errors});         
+      next(new ApiError(400, error.errors));  
     }
   };
 }

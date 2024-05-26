@@ -1,13 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 export default (err, req, res, next) => {
   let { status, message } = err;
-  const { code } = err;
-    
+  const { code } = err;   
   if (code === "23505") {
     status = 400;
     message = "Resource already exists";
   }
-  
   if (!status) {
     status = 500;
   }
@@ -21,5 +19,6 @@ export default (err, req, res, next) => {
       message,
     });
   }
-  return res.status(status).json({status :"fail", error: message }); 
+  // return the error message in json format
+  return res.status(status).json({status :"fail", error: message });  
 };

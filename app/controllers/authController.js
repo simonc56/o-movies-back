@@ -1,16 +1,16 @@
 import { User } from "../models/User.js";   // import the User model from the models folder
 import bcrypt from "bcrypt"; // import the bcrypt package 
 import jwt from "jsonwebtoken"; // import the jsonwebtoken package
+import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
 
 const authController = {
-  async registerUser(req, res) {
+  async registerUser(req, res,next) {
     // get data from request body
     const data = req.body;
-    // validate the data
     // check if the email already exists 
     const existingUser = await User.findOne({where: {email: data.email},});        
     if (existingUser) {
-      return res.status(400).json({status: "fail", error: "Email already exists"});
+      return next (new ApiError(400, "Email already exists"));
     }
     // hash the password
     const hashedPassword = await bcrypt.hash(data.password, 10);           
@@ -27,20 +27,18 @@ const authController = {
     return res.json({ status: "success", data: true });
   },
 
-  async loginUser(req, res) {
+  async loginUser(req, res,next) {
     // get data from request body
-    const data = req.body;
-    // validate the data          
-    // check if the email format is valid       
+    const data = req.body;      
     // check if the email exists
     const user = await User.findOne({ where: { email: data.email } });           
     if (!user) {
-      return res.status(400).json({ status: "fail", error: "Unknown account" });
+      return next(new ApiError(400, "Account not found"));
     }           
     // check if the password is correct
     const validPassword = await bcrypt.compare(data.password, user.password);
     if (!validPassword) {
-      return res.status(400).json({ status: "fail", error: "Unknown account" });
+      return next(new ApiError(400, "Account not found"));
     }           
     // create a token
     const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET);           
@@ -55,6 +53,5 @@ const authController = {
     return res.json({ status: "success", data: dataUser });
   }
 };
-
 
 export default authController;

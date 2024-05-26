@@ -3,15 +3,16 @@ import { fetchMovieTMDB } from "../services/axios.js";
 import axios from "axios";
 import querystring from "node:querystring";
 import jwt from "jsonwebtoken";
+import ApiError from "../errors/ApiError.js";
 
 const moviesController = {    
-  async getMoviesById(req, res) {   
+  async getMoviesById(req, res,next) {   
     const id = parseInt(req.params.id); 
     // Fetch the movie from the TMDB API
     const movie = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${id}?language=fr-FR`);
     // If the response is an error, return a 400 response with the error message
     if (axios.isAxiosError(movie)) {
-      return res.status(400).json({status: "fail", error: movie.message });
+      return next(new (ApiError(400, movie.response.data.status_message)));
     }      
     // Fetch the cast of the movie from the TMDB API
     const cast = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${id}/credits?language=fr-FR`);
@@ -129,15 +130,16 @@ const moviesController = {
       // return the data to the client
     return res.json({status: "success", data: data });   
   },
-  async getMovies(req, res) {
+  async getMovies(req, res,next) {
     const data = req.query;
     // node function to convert the object to a query string u need to import querystring
     const query = querystring.stringify(data);   
     const moviesFetchFromTheApi= await fetchMovieTMDB(`https://api.themoviedb.org/3/discover/movie?language=fr-FR&${query}`);
     // if the response is an error, return a 400 response with the error message
     if (!moviesFetchFromTheApi.results) {
-      return res.status(400).json({status: "fail", error: "No page found" });
+      return next (new ApiError(404, "No page found"));
     }
+    
     const categoriesFetchFromTheapi = await fetchMovieTMDB("https://api.themoviedb.org/3/genre/movie/list?language=fr");
     // if movies exist in the response, restructure the data to send to the client
     const movies = moviesFetchFromTheApi.results.map(movie => {

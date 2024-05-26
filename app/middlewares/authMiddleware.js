@@ -1,17 +1,20 @@
 import jwt from "jsonwebtoken"; // import the jwt library
+import ApiError from "../errors/ApiError.js"; // import the ApiError class
 
 function verifyToken (req, res, next) {
   const token = req.headers["authorization"]?.slice(7); // get the token from the header    
   if (!token) {
-    return res.status(403).send({status :"fail", error: "No token provided!" }); // if there isn't any token
+    return next (new ApiError(403,"No token provided!" )); // if there isn't any token
   }
   try {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET); // verify token
     req.userId = decoded.id; // add the user id to the request
     next();
   } catch (error){
-    console.error(error);
-    return res.status(401).send({status :"fail", error: "Unauthorized!" });
+    if (error) {
+      console.log(error);
+      return next(new ApiError(401,"Unauthorized!" ));
+    }
   }
 }
 

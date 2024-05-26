@@ -1,8 +1,9 @@
 import {Rating} from "../models/Rating.js";   // import the Rating model from the models folder
 import {Media} from "../models/Media.js";   // import the Media model from the models folder  
+import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
 
 const ratingsController = {
-  async createRating (req,res){
+  async createRating (req,res, next){
     let media;
     const userId = parseInt(req.userId);
     const data = req.body; 
@@ -20,7 +21,7 @@ const ratingsController = {
       user_id : userId}
     });
     if (ratingAlreadyExist) {
-      return res.status(400).json({status:"fail", error: "this user already rated this movie" });
+      return next(new ApiError(400, "Rating already exists for this user"));
     }     
     const rating = await Rating.create({
       value: data.value,
@@ -28,10 +29,8 @@ const ratingsController = {
       user_id: userId
     });
     res.json({status: "success", data : {ratingId:rating.id}}); 
- 
   },
-  
-  async updateRating(req, res) {
+  async updateRating(req, res,next) {
     const userId = req.userId;
     const ratingId = parseInt(req.params.id);
     const ratingContent = req.body;
@@ -43,16 +42,14 @@ const ratingsController = {
       }
     });
     if (!rating) {
-      return res.status(404).json({status:"fail", error: "Rating not found for this user"});
+      return next(new ApiError(404, "Rating not found for this user"));  
     }
     await rating.update({
       value: data.value
     });
     return res.json({status:"success", data: true});      
-
   },
-  
-  async deleteRating(req, res) {
+  async deleteRating(req, res,next ) {
     const ratingId = parseInt(req.params.id);
     const userId = req.userId;                    
     const rating = await Rating.findOne({
@@ -62,7 +59,7 @@ const ratingsController = {
       }
     });
     if (!rating) {
-      return res.status(404).json({ status :"fail", error: "Rating not found for this user" });
+      return next (new ApiError(404, "Rating not found for this user"));
     }
     await rating.destroy();
     return res.json({ status: "success", data: true });
