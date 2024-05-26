@@ -27,10 +27,9 @@ const reviewsController = {
   },
   // reviewid et le content à renvoyer dans le body 
   async updateReview(req, res,next) {
-    const userId = req.userId;
+    const userId = parseInt(req.userId);
     const reviewId = parseInt(req.params.id);
     const reviewContent = req.body;
-    const data = {userId , reviewId, ...reviewContent};
     const review = await Review.findOne({ 
       where: {
         id: reviewId,
@@ -41,7 +40,7 @@ const reviewsController = {
       return next (new ApiError(404, "Review not found for this user"));
     }
     await review.update({
-      content: data.content             
+      content: reviewContent.content             
     });
     return res.json({ status: "success", data: true });
   },

@@ -31,10 +31,10 @@ const ratingsController = {
     res.json({status: "success", data : {ratingId:rating.id}}); 
   },
   async updateRating(req, res,next) {
-    const userId = req.userId;
+    const userId = parseInt(req.userId);
     const ratingId = parseInt(req.params.id);
     const ratingContent = req.body;
-    const data = {userId,ratingId, ...ratingContent};
+    
     const rating = await Rating.findOne({
       where: {
         id: ratingId,
@@ -45,7 +45,7 @@ const ratingsController = {
       return next(new ApiError(404, "Rating not found for this user"));  
     }
     await rating.update({
-      value: data.value
+      value: ratingContent.value
     });
     return res.json({status:"success", data: true});      
   },
