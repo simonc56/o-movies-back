@@ -3,6 +3,7 @@ import express from "express";
 import moviesController from "../../controllers/moviesController.js";
 import authController from "../../controllers/authController.js";
 import reviewsController from "../../controllers/reviewsController.js";
+import viewsController from "../../controllers/viewsController.js";
 import verifyToken from "../../middlewares/authMiddleware.js";
 import ratingsController from "../../controllers/ratingsController.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
@@ -12,6 +13,7 @@ import movieSchema from "../../validation/movieSchemas.js";
 import reviewSchema from "../../validation/reviewSchemas.js";
 import ratingSchema from "../../validation/ratingSchemas.js";
 import genericSchema from "../../validation/genericSchemas.js";
+import viewSchemas from "../../validation/viewSchemas.js";
 
 
 const router = express.Router();
@@ -185,5 +187,27 @@ router.patch ("/rating/:id", verifyToken,validationMiddleware({body : ratingSche
  */
 router.delete ("/rating/:id", verifyToken,validationMiddleware({ params: genericSchema.paramsId } ),
   controllerWrapper(ratingsController.deleteRating));
+
+/**
+ * POST /api/view
+ * @summary Create a media as viewed
+ * @tags Views
+ * @param {View} request.body.required - view info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewedSchema }), controllerWrapper(viewsController.createMediaAsViewed));
+
+/**
+ * DELETE /api/view
+ * @summary Delete a media as viewed
+ * @tags Views
+ * @param {View} id.params.required - view info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.delete("/view/:id", verifyToken, validationMiddleware({ params: viewSchemas.viewedSchema }), controllerWrapper(viewsController.deleteMediaAsViewed));
 
 export default router;

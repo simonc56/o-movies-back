@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const schema = {
-  markAsViewedSchema : z.object({
-    tmdb_id: z.number().int(),
+  viewedSchema : z.object({
+    tmdb_id: z.number().int().min(1),
   }).required(),
 };
 
