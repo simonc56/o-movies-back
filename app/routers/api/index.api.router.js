@@ -5,6 +5,14 @@ import authController from "../../controllers/authController.js";
 import reviewsController from "../../controllers/reviewsController.js";
 import verifyToken from "../../middlewares/authMiddleware.js";
 import ratingsController from "../../controllers/ratingsController.js";
+import controllerWrapper from "../../middlewares/controllerWrapper.js";
+import validationMiddleware from "../../middlewares/validationMiddleware.js";
+import userSchema from "../../validation/userSchemas.js";
+import movieSchema from "../../validation/movieSchemas.js";
+import reviewSchema from "../../validation/reviewSchemas.js";
+import ratingSchema from "../../validation/ratingSchemas.js";
+import genericSchema from "../../validation/genericSchemas.js";
+
 
 const router = express.Router();
 /**
@@ -18,17 +26,25 @@ const router = express.Router();
  * A api error object
  * @typedef {object} ApiError
  * @property {string} status - The Json status Property
- * @property {string} message - Error description
+ * @property {string} error - Error description
  */
 
 /**
  * A user object 
- * @typedef {object} User
+ * @typedef {object} UserRegister
  * @property {string} email - The user email
  * @property {string} password - The user password
  * @property {string} firstname - The user firstname
  * @property {string} lastname - The user lastname
  * @property {string} birthdate - The user birthdate
+ */
+
+
+/**
+ * A user object 
+ * @typedef {object} UserLogin
+ * @property {string} email - The user email
+ * @property {string} password - The user password
  */
 
 /**
@@ -48,23 +64,21 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
-// drop down menu for sorting criteria
-/**
- * @typedef {string} Sort_by
- * @enum {string}
- */
 /**
  * GET /api/movie/:id
  * @summary get a movie
- * @param {integer} id.params.required - movie id
+ * @tags Movies
+ * @param {string} id.params.required - movie id
  * @return {Movie} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/movie/:id", moviesController.getMoviesById );
 
-/**get /api/movies 
+router.get("/movie/:id", validationMiddleware({params : genericSchema.paramsId}), controllerWrapper(moviesController.getMoviesById) );
+
+/**get /api/movie 
  * @summary get movies with parameters
+ * @tags Movies
  * @param {string} sort_by.query - Sorting criteria
  *       ['popularity.asc', 'popularity.desc',
  *        'release_date.asc', 'release_date.desc',
@@ -77,87 +91,99 @@ router.get("/movie/:id", moviesController.getMoviesById );
  * @return {Array<Movie>} 200 - success response
  * 
  */ 
-router.get("/movies", moviesController.getMovies ); 
+router.get("/movie",validationMiddleware({query : movieSchema.getMoviesWithQueries}), controllerWrapper(moviesController.getMovies) ); 
 
 /** POST /api/auth/login
  * @summary Login a user
- * @param {User} request.body.required - user info
+ * @tags Auth
+ * @param {UserLogin} request.body.required - user info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/auth/login", authController.loginUser );
+router.post("/auth/login",validationMiddleware({body : userSchema.signInSchema}), controllerWrapper(authController.loginUser) );
 
 /**
  * POST /api/auth/register
  * @summary Register a user
- * @param {User} request.body.required - user info
+ * @tags Auth
+ * @param {UserRegister} request.body.required - user info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/auth/register", authController.registerUser );
+router.post("/auth/register",validationMiddleware({body: userSchema.registerSchema}), controllerWrapper(authController.registerUser) );
 
 /**
  * POST /api/review
  * @summary Create a review
+ * @tags Reviews
  * @param {Review} request.body.required - review info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/review", verifyToken, reviewsController.createReview );
+router.post("/review", verifyToken,validationMiddleware({body : reviewSchema.createReviewSchema}), controllerWrapper(reviewsController.createReview) );
+
 
 /**
  * PATCH /api/review/:id
  * @summary Update a review
- * @param {integer} id.params.required - review id
+ * @tags Reviews
+ * @param {string} id.params.required - review id
  * @param {Review} request.body.required - review info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch("/review/:id", verifyToken, reviewsController.updateReview );
+router.patch("/review/:id", verifyToken,validationMiddleware({body : reviewSchema.updateReviewSchema, params: genericSchema.paramsId}), controllerWrapper(reviewsController.updateReview) );
 
 /** 
  * DELETE /api/review/:id
  * @summary Delete a review
- * @param {integer} id.params.required - review id
+ * @tags Reviews
+ * @param {string} id.params.required - review id
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
 */
-router.delete("/review/:id", verifyToken, reviewsController.deleteReview );
+router.delete("/review/:id", verifyToken,validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(reviewsController.deleteReview) );
+
 
 /**
  * POST /api/rating
  * @summary Create a rating
+ * @tags Ratings
  * @param {Rating} request.body.required - rating info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post ("/rating",verifyToken, ratingsController.createRating );
+router.post ("/rating",verifyToken,validationMiddleware({body : ratingSchema.createRatingSchema}), controllerWrapper(ratingsController.createRating) );
 
 /**
  * PATCH /api/rating/:id
  * @summary Update a rating
- * @param {integer} id.params.required - rating id
+ * @tags Ratings
+ * @param {string} id.params.required - rating id
  * @param {Rating} request.body.required - rating info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch ("/rating/:id", verifyToken, ratingsController.updateRating);
+router.patch ("/rating/:id", verifyToken,validationMiddleware({body : ratingSchema.updateRatingSchema, params: genericSchema.paramsId }),
+  controllerWrapper(ratingsController.updateRating));
 
 /**
  * DELETE /api/rating/:id
  * @summary Delete a rating
- * @param {integer} id.params.required - rating id
+ * @tags Ratings
+ * @param {string} id.params.required - rating id
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete ("/rating/:id", verifyToken, ratingsController.deleteRating);
+router.delete ("/rating/:id", verifyToken,validationMiddleware({ params: genericSchema.paramsId } ),
+  controllerWrapper(ratingsController.deleteRating));
 
 export default router;

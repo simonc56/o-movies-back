@@ -7,8 +7,6 @@ const schema = {
   }),
   updateReviewSchema : z.object({ 
     content: z.string().min(1).max(1000),
-    reviewId: z.number().int().min(1),
-    userId: z.number().int().min(1),  
   }),
 
 };
