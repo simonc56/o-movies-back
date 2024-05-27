@@ -1,87 +1,63 @@
 import { Review } from "../models/Review.js";   // import the Review model from the models folder
 import { Media } from "../models/Media.js";   // import the Media model from the models folder
-import reviewSchema from "../validation/reviewSchemas.js";  // import the reviewSchema object from the validation folder
-import validateData from "../validation/validator.js";  // import the validateData file from the validation folder
+import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
+
 
 const reviewsController = {
-  async createReview(req, res) {
-    try {
-      let media;
-      const userId = req.userId;
-      const data = req.body;  
-      const { parsedData, errors } = validateData(data, reviewSchema.createReviewSchema);
-      if (errors) {
-        return res.status(400).json({status: "fail", error: errors });
-      }           
-      media = await Media.findOne({
-        where: {
-          tmdb_id: parsedData.tmdb_id
-        }
-      });            
-      if (!media) {
-        media = await Media.create({
-          tmdb_id: parsedData.tmdb_id,
-        });
+  async createReview(req, res ) {
+    let media;
+    const userId = req.userId;
+    const data = req.body;  
+    media = await Media.findOne({
+      where: {
+        tmdb_id: data.tmdb_id
       }
-      const review = await Review.create({
-        content: parsedData.content,
-        media_id: media.id,
-        user_id: userId
+    });            
+    if (!media) {
+      media = await Media.create({
+        tmdb_id: data.tmdb_id,
       });
-      res.json({ status: "success", data: { reviewId: review.id } });
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({status :"fail",  error: error.message });
     }
+    const review = await Review.create({
+      content: data.content,
+      media_id: media.id,
+      user_id: userId
+    });
+    res.json({ status: "success", data: { reviewId: review.id } });
   },
   // reviewid et le content à renvoyer dans le body 
-  async updateReview(req, res) {
-    try {
-      const userId = req.userId;
-      const reviewId = parseInt(req.params.id);
-      const reviewContent = req.body;
-      const data = {userId , reviewId, ...reviewContent};
-      const { parsedData, errors } = validateData(data, reviewSchema.updateReviewSchema);
-      if (errors) {
-        return res.status(400).json({status: "fail",  error: errors });
+  async updateReview(req, res,next) {
+    const userId = parseInt(req.userId);
+    const reviewId = parseInt(req.params.id);
+    const reviewContent = req.body;
+    const review = await Review.findOne({ 
+      where: {
+        id: reviewId,
+        user_id: userId
       }
-      const review = await Review.findOne({ 
-        where: {
-          id: reviewId,
-          user_id: userId
-        }
-      });
-      if (!review) {
-        return res.status(404).json({status: "fail", error: "Review not found for this user " });
-      }
-      await review.update({
-        content: parsedData.content             
-      });
-      return res.json({ status: "success", data: true });
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({status :"fail", error: error.message });
+    });
+    if (!review) {
+      return next (new ApiError(404, "Review not found for this user"));
     }
+    await review.update({
+      content: reviewContent.content             
+    });
+    return res.json({ status: "success", data: true });
   },
-  async deleteReview(req, res) {
-    try {
-      const reviewId = parseInt(req.params.id);
-      const userId = req.userId;                    
-      const review = await Review.findOne({
-        where: {
-          id: reviewId,
-          user_id: userId
-        }
-      });
-      if (!review) {
-        return res.status(404).json({ status :"fail", error: "Review not found for this user" });
+  async deleteReview(req, res,next) {
+    const reviewId = parseInt(req.params.id);
+    const userId = req.userId;                    
+    const review = await Review.findOne({
+      where: {
+        id: reviewId,
+        user_id: userId
       }
-      await review.destroy();
-      return res.json({ status: "success", data: true });
-    } catch (error) {
-      console.error(error);
-      return res.status(400).json({status :"fail", error: error.message });
+    });
+    if (!review) {
+      return next(new ApiError(404, "Review not found for this user"));
     }
+    await review.destroy();
+    return res.json({ status: "success", data: true });
   },
 };
 

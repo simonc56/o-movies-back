@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 const schema = {
-  getId: z.number().int().min(1),
   getMoviesWithQueries : z.object({           
     page : z.string().refine(value => parseInt(value) > 0, { message: "page must be a positive integer" }).optional(),
     include_adult: z.string().refine(value => ["true", "false"].includes(value), { message: "include_adult must be true or false" }).optional(),
