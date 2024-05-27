@@ -12,7 +12,7 @@ const moviesController = {
     const movie = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${id}?language=fr-FR`);
     // If the response is an error, return a 400 response with the error message
     if (axios.isAxiosError(movie)) {
-      return next(new (ApiError(400, movie.response.data.status_message)));
+      return next  (new ApiError(400, movie.response.data.status_message));
     }      
     // Fetch the cast of the movie from the TMDB API
     const cast = await fetchMovieTMDB(`https://api.themoviedb.org/3/movie/${id}/credits?language=fr-FR`);
@@ -44,7 +44,7 @@ const moviesController = {
           {
             association: "medias_rating",
             attributes: [["id","mediaId"]] , 
-            through: { attributes: ["value", ["id", "rating_id"]] },
+            through: { attributes: ["value", "id"] },
             where: { id: movieInDb.id },
             required: false
               
@@ -52,13 +52,13 @@ const moviesController = {
           {
             association: "medias_review", 
             attributes: [["id","mediaId"]] , 
-            through: { attributes: ["content", ["id", "review_id"]] },
+            through: { attributes: ["content", "id"] },
             where: { id: movieInDb.id },
             required: false
           }
         ]
       });
-      // restructered data to send to the client
+        // restructered data to send to the client
       userData = {
         userId: userInput.id,
         rating: userInput.medias_rating[0] ? userInput.medias_rating[0].rating  : null,
@@ -81,7 +81,7 @@ const moviesController = {
   
       // Si le résultat n'est pas vide, on extrait et formate la note moyenne
       if (result.length > 0) {
-        averageRating = result[0].movie_average_rating;
+        averageRating = parseFloat(result[0].movie_average_rating).toFixed(1);
       } else {
         // Si le résultat est vide, on peut définir une valeur par défaut
         averageRating = null; // ou '0.0' si vous préférez
