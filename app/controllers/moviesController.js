@@ -81,7 +81,7 @@ const moviesController = {
   
       // Si le résultat n'est pas vide, on extrait et formate la note moyenne
       if (result.length > 0) {
-        averageRating = parseFloat(result[0].movie_average_rating).toFixed(1);
+        averageRating = result[0].movie_average_rating;
       } else {
         // Si le résultat est vide, on peut définir une valeur par défaut
         averageRating = null; // ou '0.0' si vous préférez
