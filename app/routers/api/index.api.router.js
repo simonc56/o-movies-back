@@ -14,6 +14,7 @@ import reviewSchema from "../../validation/reviewSchemas.js";
 import ratingSchema from "../../validation/ratingSchemas.js";
 import genericSchema from "../../validation/genericSchemas.js";
 import viewSchemas from "../../validation/viewSchemas.js";
+import profilController from "../../controllers/profilController.js";
 
 const router = express.Router();
 
@@ -38,6 +39,22 @@ const router = express.Router();
  * @property {string} firstname - The user firstname
  * @property {string} lastname - The user lastname
  * @property {string} birthdate - The user birthdate
+ */
+
+/**
+ * A user object 
+ * @typedef {object} User
+ * @property {number} id - The user token
+ * @property {string} firstname - The user firstname
+ * @property {string} lastname - The user lastname
+ * @property {string} email - The user email
+ * @property {string} birthdate - The user birthdate
+ * @property {created_at} created_at - The user created_at
+ * @property {updated_at} updated_at - The user updated_at
+ * @property {number} count_review - The user count review
+ * @property {number} count_rating - The user count rating
+ * @property {number} id - The user token
+ * 
  */
 
 /**
@@ -217,7 +234,8 @@ router.delete ("/rating/:id", verifyToken,validationMiddleware({ params: generic
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewedSchema }), controllerWrapper(viewsController.createMediaAsViewed));
+router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewedSchema }),
+  controllerWrapper(viewsController.createMediaAsViewed));
 
 /**
  * DELETE /api/view/:id
@@ -228,6 +246,19 @@ router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewe
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(viewsController.deleteMediaAsViewed));
+router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }),
+  controllerWrapper(viewsController.deleteMediaAsViewed));
+
+/**
+ * GET /api/profil
+ * @summary Get user profil
+ * @tags Profil
+ * @return {User} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ 
+ */
+
+router.get("/profil", verifyToken, controllerWrapper(profilController.getProfil));
 
 export default router;
