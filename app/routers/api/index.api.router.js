@@ -6,6 +6,7 @@ import reviewsController from "../../controllers/reviewsController.js";
 import viewsController from "../../controllers/viewsController.js";
 import verifyToken from "../../middlewares/authMiddleware.js";
 import ratingsController from "../../controllers/ratingsController.js";
+import playlistController from "../../controllers/playlistController.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
 import validationMiddleware from "../../middlewares/validationMiddleware.js";
 import userSchema from "../../validation/userSchemas.js";
@@ -14,6 +15,7 @@ import reviewSchema from "../../validation/reviewSchemas.js";
 import ratingSchema from "../../validation/ratingSchemas.js";
 import genericSchema from "../../validation/genericSchemas.js";
 import viewSchemas from "../../validation/viewSchemas.js";
+import playlistSchema from "../../validation/playlistSchemas.js";
 
 const router = express.Router();
 
@@ -229,5 +231,39 @@ router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewe
  * @return {ApiError} 500 - internal server error response
  */
 router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(viewsController.deleteMediaAsViewed));
+
+/**
+ * POST /api/playlist
+ * @summary Create a playlist
+ * @tags Playlist
+ * @param {Playlist} request.body.required - playlist info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.post("/playlist", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema }), controllerWrapper(playlistController.createPlaylist));
+
+/**
+ * PATCH /api/playlist/:id
+ * @summary Update a playlist
+ * @tags Playlist
+ * @param {string} id.params.required - playlist id
+ * @param {Playlist} request.body.required - playlist info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.patch("/playlist/:id", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema, params: genericSchema.paramsId }), controllerWrapper(playlistController.updatePlaylist));
+
+/**
+ * DELETE /api/playlist/:id
+ * @summary Delete a playlist
+ * @tags Playlist
+ * @param {string} id.params.required - playlist id
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.delete("/playlist/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(playlistController.deletePlaylist));
 
 export default router;
