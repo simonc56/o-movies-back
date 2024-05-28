@@ -2,7 +2,6 @@ import { Review } from "../models/Review.js";   // import the Review model from 
 import { Media } from "../models/Media.js";   // import the Media model from the models folder
 import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
 
-
 const reviewsController = {
   async createReview(req, res,next ) {
     let media;
@@ -30,7 +29,6 @@ const reviewsController = {
     });
     res.json({ status: "success", data: { review_id: review.id } });
   },
-  // reviewid et le content à renvoyer dans le body 
   async updateReview(req, res,next) {
     const userId = parseInt(req.userId);
     const reviewId = parseInt(req.params.id);
