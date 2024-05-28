@@ -148,10 +148,10 @@ const moviesController = {
         // i map the genre_ids to get the genre name and id
         genres: movie.genre_ids
           ? movie.genre_ids.map((genre_id) => {
-              // i find the genre with the genre_id
-              const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
-              return { id: genre.id, name: genre.name };
-            })
+            // i find the genre with the genre_id
+            const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
+            return { id: genre.id, name: genre.name };
+          })
           : null,
         vote_average: movie.vote_average,
         vote_count: movie.vote_count,
