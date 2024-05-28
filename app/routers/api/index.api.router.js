@@ -14,6 +14,7 @@ import reviewSchema from "../../validation/reviewSchemas.js";
 import ratingSchema from "../../validation/ratingSchemas.js";
 import genericSchema from "../../validation/genericSchemas.js";
 import viewSchemas from "../../validation/viewSchemas.js";
+import profilController from "../../controllers/profilController.js";
 
 const router = express.Router();
 
@@ -229,5 +230,9 @@ router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewe
  * @return {ApiError} 500 - internal server error response
  */
 router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(viewsController.deleteMediaAsViewed));
+
+
+
+router.get("/profil", verifyToken, controllerWrapper(profilController.getProfil));
 
 export default router;
