@@ -1,5 +1,5 @@
 import ApiError from "../errors/ApiError.js";
-import { ZodError } from "zod"; // Assurez-vous d'importer ZodError pour une meilleure gestion des erreurs
+import { ZodError } from "zod"; 
 
 // Desc: Middleware to validate request properties using schemas from zod package
 export function validationMiddleware(schemas){
