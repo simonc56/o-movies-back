@@ -104,7 +104,28 @@ router.get ("/movie/upcoming", controllerWrapper(moviesController.getUpcomingMov
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get ("/movie/nowplaying", controllerWrapper(moviesController.getNowPLayingMovies));
+router.get ("/movie/nowplaying", controllerWrapper(moviesController.getNowPlayingMovies));
+
+/**
+ * GET /api/movie/popular
+ * @summary get popular movies
+ * @tags Movies
+ * @return {Array<Movie>} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get ("/movie/popular", controllerWrapper(moviesController.getPopularMovies));
+
+/**
+ * GET /api/movie/toprated
+ * @summary get top rated movies
+ * @tags Movies
+ * @return {Array<Movie>} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get ("/movie/toprated", controllerWrapper(moviesController.getTopRatedMovies));
+
 
 /**
  * GET /api/movie/:id
