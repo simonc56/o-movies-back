@@ -54,7 +54,6 @@ const router = express.Router();
  * @property {number} count_review - The user count review
  * @property {number} count_rating - The user count rating
  * @property {number} id - The user token
- * 
  */
 
 /**
@@ -95,7 +94,38 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get ("/movie/upcoming", controllerWrapper(moviesController.getUpcomingMovies) ); 
+router.get ("/movie/upcoming", controllerWrapper(moviesController.getUpcomingMovies)); 
+
+/**
+ * GET /api/movie/nowplaying
+ * @summary get now playing movies
+ * @tags Movies
+ * @return {Array<Movie>} 200 - success response*
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get ("/movie/nowplaying", controllerWrapper(moviesController.getNowPlayingMovies));
+
+/**
+ * GET /api/movie/popular
+ * @summary get popular movies
+ * @tags Movies
+ * @return {Array<Movie>} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get ("/movie/popular", controllerWrapper(moviesController.getPopularMovies));
+
+/**
+ * GET /api/movie/toprated
+ * @summary get top rated movies
+ * @tags Movies
+ * @return {Array<Movie>} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get ("/movie/toprated", controllerWrapper(moviesController.getTopRatedMovies));
+
 
 /**
  * GET /api/movie/:id
@@ -126,7 +156,7 @@ router.get("/movie/:id", validationMiddleware({params : genericSchema.paramsId})
  * @return {ApiError} 500 - internal server error response
  */ 
 router.get("/movie",validationMiddleware({query : movieSchema.getMoviesWithQueries}),
-  controllerWrapper(moviesController.getMovies) ); 
+  controllerWrapper(moviesController.getMovies)); 
 
 /** POST /api/auth/login
  * @summary Login a user
@@ -137,7 +167,7 @@ router.get("/movie",validationMiddleware({query : movieSchema.getMoviesWithQueri
  * @return {ApiError} 500 - internal server error response
  */
 router.post("/auth/login",validationMiddleware({body : userSchema.signInSchema}),
-  controllerWrapper(authController.loginUser) );
+  controllerWrapper(authController.loginUser));
 
 /**
  * POST /api/auth/register
@@ -149,7 +179,7 @@ router.post("/auth/login",validationMiddleware({body : userSchema.signInSchema})
  * @return {ApiError} 500 - internal server error response
  */
 router.post("/auth/register",validationMiddleware({body: userSchema.registerSchema}),
-  controllerWrapper(authController.registerUser) );
+  controllerWrapper(authController.registerUser));
 
 /**
  * POST /api/review
@@ -161,7 +191,7 @@ router.post("/auth/register",validationMiddleware({body: userSchema.registerSche
  * @return {ApiError} 500 - internal server error response
  */
 router.post("/review", verifyToken,validationMiddleware({body : reviewSchema.createReviewSchema}),
-  controllerWrapper(reviewsController.createReview) );
+  controllerWrapper(reviewsController.createReview));
 
 /**
  * PATCH /api/review/:id
@@ -174,7 +204,7 @@ router.post("/review", verifyToken,validationMiddleware({body : reviewSchema.cre
  * @return {ApiError} 500 - internal server error response
  */
 router.patch("/review/:id", verifyToken,validationMiddleware({body : reviewSchema.updateReviewSchema, params: genericSchema.paramsId}), 
-  controllerWrapper(reviewsController.updateReview) );
+  controllerWrapper(reviewsController.updateReview));
 
 /** 
  * DELETE /api/review/:id
@@ -186,7 +216,7 @@ router.patch("/review/:id", verifyToken,validationMiddleware({body : reviewSchem
  * @return {ApiError} 500 - internal server error response
 */
 router.delete("/review/:id", verifyToken,validationMiddleware({ params: genericSchema.paramsId }),
-  controllerWrapper(reviewsController.deleteReview) );
+  controllerWrapper(reviewsController.deleteReview));
 
 /**
  * POST /api/rating
@@ -198,7 +228,7 @@ router.delete("/review/:id", verifyToken,validationMiddleware({ params: genericS
  * @return {ApiError} 500 - internal server error response
  */
 router.post ("/rating",verifyToken,validationMiddleware({body : ratingSchema.createRatingSchema}),
-  controllerWrapper(ratingsController.createRating) );
+  controllerWrapper(ratingsController.createRating));
 
 /**
  * PATCH /api/rating/:id
