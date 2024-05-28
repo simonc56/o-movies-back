@@ -4,9 +4,10 @@ import ApiError from "../errors/ApiError.js"; // import the ApiError class from 
 
 
 const reviewsController = {
-  async createReview(req, res ) {
+  async createReview(req, res,next ) {
     let media;
     const userId = req.userId;
+  
     const data = req.body;  
     media = await Media.findOne({
       where: {
@@ -18,12 +19,16 @@ const reviewsController = {
         tmdb_id: data.tmdb_id,
       });
     }
+    const reviewAlreadyExist = await Review.findOne({ where: { media_id: media.id, user_id: userId } });
+    if (reviewAlreadyExist) { 
+      return next(new ApiError(400, "Review already exists for this user"));
+    }
     const review = await Review.create({
       content: data.content,
       media_id: media.id,
       user_id: userId
     });
-    res.json({ status: "success", data: { reviewId: review.id } });
+    res.json({ status: "success", data: { review_id: review.id } });
   },
   // reviewid et le content à renvoyer dans le body 
   async updateReview(req, res,next) {
