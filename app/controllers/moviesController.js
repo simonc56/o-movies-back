@@ -4,6 +4,7 @@ import querystring from "node:querystring";
 import ApiError from "../errors/ApiError.js";
 import { Media, User, sequelize } from "../models/associations.js";
 import { fetchMovieTMDB } from "../services/axios.js";
+import functionSqL from "../utils/functionSql.js";
 
 const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
 
@@ -48,6 +49,7 @@ const moviesController = {
             attributes: [["id", "mediaId"]],
             through: { attributes: ["value", "id"] },
             where: { id: movieInDb.id },
+
             required: false,
           },
           {
@@ -66,32 +68,14 @@ const moviesController = {
         review: userInput.medias_review[0] ? userInput.medias_review[0].review : null,
       };
     }
-    // if the movie is in the database, get the average rating of the movie
-    // i use a query to get the average rating of the movie
-    // i use the function find_average_rating to get the average rating of the movie
-    // i pass the media_id of the movie to the function
-    // i initialize the average rating to null
+    // i initlize the average rating to null and if the function return a result i assign the value to the variable
     let averageRating = null;
-    if (movieInDb) {
-      const result = await sequelize.query(
-        `
-            SELECT * FROM find_average_rating(_media_id => :id)
-        `,
-        {
-          replacements: { id: movieInDb.id },
-          type: sequelize.QueryTypes.SELECT,
-        }
-      );
+    if (movieInDb) {           
+      const result = await functionSqL.averageRating(movieInDb.id);
+      averageRating = result;
+    }     
+    // restructered data to send to the client                  
 
-      // Si le résultat n'est pas vide, on extrait et formate la note moyenne
-      if (result.length > 0) {
-        averageRating = parseFloat(result[0].movie_average_rating).toFixed(1);
-      } else {
-        // Si le résultat est vide, on peut définir une valeur par défaut
-        averageRating = null; // ou '0.0' si vous préférez
-      }
-    }
-    // restructered data to send to the client
     const data = {
       tmdb_id: movie.id,
       id: reviews.length > 0 ? reviews[0].id : null,
@@ -99,8 +83,9 @@ const moviesController = {
       status: movie.status,
       original_title: movie.original_title,
       adult: movie.adult,
-      average_rating: averageRating,
-      original_language: movie.original_language,
+      // i check if the average rating is not null and i assign the value to the variable
+      average_rating: averageRating ? averageRating.movie_average_rating : null,
+      original_language: movie.original_language,               
       release_date: movie.release_date,
       runtime: movie.runtime,
       budget: movie.budget,
