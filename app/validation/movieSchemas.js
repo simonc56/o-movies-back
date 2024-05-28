@@ -12,6 +12,9 @@ const schema = {
     { message: "sort_by must be one of popularity.asc, popularity.desc, release_date.asc, release_date.desc, revenue.asc, revenue.desc, primary_release_date.asc, primary_release_date.desc, title.asc, title.desc, vote_average.asc, vote_average.desc, vote_count.asc, vote_count.desc" })
       .optional(),
   }), 
+  getMovieSearch : z.object({
+    query: z.string().min(1).max(50),
+  }).required(),
 };
 
 export default schema;  

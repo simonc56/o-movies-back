@@ -128,9 +128,8 @@ const moviesController = {
     return res.json({ status: "success", data: data });
   },
   async getMovies(req, res, next) {
-    const data = req.query;
     // node function to convert the object to a query string u need to import querystring
-    const query = querystring.stringify(data);
+    const query = querystring.stringify(req.query);
     const moviesFetchFromTheApi = await fetchMovieTMDB(`/discover/movie?language=fr-FR&${query}`);
     // if the response is an error, return a 400 response with the error message
     if (!moviesFetchFromTheApi.results) {
@@ -239,6 +238,20 @@ const moviesController = {
           : null,
         vote_average: movie.vote_average,
         vote_count: movie.vote_count,
+      };
+    });
+    return res.json({ status: "success", data: movies });
+  },
+  getMovieBySearch: async (req, res) => {
+    const query = querystring.stringify(req.query);
+    const moviesFetchFromTheApi = await fetchMovieTMDB(`/search/movie?${query}&language=fr`);
+    const movies = moviesFetchFromTheApi.results.map((movie) => {
+      return {
+        tmdb_id: movie.id,
+        title_fr: movie.title,
+        release_date: movie.release_date,
+        poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
+
       };
     });
     return res.json({ status: "success", data: movies });
