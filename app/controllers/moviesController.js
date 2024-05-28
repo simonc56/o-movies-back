@@ -135,7 +135,6 @@ const moviesController = {
     if (!moviesFetchFromTheApi.results) {
       return next(new ApiError(404, "No movie found"));
     }
-
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     // if movies exist in the response, restructure the data to send to the client
     const movies = moviesFetchFromTheApi.results.map((movie) => {
@@ -250,8 +249,6 @@ const moviesController = {
         tmdb_id: movie.id,
         title_fr: movie.title,
         release_date: movie.release_date,
-        poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
-
       };
     });
     return res.json({ status: "success", data: movies });
