@@ -12,7 +12,12 @@ const playlistController = {
         user_id: userId
       }
     });
-    const playlistAlreadyExist = await Playlist.findOne({ where: { name: data.name, user_id: userId } });
+    const playlistAlreadyExist = await Playlist.findOne({ 
+      where: { 
+        name: data.name, 
+        user_id: userId 
+      } 
+    });
     if (playlistAlreadyExist) {
       return next(new ApiError(400, "Playlist already exists for this user"));
     }
@@ -52,7 +57,7 @@ const playlistController = {
       }
     });
     if (!playlist) {
-      return next(new ApiError(404, "Playlist not found for this user"));
+      return next(new ApiError(404, "Playlist not found or already delete for this user"));
     }
     await playlist.destroy();
     return res.json({ status: "success", data: true });
