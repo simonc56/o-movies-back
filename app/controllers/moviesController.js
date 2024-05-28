@@ -159,6 +159,34 @@ const moviesController = {
     });
     return res.json({ status: "success", data: movies });
   },
+  getUpcomingMovies: async (req, res) => {
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming?language=fr-FR");
+
+    const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
+    const movies = moviesFetchFromTheApi.results.map((movie) => {
+      return {
+        tmdb_id: movie.id,
+        title_fr: movie.title,
+        release_date: movie.release_date,
+        poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
+        // i map the genre_ids to get the genre name and id
+        genres: movie.genre_ids
+          ? movie.genre_ids.map((genre_id) => {
+            // i find the genre with the genre_id
+            const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
+            return { id: genre.id, name: genre.name };
+          })
+          : null,
+        vote_average: movie.vote_average,
+        vote_count: movie.vote_count,
+      };
+    });
+
+
+    return res.json({ status: "success", data: movies });
+
+
+  }
 };
 
 export default moviesController;

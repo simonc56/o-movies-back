@@ -64,6 +64,22 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
+
+
+/**
+ * GET /api/movie/upcoming
+ * @summary get upcoming movies
+ * @tags Movies
+ * @return {Array<Movie>} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+
+router.get ("/movie/upcoming", controllerWrapper(moviesController.getUpcomingMovies) ); 
+
+
+
+
 /**
  * GET /api/movie/:id
  * @summary get a movie
@@ -75,6 +91,8 @@ const router = express.Router();
  */
 
 router.get("/movie/:id", validationMiddleware({params : genericSchema.paramsId}), controllerWrapper(moviesController.getMoviesById) );
+
+
 
 /**get /api/movie 
  * @summary get movies with parameters
