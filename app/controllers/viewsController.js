@@ -33,10 +33,10 @@ const viewsController = {
   },
   async deleteMediaAsViewed(req, res, next) {
     const userId = req.userId;
-    const { tmdb_id } = req.params;
+    const tmdbId = req.params.id;
     let media = await Media.findOne({
       where: {
-        tmdb_id: tmdb_id
+        tmdb_id: tmdbId
       }
     });
     if (!media) {
@@ -52,7 +52,7 @@ const viewsController = {
       return next(new ApiError(400, "Media not marked as viewed by this user"));
     }
     await userMediaView.destroy();
-    res.json({ status: "success" });
+    res.json({ status: "success", data: true });
   }
 };
   

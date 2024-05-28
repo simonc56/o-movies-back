@@ -15,13 +15,12 @@ import ratingSchema from "../../validation/ratingSchemas.js";
 import genericSchema from "../../validation/genericSchemas.js";
 import viewSchemas from "../../validation/viewSchemas.js";
 
-
 const router = express.Router();
+
 /**
  * A api success object
  * @typedef {object} ApiSuccess
  * @property {string} status - The Json status Property
- 
  */
 
 /**
@@ -41,6 +40,11 @@ const router = express.Router();
  * @property {string} birthdate - The user birthdate
  */
 
+/**
+ * A view object
+ * @typedef {object} View
+ * @property {number} tmdb_id - The tmdb id
+ */
 
 /**
  * A user object 
@@ -127,7 +131,6 @@ router.post("/auth/register",validationMiddleware({body: userSchema.registerSche
  */
 router.post("/review", verifyToken,validationMiddleware({body : reviewSchema.createReviewSchema}), controllerWrapper(reviewsController.createReview) );
 
-
 /**
  * PATCH /api/review/:id
  * @summary Update a review
@@ -150,7 +153,6 @@ router.patch("/review/:id", verifyToken,validationMiddleware({body : reviewSchem
  * @return {ApiError} 500 - internal server error response
 */
 router.delete("/review/:id", verifyToken,validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(reviewsController.deleteReview) );
-
 
 /**
  * POST /api/rating
@@ -200,14 +202,14 @@ router.delete ("/rating/:id", verifyToken,validationMiddleware({ params: generic
 router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewedSchema }), controllerWrapper(viewsController.createMediaAsViewed));
 
 /**
- * DELETE /api/view
+ * DELETE /api/view/:id
  * @summary Delete a media as viewed
  * @tags Views
- * @param {View} id.params.required - view info
+ * @param {string} id.params.required - view info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete("/view/:id", verifyToken, validationMiddleware({ params: viewSchemas.viewedSchema }), controllerWrapper(viewsController.deleteMediaAsViewed));
+router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(viewsController.deleteMediaAsViewed));
 
 export default router;
