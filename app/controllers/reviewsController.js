@@ -28,7 +28,7 @@ const reviewsController = {
       media_id: media.id,
       user_id: userId
     });
-    res.json({ status: "success", data: { reviewId: review.id } });
+    res.json({ status: "success", data: { review_id: review.id } });
   },
   // reviewid et le content à renvoyer dans le body 
   async updateReview(req, res,next) {

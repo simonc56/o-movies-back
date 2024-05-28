@@ -46,7 +46,7 @@ const moviesController = {
         include: [
           {
             association: "medias_rating",
-            attributes: [["id", "mediaId"]],
+            attributes: [["id", "media_id"]],
             through: { attributes: ["value", "id"] },
             where: { id: movieInDb.id },
 
@@ -54,7 +54,7 @@ const moviesController = {
           },
           {
             association: "medias_review",
-            attributes: [["id", "mediaId"]],
+            attributes: [["id", "media_id"]],
             through: { attributes: ["content", "id"] },
             where: { id: movieInDb.id },
             required: false,
@@ -63,7 +63,7 @@ const moviesController = {
       });
       // restructered data to send to the client
       userData = {
-        userId: userInput.id,
+        user_id: userInput.id,
         rating: userInput.medias_rating[0] ? userInput.medias_rating[0].rating : null,
         review: userInput.medias_review[0] ? userInput.medias_review[0].review : null,
       };
@@ -122,7 +122,7 @@ const moviesController = {
           };
         }),
       reviews: reviews,
-      userData: userData,
+      user_data: userData,
     };
     // return the data to the client
     return res.json({ status: "success", data: data });
@@ -161,7 +161,6 @@ const moviesController = {
   },
   getUpcomingMovies: async (req, res) => {
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming?language=fr-FR");
-
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
@@ -169,10 +168,8 @@ const moviesController = {
         title_fr: movie.title,
         release_date: movie.release_date,
         poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
-        // i map the genre_ids to get the genre name and id
         genres: movie.genre_ids
           ? movie.genre_ids.map((genre_id) => {
-            // i find the genre with the genre_id
             const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
             return { id: genre.id, name: genre.name };
           })
@@ -181,11 +178,7 @@ const moviesController = {
         vote_count: movie.vote_count,
       };
     });
-
-
     return res.json({ status: "success", data: movies });
-
-
   }
 };
 
