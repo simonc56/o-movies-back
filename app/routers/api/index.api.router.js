@@ -52,8 +52,8 @@ const router = express.Router();
  * @property {string} lastname - The user lastname
  * @property {string} email - The user email
  * @property {string} birthdate - The user birthdate
- * @property {created_at} created_at - The user created_at
- * @property {updated_at} updated_at - The user updated_at
+ * @property {string} created_at - The user created_at
+ * @property {string} updated_at - The user updated_at
  * @property {number} count_review - The user count review
  * @property {number} count_rating - The user count rating
  * @property {number} id - The user token
@@ -78,8 +78,8 @@ const router = express.Router();
  * @property {string} name - The playlist name
  * @property {number} user_id - The user id
  * @property {number} id - The playlist id
- * @property {created_at} created_at - The playlist created_at
- * @property {updated_at} updated_at - The playlist updated_at
+ * @property {string} created_at - The playlist created_at
+ * @property {string} updated_at - The playlist updated_at
  */
 
 /**
