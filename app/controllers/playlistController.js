@@ -52,6 +52,15 @@ const playlistController = {
     await playlist.destroy();
     return res.json({ status: "success", data: true });
   },
+  async getPlaylists (req,res,next){  
+    const userId = req.userId;
+    const playlists = await Playlist.findAll({
+      where: {
+        user_id: userId
+      }
+    });
+    res.json({ status: "success", data: playlists });
+  }
 };
 
 export default playlistController;

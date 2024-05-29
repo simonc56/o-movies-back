@@ -310,6 +310,19 @@ router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSc
  */
 router.get("/profil", verifyToken, controllerWrapper(profilController.getProfil));
 
+
+
+/** 
+ * GET /api/playlist
+ * @summary Get playlists
+ * @tags Playlist
+ * @return {Array<Playlist>} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ * 
+ */
+router.get("/playlist", verifyToken, controllerWrapper(playlistController.getPlaylists));
+
 /**
  * POST /api/playlist
  * @summary Create a playlist
