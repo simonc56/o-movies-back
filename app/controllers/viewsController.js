@@ -29,7 +29,7 @@ const viewsController = {
       user_id: userId,
       media_id:media.id
     });
-    res.json({ status: "success", data: { userMediaViewId: userMediaView.id } });
+    res.json({ status: "success", data: { user_media_viewId: userMediaView.id } });
   },
   async deleteMediaAsViewed(req, res, next) {
     const userId = req.userId;
