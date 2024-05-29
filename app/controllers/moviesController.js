@@ -128,15 +128,13 @@ const moviesController = {
     return res.json({ status: "success", data: data });
   },
   async getMovies(req, res, next) {
-    const data = req.query;
     // node function to convert the object to a query string u need to import querystring
-    const query = querystring.stringify(data);
+    const query = querystring.stringify(req.query);
     const moviesFetchFromTheApi = await fetchMovieTMDB(`/discover/movie?language=fr-FR&${query}`);
     // if the response is an error, return a 400 response with the error message
     if (!moviesFetchFromTheApi.results) {
       return next(new ApiError(404, "No movie found"));
     }
-
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     // if movies exist in the response, restructure the data to send to the client
     const movies = moviesFetchFromTheApi.results.map((movie) => {
@@ -239,6 +237,17 @@ const moviesController = {
           : null,
         vote_average: movie.vote_average,
         vote_count: movie.vote_count,
+      };
+    });
+    return res.json({ status: "success", data: movies });
+  },
+  getMovieBySearch: async (req, res) => {
+    const moviesFetchFromTheApi = await fetchMovieTMDB(`/search/movie?query=${req.query.query}&language=fr-FR`);
+    const movies = moviesFetchFromTheApi.results.map((movie) => {
+      return {
+        tmdb_id: movie.id,
+        title_fr: movie.title,
+        release_date: movie.release_date,
       };
     });
     return res.json({ status: "success", data: movies });

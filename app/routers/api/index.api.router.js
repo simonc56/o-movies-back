@@ -86,6 +86,18 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
+
+/**
+ * GET /api/movie/search
+ * @summary search movies
+ * @tags Movies
+ * @param {string} query.query.required - search query
+ * @return {Array<Movie>} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get("/movie/search",validationMiddleware({query: movieSchema.getMovieSearch}), controllerWrapper(moviesController.getMovieBySearch));
+
 /**
  * GET /api/movie/upcoming
  * @summary get upcoming movies
