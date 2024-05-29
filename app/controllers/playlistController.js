@@ -60,11 +60,16 @@ const playlistController = {
   async addMovieInPlayist(req, res, next) {
     const tmdbId = req.body.tmdb_id;
     const playlistId = parseInt(req.params.id);
+    const userId = req.userId;
     let media = await Media.findOne({ where: { tmdb_id: tmdbId } });
     if (!media) {
       media = await Media.create({
         tmdb_id: tmdbId,
       });
+    }
+    const notThisUserPlaylist = await Playlist.findOne({ where: { id: playlistId, user_id: userId  } });
+    if (!notThisUserPlaylist) {
+      return next(new ApiError(404, "Playlist not found for this user"));
     }
     const mediaAlreadyExist = await PlaylistHasMedia.findOne({ 
       where: { 
@@ -84,10 +89,14 @@ const playlistController = {
   async deleteMovieInPlaylist(req, res, next) {
     const tmdbId = req.body.tmdb_id;
     const playlistId = parseInt(req.params.id);
-    
+    const userId = req.userId;
     const media = await Media.findOne({ where: { tmdb_id: tmdbId } });
     if (!media) {
       return next(new ApiError(404, "Media not found"));
+    }
+    const notThisUserPlaylist = await Playlist.findOne({ where: { id: playlistId, user_id: userId  } });
+    if (!notThisUserPlaylist) {
+      return next(new ApiError(404, "Playlist not found for this user"));
     }
     const mediaInPlaylist = await PlaylistHasMedia.findOne({ 
       where: { 
