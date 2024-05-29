@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Define the regex for the password
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&,<>^|+_-])(?=.*[a-zA-Z]).{8,}$/;
+const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&,.<>^|+_-])(?=.*[a-zA-Z]).{8,}$/;
 // Define the schema for the user object
 const schema = {
   registerSchema : z.object({       
