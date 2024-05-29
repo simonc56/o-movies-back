@@ -47,7 +47,7 @@ const moviesController = {
           {
             association: "medias_rating",
             attributes: [["id", "media_id"]],
-            through: { attributes: ["value", "id"] },
+            through: { attributes: ["value", ["id", "rating_id"]] },
             where: { id: movieInDb.id },
 
             required: false,
@@ -55,7 +55,7 @@ const moviesController = {
           {
             association: "medias_review",
             attributes: [["id", "media_id"]],
-            through: { attributes: ["content", "id"] },
+            through: { attributes: ["content", ["id", "review_id"]] },
             where: { id: movieInDb.id },
             required: false,
           },
