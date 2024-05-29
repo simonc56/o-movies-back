@@ -56,6 +56,12 @@ const router = express.Router();
  */
 
 /**
+ * A playlist object
+ * @typedef {object} Playlist
+ * @property {string} name - The playlist name
+ */
+
+/**
  * A movie object
  * @typedef {object} Movie
  * @property {number} id - The movie id
