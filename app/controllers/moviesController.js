@@ -242,8 +242,7 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   getMovieBySearch: async (req, res) => {
-    const query = querystring.stringify(req.query);
-    const moviesFetchFromTheApi = await fetchMovieTMDB(`/search/movie?${query}&language=fr`);
+    const moviesFetchFromTheApi = await fetchMovieTMDB(`/search/movie?query=${req.query.query}&language=fr-FR`);
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
         tmdb_id: movie.id,
