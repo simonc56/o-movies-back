@@ -310,8 +310,6 @@ router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSc
  */
 router.get("/profil", verifyToken, controllerWrapper(profilController.getProfil));
 
-
-
 /** 
  * GET /api/playlist
  * @summary Get playlists
@@ -333,6 +331,17 @@ router.get("/playlist", verifyToken, controllerWrapper(playlistController.getPla
  * @return {ApiError} 500 - internal server error response
  */
 router.post("/playlist", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema }), controllerWrapper(playlistController.createPlaylist));
+
+/**
+ * GET /api/playlist/:id
+ * @summary Get a playlist
+ * @tags Playlist
+ * @param {string} id.params.required - playlist id
+ * @return {array<Movie>} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get("/playlist/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(playlistController.getPlaylistById));
 
 /**
  * PATCH /api/playlist/:id
