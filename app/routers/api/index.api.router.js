@@ -24,6 +24,7 @@ const router = express.Router();
  * A api success object
  * @typedef {object} ApiSuccess
  * @property {string} status - The Json status Property
+ * @property {object} data - The data object
  */
 
 /**
@@ -59,12 +60,6 @@ const router = express.Router();
  */
 
 /**
- * A view object
- * @typedef {object} View
- * @property {number} tmdb_id - The tmdb id
- */
-
-/**
  * A user object 
  * @typedef {object} UserLogin
  * @property {string} email - The user email
@@ -72,9 +67,49 @@ const router = express.Router();
  */
 
 /**
+ * A view object
+ * @typedef {object} View
+ * @property {number} tmdb_id - The tmdb id
+ */
+
+/**
  * A playlist object
  * @typedef {object} Playlist
  * @property {string} name - The playlist name
+ * @property {number} user_id - The user id
+ * @property {number} id - The playlist id
+ * @property {created_at} created_at - The playlist created_at
+ * @property {updated_at} updated_at - The playlist updated_at
+ */
+
+/**
+ * A CreatePlaylist object
+ * @typedef {object} CreatePlaylist
+ * @property {string} name - The playlist name
+ */
+
+/**
+ * A AddOrDeleteMovie object
+ * @typedef {object} AddOrDeleteMovie
+ * @property {number} tmdb_id - The tmdb id
+ */
+
+/**
+ * A review object
+ * @typedef {object} Review
+ * @property {string} content - The review content
+ */
+
+/**
+ * A CreateRating object
+ * @typedef {object} CreateRating
+ * @property {number} value - The rating value
+ * @property {number} tmdb_id - The tmdb id
+ */
+
+/** A updateRating object
+ * @typedef {object} UpdateRating
+ * @property {number} value - The rating value
  */
 
 /**
@@ -240,7 +275,7 @@ router.delete("/review/:id", verifyToken,validationMiddleware({ params: genericS
  * POST /api/rating
  * @summary Create a rating
  * @tags Ratings
- * @param {Rating} request.body.required - rating info
+ * @param {CreateRating} request.body.required - rating info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -253,7 +288,7 @@ router.post ("/rating",verifyToken,validationMiddleware({body : ratingSchema.cre
  * @summary Update a rating
  * @tags Ratings
  * @param {string} id.params.required - rating id
- * @param {Rating} request.body.required - rating info
+ * @param {UpdateRating} request.body.required - rating info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -322,7 +357,7 @@ router.get("/playlist", verifyToken, controllerWrapper(playlistController.getPla
  * POST /api/playlist
  * @summary Create a playlist
  * @tags Playlist
- * @param {Playlist} request.body.required - playlist info
+ * @param {CreatePlaylist} request.body.required - playlist info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -347,7 +382,7 @@ router.get("/playlist/:id", verifyToken, validationMiddleware({ params: genericS
  * @summary Update a playlist
  * @tags Playlist
  * @param {string} id.params.required - playlist id
- * @param {Playlist} request.body.required - playlist info
+ * @param {CreatePlaylist} request.body.required - playlist info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -372,7 +407,7 @@ router.delete("/playlist/:id", verifyToken, validationMiddleware({ params: gener
  * @summary Add a movie in a playlist
  * @tags Playlist
  * @param {string} id.params.required - playlist id
- * @param {Playlist} request.body.required - playlist info
+ * @param {AddOrDeleteMovie} request.body.required - playlist info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -385,7 +420,7 @@ router.post("/playlist/:id/addmovie", verifyToken, validationMiddleware({ body: 
  * @summary Delete a movie in a playlist
  * @tags Playlist
  * @param {string} id.params.required - playlist id
- * @param {Playlist} request.body.required - playlist info
+ * @param {AddOrDeleteMovie} request.body.required - playlist info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
