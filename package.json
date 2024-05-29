@@ -6,6 +6,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --watch index.js",
+    "db:data": "dotenv -e .env psql $PG_URL -f data/data.sql",
+    "db:seeding": "dotenv -e .env psql $PG_URL -f data/seeding.sql",
+    "db:function": "dotenv -e .env psql $PG_URL -f data/function.sql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -26,6 +29,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "dotenv-cli": "^7.4.2",
     "eslint": "8.57.0",
     "prettier": "^3.2.5"
   }
