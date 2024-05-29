@@ -47,18 +47,23 @@ const moviesController = {
           {
             association: "medias_rating",
             attributes: [["id", "media_id"]],
-            through: { attributes: ["value", "id"] },
+            through: { attributes: ["value", ["id", "rating_id"]] },
             where: { id: movieInDb.id },
-
             required: false,
           },
           {
             association: "medias_review",
             attributes: [["id", "media_id"]],
-            through: { attributes: ["content", "id"] },
+            through: { attributes: ["content", ["id", "review_id"]] },
             where: { id: movieInDb.id },
             required: false,
           },
+          {
+            association:"medias_view",
+            attributes: [["id", "media_id"]],
+            where: { id: movieInDb.id },
+            required: false,
+          }
         ],
       });
       // restructered data to send to the client
@@ -66,6 +71,7 @@ const moviesController = {
         user_id: userInput.id,
         rating: userInput.medias_rating[0] ? userInput.medias_rating[0].rating : null,
         review: userInput.medias_review[0] ? userInput.medias_review[0].review : null,
+        viewed: userInput.medias_view[0] ? true : false,
       };
     }
     // i initlize the average rating to null and if the function return a result i assign the value to the variable
