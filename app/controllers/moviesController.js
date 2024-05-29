@@ -163,7 +163,7 @@ const moviesController = {
     });
     return res.json({ status: "success", data: movies });
   },
-  getUpcomingMovies: async (req, res) => {
+  async getUpcomingMovies(req, res) {
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming?language=fr-FR");
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
@@ -184,7 +184,7 @@ const moviesController = {
     });
     return res.json({ status: "success", data: movies });
   },
-  getNowPlayingMovies: async (req, res) => {
+  async getNowPlayingMovies(req, res) {
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/now_playing?language=fr-FR'");
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
@@ -205,7 +205,7 @@ const moviesController = {
     });
     return res.json({ status: "success", data: movies });
   },
-  getPopularMovies: async (req, res) => {
+  async getPopularMovies (req, res){
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/popular?language=fr-FR'");
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
@@ -226,7 +226,7 @@ const moviesController = {
     });
     return res.json({ status: "success", data: movies });
   },
-  getTopRatedMovies: async (req, res) => {
+  async getTopRatedMovies(req, res) {
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/top_rated?language=fr-FR'");
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
@@ -247,7 +247,7 @@ const moviesController = {
     });
     return res.json({ status: "success", data: movies });
   },
-  getMovieBySearch: async (req, res) => {
+  async getMovieBySearch(req, res){
     const moviesFetchFromTheApi = await fetchMovieTMDB(`/search/movie?query=${req.query.query}&language=fr-FR`);
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
