@@ -18,7 +18,6 @@ import viewSchemas from "../../validation/viewSchemas.js";
 import playlistSchema from "../../validation/playlistSchemas.js";
 import profilController from "../../controllers/profilController.js";
 
-
 const router = express.Router();
 
 /**
@@ -95,7 +94,6 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
-
 /**
  * GET /api/movie/search
  * @summary search movies
@@ -146,7 +144,6 @@ router.get ("/movie/popular", controllerWrapper(moviesController.getPopularMovie
  * @return {ApiError} 500 - internal server error response
  */
 router.get ("/movie/toprated", controllerWrapper(moviesController.getTopRatedMovies));
-
 
 /**
  * GET /api/movie/:id
@@ -342,7 +339,8 @@ router.post("/playlist", verifyToken, validationMiddleware({ body: playlistSchem
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/playlist/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(playlistController.getPlaylistById));
+router.get("/playlist/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }),
+  controllerWrapper(playlistController.getPlaylistById));
 
 /**
  * PATCH /api/playlist/:id
