@@ -3,7 +3,7 @@ import { Media } from "../models/Media.js";   // import the Media model from the
 import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
 
 const reviewsController = {
-  async createReview(req, res,next ) {
+  async createReview(req, res, next) {
     let media;
     const userId = req.userId;
   
