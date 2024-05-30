@@ -33,12 +33,12 @@ const authController = {
     // check if the email exists
     const user = await User.findOne({ where: { email: data.email } });           
     if (!user) {
-      return next(new ApiError(400, "Account not found"));
+      return next(new ApiError(401, "Account not found"));
     }           
     // check if the password is correct
     const validPassword = await bcrypt.compare(data.password, user.password);
     if (!validPassword) {
-      return next(new ApiError(400, "Account not found"));
+      return next(new ApiError(401, "Account not found"));
     }           
     // create a token
     const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET);           
