@@ -6,9 +6,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --watch index.js",
-    "db:data": "npx dotenv -e .env -- psql $PG_URL -f data/data.sql",
-    "db:seeding": "npx dotenv -e .env -- psql $PG_URL -f data/seeding.sql",
-    "db:function": "npx dotenv -e .env -- psql -d omovies -f data/function.sql",
+    "db:data": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/data.sql'",
+    "db:seeding": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/seeding.sql'",
+    "db:function": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/function.sql'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
