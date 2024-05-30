@@ -22,6 +22,7 @@
     "email-validator": "^2.0.4",
     "express": "^4.19.2",
     "express-jsdoc-swagger": "^1.8.0",
+    "express-rate-limit": "^7.2.0",
     "jsdoc": "^4.0.3",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.5",
