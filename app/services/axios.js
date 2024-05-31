@@ -1,10 +1,12 @@
-// function to fetch movie from TMDB API using axios with the url as an argument and the API key in the headers return the response data or an error
 import axios from "axios";
+import { setupCache } from "axios-cache-interceptor";
+import redisStorage from "./storageRedis.js";
 
 const instanceAxios = axios.create({
   baseURL: "https://api.themoviedb.org/3",
 });
-// i want my error is returned to the caller
+const instanceAxiosCached = setupCache(instanceAxios, { storage: redisStorage });
+
 export async function fetchMovieTMDB(url) {
   const options = {
     method: "GET",
@@ -15,9 +17,10 @@ export async function fetchMovieTMDB(url) {
     },
   };
   try {
-    const response = await instanceAxios.request(options);
+    const response = await instanceAxiosCached.request(options);
     return response.data;
   } catch (error) {
+    console.error(error);
     return error;
   }
 }
