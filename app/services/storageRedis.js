@@ -2,9 +2,9 @@ import  { createClient } from "redis";  // v4
 import { buildStorage, canStale } from "axios-cache-interceptor";
 
 const client = createClient({
-  password: "6LhB20N5xxNbmY3UmMFNtIxqBi9ytVww",
+  password: process.env.REDIS_PASSWORD,
   socket: {
-    host: "redis-16260.c135.eu-central-1-1.ec2.redns.redis-cloud.com",
+    host: process.env.REDIS_URL,
     port: 16260
   }
 });
@@ -34,8 +34,7 @@ const redisStorage = buildStorage({
             : 
             undefined
     });
-  },
-  
+  },  
   remove(key) {
     return client.del(`axios-cache-${key}`);
   }
