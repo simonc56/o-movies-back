@@ -87,7 +87,7 @@ const playlistController = {
     return res.json({ status: "success", data: true });
   },
   async deleteMovieInPlaylist(req, res, next) {
-    const tmdbId = req.body.tmdb_id;
+    const tmdbId = parseInt(req.params.tmdb_id);
     const playlistId = parseInt(req.params.id);
     const userId = req.userId;
     const media = await Media.findOne({ where: { tmdb_id: tmdbId } });
