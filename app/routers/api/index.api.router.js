@@ -89,8 +89,8 @@ const router = express.Router();
  */
 
 /**
- * A AddOrDeleteMovie object
- * @typedef {object} AddOrDeleteMovie
+ * A AddMovie object
+ * @typedef {object} AddMovie
  * @property {number} tmdb_id - The tmdb id
  */
 
@@ -407,7 +407,7 @@ router.delete("/playlist/:id", verifyToken, validationMiddleware({ params: gener
  * @summary Add a movie in a playlist
  * @tags Playlist
  * @param {string} id.params.required - playlist id
- * @param {AddOrDeleteMovie} request.body.required - playlist info
+ * @param {AddMovie} request.body.required - playlist info
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
@@ -416,16 +416,16 @@ router.post("/playlist/:id/addmovie", verifyToken, validationMiddleware({ body: 
   controllerWrapper(playlistController.addMovieInPlayist));
 
 /**
- * DELETE /api/playlist/:id/deletemovie
+ * DELETE /api/playlist/:id/deletemovie/:tmdb_id
  * @summary Delete a movie in a playlist
  * @tags Playlist
  * @param {string} id.params.required - playlist id
- * @param {AddOrDeleteMovie} request.body.required - playlist info
+ * @param {string} tmdb_id.params.required - media tmdb_id
  * @return {ApiSuccess} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete("/playlist/:id/deletemovie", verifyToken, validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }), 
+router.delete("/playlist/:id/deletemovie/:tmdb_id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), 
   controllerWrapper(playlistController.deleteMovieInPlaylist));
 
 export default router;
