@@ -1,4 +1,3 @@
-// Initialize express router
 import express from "express";
 import moviesRouter from "./movies.router.js";
 import authRouter from "./auth.router.js";

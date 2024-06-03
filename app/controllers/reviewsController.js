@@ -27,7 +27,7 @@ const reviewsController = {
       media_id: media.id,
       user_id: userId
     });
-    res.json({ status: "success", data: { review_id: review.id } });
+    res.json({ status: "success", data: { review_id: review.id , content: review.content } });
   },
   async updateReview(req, res,next) {
     const userId = parseInt(req.userId);
@@ -45,7 +45,7 @@ const reviewsController = {
     await review.update({
       content: reviewContent.content             
     });
-    return res.json({ status: "success", data: true });
+    return res.json({ status: "success", data: {content : review.content} });
   },
   async deleteReview(req, res,next) {
     const reviewId = parseInt(req.params.id);
