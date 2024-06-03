@@ -85,7 +85,7 @@ const moviesController = {
         rating: userInput.medias_rating[0] ? userInput.medias_rating[0].rating : null,
         review: userInput.medias_review[0] ? userInput.medias_review[0].review : null,
         viewed: userInput.medias_view[0] ? true : false,
-        in_playlists: alreadyInPlaylist[0] ? alreadyInPlaylist: null,
+        in_playlists: alreadyInPlaylist,
       };
     }
     // i initialize the average rating to null and if the function return a result i assign the value to the variable
