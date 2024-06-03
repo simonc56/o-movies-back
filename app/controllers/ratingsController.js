@@ -1,7 +1,7 @@
-import {Rating} from "../models/Rating.js";   // import the Rating model from the models folder
-import {Media} from "../models/Media.js";   // import the Media model from the models folder  
-import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
-import functionSqL from "../utils/functionSql.js"; // import the functionSqL object from the utils folder
+import {Rating} from "../models/Rating.js";
+import {Media} from "../models/Media.js";
+import ApiError from "../errors/ApiError.js";
+import functionSqL from "../utils/functionSql.js";
 
 const ratingsController = {
   async createRating (req,res, next){
@@ -69,4 +69,4 @@ const ratingsController = {
   },
 };
 
-export default ratingsController;  // export the ratingsController object
+export default ratingsController;

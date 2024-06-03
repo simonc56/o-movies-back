@@ -1,4 +1,4 @@
-import  { createClient } from "redis";  // v4
+import  { createClient } from "redis";
 import { buildStorage, canStale } from "axios-cache-interceptor";
 
 const client = createClient({
@@ -15,7 +15,6 @@ const redisStorage = buildStorage({
       .get(`axios-cache-${key}`)
       .then((result) => result && JSON.parse(result));
   },
-  
   set(key, value, req) {
     return client.set(`axios-cache-${key}`, JSON.stringify(value), {
       PXAT:
@@ -41,8 +40,6 @@ const redisStorage = buildStorage({
 });
 
 await client.connect();
-
-  
 
 export default redisStorage; 
 

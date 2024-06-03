@@ -6,7 +6,6 @@ import errorMiddleware from "./middlewares/errorMiddleware.js";
 import rateLimiter from "./middlewares/rateLimiteMiddleware.js";
 import bodySanitizer from "./middlewares/sanitizeMiddleware.js";
 
-
 const app = express();
 // Initilise Swagger
 initSwagger(app);

@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken"; // import the jwt library
-import ApiError from "../errors/ApiError.js"; // import the ApiError class
+import jwt from "jsonwebtoken";
+import ApiError from "../errors/ApiError.js";
 
 function verifyToken (req, res, next) {
   const token = req.headers["authorization"]?.slice(7); // get the token from the header    

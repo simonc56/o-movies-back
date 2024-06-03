@@ -80,8 +80,7 @@ const moviesController = {
       const result = await functionSqL.averageRating(movieInDb.id);
       averageRating = result;
     }     
-    // restructered data to send to the client                  
-
+    // restructered data to send to the client
     const data = {
       tmdb_id: movie.id,
       id: reviews.length > 0 ? reviews[0].id : null,

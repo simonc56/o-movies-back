@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // Define the regex for the password
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&,.<>^|+_-])(?=.*[a-zA-Z]).{8,}$/;
-// Define the schema for the user object
+
 const schema = {
   registerSchema : z.object({       
     email: z.string().email(),
@@ -13,7 +13,7 @@ const schema = {
   }).required(),
   signInSchema : z.object({
     email: z.string().email(),
-    password: z.string().regex(passwordRegex)// Valide le mot de passe
+    password: z.string().regex(passwordRegex)
   }).required(),
 };
 
