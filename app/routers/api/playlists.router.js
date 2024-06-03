@@ -113,7 +113,7 @@ router.post("/:id/addmovie", verifyToken, validationMiddleware({ body: playlistS
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete("/:id/deletemovie", verifyToken, validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }), 
+router.delete("/:id/deletemovie/:tmdb_id", verifyToken, validationMiddleware({params: genericSchema.paramsId }), 
   controllerWrapper(playlistController.deleteMovieInPlaylist));
 
 export default router;

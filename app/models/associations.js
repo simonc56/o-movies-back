@@ -19,6 +19,11 @@ Playlist.belongsTo(User,{
   foreignKey:"user_id"
 });
 
+User.hasMany(Playlist, {
+  as: "playlists",
+  foreignKey: "user_id"
+});
+  
 //View
 User.belongsToMany(Media, {
   as:"medias_view",

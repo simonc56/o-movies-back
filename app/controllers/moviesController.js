@@ -63,15 +63,28 @@ const moviesController = {
             attributes: [["id", "media_id"]],
             where: { id: movieInDb.id },
             required: false,
+          },
+          {
+            association: "playlists",
+            attributes: ["name",["id", "playlist_id"]], 
+            include: [
+              {
+                association: "medias",
+                attributes: [["id", "media_id"]],
+                where: { id: movieInDb.id },
+              }
+            ]
           }
         ],
       });
+      console.log(JSON.stringify(userInput, null, 2));
       // restructered data to send to the client
       userData = {
         user_id: userInput.id,
         rating: userInput.medias_rating[0] ? userInput.medias_rating[0].rating : null,
         review: userInput.medias_review[0] ? userInput.medias_review[0].review : null,
         viewed: userInput.medias_view[0] ? true : false,
+        in_playlists: userInput.playlists,
       };
     }
     // i initlize the average rating to null and if the function return a result i assign the value to the variable
