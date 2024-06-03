@@ -1,6 +1,6 @@
-import { Review } from "../models/Review.js";   // import the Review model from the models folder
-import { Media } from "../models/Media.js";   // import the Media model from the models folder
-import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
+import { Review } from "../models/Review.js";
+import { Media } from "../models/Media.js";
+import ApiError from "../errors/ApiError.js";
 
 const reviewsController = {
   async createReview(req, res, next) {
@@ -64,4 +64,4 @@ const reviewsController = {
   },
 };
 
-export default reviewsController;  // export the reviewsController object
+export default reviewsController;

@@ -4,7 +4,7 @@ import authRouter from "./auth.router.js";
 import reviewsRouter from "./reviews.router.js";
 import ratingsRouter from "./ratings.router.js";
 import viewsRouter from "./views.router.js";
-import profileRouter from "./profile.router.js";
+import profilRouter from "./profil.router.js";
 import playlistsRouter from "./playlists.router.js";
 
 const router = express.Router();
@@ -28,7 +28,7 @@ router.use("/auth", authRouter);
 router.use("/review", reviewsRouter);
 router.use("/rating", ratingsRouter);
 router.use("/view", viewsRouter);
-router.use("/profil", profileRouter);
+router.use("/profil", profilRouter);
 router.use("/playlist", playlistsRouter);
 
 export default router;

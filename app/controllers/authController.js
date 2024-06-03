@@ -1,7 +1,7 @@
-import { User } from "../models/User.js";   // import the User model from the models folder
-import bcrypt from "bcrypt"; // import the bcrypt package 
-import jwt from "jsonwebtoken"; // import the jsonwebtoken package
-import ApiError from "../errors/ApiError.js"; // import the ApiError class from the utils folder
+import { User } from "../models/User.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import ApiError from "../errors/ApiError.js";
 
 const authController = {
   async registerUser(req, res,next) {
