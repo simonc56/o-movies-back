@@ -33,7 +33,7 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/movie/search", validationMiddleware({ query: movieSchema.getMovieSearch }), controllerWrapper(moviesController.getMovieBySearch));
+router.get("/search", validationMiddleware({ query: movieSchema.getMovieSearch }), controllerWrapper(moviesController.getMovieBySearch));
 
 /**
  * GET /api/movie/upcoming
@@ -43,7 +43,7 @@ router.get("/movie/search", validationMiddleware({ query: movieSchema.getMovieSe
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/movie/upcoming", controllerWrapper(moviesController.getUpcomingMovies));
+router.get("/upcoming", controllerWrapper(moviesController.getUpcomingMovies));
 
 /**
  * GET /api/movie/nowplaying
@@ -53,7 +53,7 @@ router.get("/movie/upcoming", controllerWrapper(moviesController.getUpcomingMovi
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/movie/nowplaying", controllerWrapper(moviesController.getNowPlayingMovies));
+router.get("/nowplaying", controllerWrapper(moviesController.getNowPlayingMovies));
 
 /**
  * GET /api/movie/popular
@@ -63,7 +63,7 @@ router.get("/movie/nowplaying", controllerWrapper(moviesController.getNowPlaying
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/movie/popular", controllerWrapper(moviesController.getPopularMovies));
+router.get("/popular", controllerWrapper(moviesController.getPopularMovies));
 
 /**
  * GET /api/movie/toprated
@@ -73,7 +73,7 @@ router.get("/movie/popular", controllerWrapper(moviesController.getPopularMovies
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/movie/toprated", controllerWrapper(moviesController.getTopRatedMovies));
+router.get("/toprated", controllerWrapper(moviesController.getTopRatedMovies));
 
 /**
  * GET /api/movie/:id
@@ -84,7 +84,7 @@ router.get("/movie/toprated", controllerWrapper(moviesController.getTopRatedMovi
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/movie/:id", validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(moviesController.getMoviesById));
+router.get("/:id", validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(moviesController.getMoviesById));
 
 /**
  * GET /api/movie 
@@ -103,6 +103,6 @@ router.get("/movie/:id", validationMiddleware({ params: genericSchema.paramsId }
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */ 
-router.get("/movie", validationMiddleware({ query: movieSchema.getMoviesWithQueries }), controllerWrapper(moviesController.getMovies));
+router.get("", validationMiddleware({ query: movieSchema.getMoviesWithQueries }), controllerWrapper(moviesController.getMovies));
 
 export default router;

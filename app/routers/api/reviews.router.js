@@ -23,7 +23,7 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/review", verifyToken, validationMiddleware({ body: reviewSchema.createReviewSchema }), controllerWrapper(reviewsController.createReview));
+router.post("", verifyToken, validationMiddleware({ body: reviewSchema.createReviewSchema }), controllerWrapper(reviewsController.createReview));
 
 /**
  * PATCH /api/review/:id
@@ -35,7 +35,7 @@ router.post("/review", verifyToken, validationMiddleware({ body: reviewSchema.cr
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch("/review/:id", verifyToken, validationMiddleware({ body: reviewSchema.updateReviewSchema, params: genericSchema.paramsId }), controllerWrapper(reviewsController.updateReview));
+router.patch("/:id", verifyToken, validationMiddleware({ body: reviewSchema.updateReviewSchema, params: genericSchema.paramsId }), controllerWrapper(reviewsController.updateReview));
 
 /** 
  * DELETE /api/review/:id
@@ -46,6 +46,6 @@ router.patch("/review/:id", verifyToken, validationMiddleware({ body: reviewSche
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
 */
-router.delete("/review/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(reviewsController.deleteReview));
+router.delete("/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), controllerWrapper(reviewsController.deleteReview));
 
 export default router;

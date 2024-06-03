@@ -39,7 +39,7 @@ const router = express.Router();
  * @return {ApiError} 500 - internal server error response
  * 
  */
-router.get("/playlist", verifyToken, controllerWrapper(playlistController.getPlaylists));
+router.get("", verifyToken, controllerWrapper(playlistController.getPlaylists));
 
 /**
  * POST /api/playlist
@@ -50,7 +50,7 @@ router.get("/playlist", verifyToken, controllerWrapper(playlistController.getPla
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/playlist", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema }), 
+router.post("", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema }), 
   controllerWrapper(playlistController.createPlaylist));
 
 /**
@@ -62,7 +62,7 @@ router.post("/playlist", verifyToken, validationMiddleware({ body: playlistSchem
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.get("/playlist/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), 
+router.get("/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), 
   controllerWrapper(playlistController.getPlaylistById));
 
 /**
@@ -75,7 +75,7 @@ router.get("/playlist/:id", verifyToken, validationMiddleware({ params: genericS
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch("/playlist/:id", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema, params: genericSchema.paramsId }), 
+router.patch("/:id", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema, params: genericSchema.paramsId }), 
   controllerWrapper(playlistController.updatePlaylist));
 
 /**
@@ -87,7 +87,7 @@ router.patch("/playlist/:id", verifyToken, validationMiddleware({ body: playlist
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete("/playlist/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), 
+router.delete("/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), 
   controllerWrapper(playlistController.deletePlaylist));
 
 /**
@@ -100,7 +100,7 @@ router.delete("/playlist/:id", verifyToken, validationMiddleware({ params: gener
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/playlist/:id/addmovie", verifyToken, validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }), 
+router.post("/:id/addmovie", verifyToken, validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }), 
   controllerWrapper(playlistController.addMovieInPlayist));
 
 /**
@@ -113,7 +113,7 @@ router.post("/playlist/:id/addmovie", verifyToken, validationMiddleware({ body: 
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete("/playlist/:id/deletemovie", verifyToken, validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }), 
+router.delete("/:id/deletemovie", verifyToken, validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }), 
   controllerWrapper(playlistController.deleteMovieInPlaylist));
 
 export default router;

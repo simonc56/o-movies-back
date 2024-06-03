@@ -31,7 +31,7 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/auth/login", validationMiddleware({ body: userSchema.signInSchema }), 
+router.post("/login", validationMiddleware({ body: userSchema.signInSchema }), 
   controllerWrapper(authController.loginUser));
 
 /**
@@ -43,7 +43,7 @@ router.post("/auth/login", validationMiddleware({ body: userSchema.signInSchema 
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/auth/register", validationMiddleware({ body: userSchema.registerSchema }), 
+router.post("/register", validationMiddleware({ body: userSchema.registerSchema }), 
   controllerWrapper(authController.registerUser));
 
 export default router;

@@ -23,7 +23,7 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewedSchema }), 
+router.post("/", verifyToken, validationMiddleware({ body: viewSchemas.viewedSchema }), 
   controllerWrapper(viewsController.createMediaAsViewed));
 
 /**
@@ -35,7 +35,7 @@ router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewe
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), 
+router.delete("/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), 
   controllerWrapper(viewsController.deleteMediaAsViewed));
 
 export default router;

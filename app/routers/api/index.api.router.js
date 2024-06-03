@@ -24,21 +24,6 @@ const router = express.Router();
  * @property {string} error - Error description
  */
 
-/**
- * A user object 
- * @typedef {object} User
- * @property {number} id - The user token
- * @property {string} firstname - The user firstname
- * @property {string} lastname - The user lastname
- * @property {string} email - The user email
- * @property {string} birthdate - The user birthdate
- * @property {string} created_at - The user created_at
- * @property {string} updated_at - The user updated_at
- * @property {number} count_review - The user count review
- * @property {number} count_rating - The user count rating
- * @property {number} id - The user token
- */
-
 router.use("/movie", moviesRouter);
 router.use("/auth", authRouter);
 router.use("/review", reviewsRouter);
