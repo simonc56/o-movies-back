@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import transporter from "../config/nodemailer.js";
+import { Op } from "sequelize";
 import ApiError from "../errors/ApiError.js";
 
 const authController = {
@@ -82,7 +83,7 @@ const authController = {
             If you did not request this, please ignore this email and your password will remain unchanged.`,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
+    transporter.sendMail(mailOptions, (error) => {
       if (error) {
         return next(new ApiError(500, "Error sending email"));
       }
