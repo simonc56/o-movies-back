@@ -77,17 +77,18 @@ const moviesController = {
           }
         ],
       });
-      console.log(JSON.stringify(userInput, null, 2));
-      // restructered data to send to the client
+      const alreadyInPlaylist = userInput.playlists.map((playlist) => {
+        return playlist.dataValues.playlist_id;
+      });  
       userData = {
         user_id: userInput.id,
         rating: userInput.medias_rating[0] ? userInput.medias_rating[0].rating : null,
         review: userInput.medias_review[0] ? userInput.medias_review[0].review : null,
         viewed: userInput.medias_view[0] ? true : false,
-        in_playlists: userInput.playlists,
+        in_playlists: alreadyInPlaylist[0] ? alreadyInPlaylist: null,
       };
     }
-    // i initlize the average rating to null and if the function return a result i assign the value to the variable
+    // i initialize the average rating to null and if the function return a result i assign the value to the variable
     let averageRating = null;
     if (movieInDb) {           
       const result = await functionSqL.averageRating(movieInDb.id);
