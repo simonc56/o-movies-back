@@ -26,7 +26,7 @@ const router = express.Router();
 
 /**
  * GET /api/movie/search
- * @summary search movies
+ * @summary To search movies
  * @tags Movies
  * @param {string} query.query.required - search query
  * @return {Array<Movie>} 200 - success response
@@ -37,7 +37,7 @@ router.get("/movie/search", validationMiddleware({ query: movieSchema.getMovieSe
 
 /**
  * GET /api/movie/upcoming
- * @summary get upcoming movies
+ * @summary Get upcoming movies
  * @tags Movies
  * @return {Array<Movie>} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -47,7 +47,7 @@ router.get("/movie/upcoming", controllerWrapper(moviesController.getUpcomingMovi
 
 /**
  * GET /api/movie/nowplaying
- * @summary get now playing movies
+ * @summary Get now playing movies
  * @tags Movies
  * @return {Array<Movie>} 200 - success response*
  * @return {ApiError} 400 - bad input response
@@ -57,7 +57,7 @@ router.get("/movie/nowplaying", controllerWrapper(moviesController.getNowPlaying
 
 /**
  * GET /api/movie/popular
- * @summary get popular movies
+ * @summary Get popular movies
  * @tags Movies
  * @return {Array<Movie>} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -67,7 +67,7 @@ router.get("/movie/popular", controllerWrapper(moviesController.getPopularMovies
 
 /**
  * GET /api/movie/toprated
- * @summary get top rated movies
+ * @summary Get top rated movies
  * @tags Movies
  * @return {Array<Movie>} 200 - success response
  * @return {ApiError} 400 - bad input response
@@ -77,7 +77,7 @@ router.get("/movie/toprated", controllerWrapper(moviesController.getTopRatedMovi
 
 /**
  * GET /api/movie/:id
- * @summary get a movie
+ * @summary Get a movie
  * @tags Movies
  * @param {string} id.params.required - movie id
  * @return {Movie} 200 - success response
@@ -88,7 +88,7 @@ router.get("/movie/:id", validationMiddleware({ params: genericSchema.paramsId }
 
 /**
  * GET /api/movie 
- * @summary get movies with parameters
+ * @summary Get movies with parameters
  * @tags Movies
  * @param {string} sort_by.query - Sorting criteria
  *       ['popularity.asc', 'popularity.desc',
