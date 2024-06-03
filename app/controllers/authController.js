@@ -2,7 +2,7 @@ import { User } from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import transporter from "../config/nodemailer.js";
+import transporter from "../services/nodemailer.js";
 import { Op } from "sequelize";
 import ApiError from "../errors/ApiError.js";
 
@@ -66,12 +66,12 @@ const authController = {
     const token = crypto.randomBytes(32).toString("hex");
     const tokenExpiration = Date.now() + 3600000; // 1 hour
 
-    user.resetPasswordToken = token;
-    user.resetPasswordExpires = tokenExpiration;
+    user.reset_password_token = token;
+    user.reset_password_expires = tokenExpiration;
 
     await user.save();
 
-    const resetLink = `http://${req.headers.host}/reset/password/${token}`;
+    const resetLink = `http://${req.headers.host}/reset-password/${token}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -82,6 +82,7 @@ const authController = {
             ${resetLink}
             If you did not request this, please ignore this email and your password will remain unchanged.`,
     };
+    console.log(mailOptions);
 
     transporter.sendMail(mailOptions, (error) => {
       if (error) {
@@ -97,8 +98,8 @@ const authController = {
 
     const user = await User.findOne({
       where: {
-        resetPasswordToken: token,
-        resetPasswordExpires: { [Op.gt]: Date.now() },
+        reset_password_token: token,
+        reset_password_expires: { [Op.gt]: Date.now() },
       },
     });
 
@@ -107,8 +108,8 @@ const authController = {
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
+    user.reset_password_token = null;
+    user.reset_password_expires = null;
 
     await user.save();
 
