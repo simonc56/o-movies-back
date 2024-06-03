@@ -129,88 +129,6 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
-/**
- * GET /api/movie/search
- * @summary search movies
- * @tags Movies
- * @param {string} query.query.required - search query
- * @return {Array<Movie>} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.get("/movie/search",validationMiddleware({query: movieSchema.getMovieSearch}), controllerWrapper(moviesController.getMovieBySearch));
-
-/**
- * GET /api/movie/upcoming
- * @summary get upcoming movies
- * @tags Movies
- * @return {Array<Movie>} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.get ("/movie/upcoming", controllerWrapper(moviesController.getUpcomingMovies)); 
-
-/**
- * GET /api/movie/nowplaying
- * @summary get now playing movies
- * @tags Movies
- * @return {Array<Movie>} 200 - success response*
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.get ("/movie/nowplaying", controllerWrapper(moviesController.getNowPlayingMovies));
-
-/**
- * GET /api/movie/popular
- * @summary get popular movies
- * @tags Movies
- * @return {Array<Movie>} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.get ("/movie/popular", controllerWrapper(moviesController.getPopularMovies));
-
-/**
- * GET /api/movie/toprated
- * @summary get top rated movies
- * @tags Movies
- * @return {Array<Movie>} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.get ("/movie/toprated", controllerWrapper(moviesController.getTopRatedMovies));
-
-/**
- * GET /api/movie/:id
- * @summary get a movie
- * @tags Movies
- * @param {string} id.params.required - movie id
- * @return {Movie} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.get("/movie/:id", validationMiddleware({params : genericSchema.paramsId}),
-  controllerWrapper(moviesController.getMoviesById) );
-
-/**get /api/movie 
- * @summary get movies with parameters
- * @tags Movies
- * @param {string} sort_by.query - Sorting criteria
- *       ['popularity.asc', 'popularity.desc',
- *        'release_date.asc', 'release_date.desc',
- *         'revenue.asc', 'revenue.desc', 'primary_release_date.asc',
- *          'primary_release_date.desc', 'title.asc', 'title.desc',
- *           'vote_average.asc', 'vote_average.desc', 'vote_count.asc', 'vote_count.desc']
- * @param {string} page.query - movie page
- * @param {string} include_adult.query - include adult movie
- *        ['true', 'false']
- * @return {Array<Movie>} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */ 
-router.get("/movie",validationMiddleware({query : movieSchema.getMoviesWithQueries}),
-  controllerWrapper(moviesController.getMovies)); 
-
 /** POST /api/auth/login
  * @summary Login a user
  * @tags Auth
@@ -332,100 +250,26 @@ router.post("/view", verifyToken, validationMiddleware({ body: viewSchemas.viewe
 router.delete("/view/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }),
   controllerWrapper(viewsController.deleteMediaAsViewed));
 
-/**
- * GET /api/profil
- * @summary Get user profil
- * @tags Profil
- * @return {User} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.get("/profil", verifyToken, controllerWrapper(profilController.getProfil));
 
-/** 
- * GET /api/playlist
- * @summary Get playlists
- * @tags Playlist
- * @return {Array<Playlist>} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- * 
- */
-router.get("/playlist", verifyToken, controllerWrapper(playlistController.getPlaylists));
+export default router;
 
-/**
- * POST /api/playlist
- * @summary Create a playlist
- * @tags Playlist
- * @param {CreatePlaylist} request.body.required - playlist info
- * @return {ApiSuccess} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.post("/playlist", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema }), 
-  controllerWrapper(playlistController.createPlaylist));
+import express from "express";
+import moviesRouter from "./moviesRouter.js";
+import authRouter from "./authRouter.js";
+import reviewsRouter from "./reviewsRouter.js";
+import ratingsRouter from "./ratingsRouter.js";
+import viewsRouter from "./viewsRouter.js";
+import profileRouter from "./profileRouter.js";
+import playlistsRouter from "./playlistsRouter.js";
 
-/**
- * GET /api/playlist/:id
- * @summary Get a playlist
- * @tags Playlist
- * @param {string} id.params.required - playlist id
- * @return {array<Movie>} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.get("/playlist/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }),
-  controllerWrapper(playlistController.getPlaylistById));
+const router = express.Router();
 
-/**
- * PATCH /api/playlist/:id
- * @summary Update a playlist
- * @tags Playlist
- * @param {string} id.params.required - playlist id
- * @param {CreatePlaylist} request.body.required - playlist info
- * @return {ApiSuccess} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.patch("/playlist/:id", verifyToken, validationMiddleware({ body: playlistSchema.playlistSchema, params: genericSchema.paramsId }), 
-  controllerWrapper(playlistController.updatePlaylist));
-
-/**
- * DELETE /api/playlist/:id
- * @summary Delete a playlist
- * @tags Playlist
- * @param {string} id.params.required - playlist id
- * @return {ApiSuccess} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.delete("/playlist/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }), 
-  controllerWrapper(playlistController.deletePlaylist));
-
-/**
- * POST /api/playlist/:id/addmovie
- * @summary Add a movie in a playlist
- * @tags Playlist
- * @param {string} id.params.required - playlist id
- * @param {AddOrDeleteMovie} request.body.required - playlist info
- * @return {ApiSuccess} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.post("/playlist/:id/addmovie", verifyToken, validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }), 
-  controllerWrapper(playlistController.addMovieInPlayist));
-
-/**
- * DELETE /api/playlist/:id/deletemovie
- * @summary Delete a movie in a playlist
- * @tags Playlist
- * @param {string} id.params.required - playlist id
- * @param {AddOrDeleteMovie} request.body.required - playlist info
- * @return {ApiSuccess} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-router.delete("/playlist/:id/deletemovie", verifyToken, validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }), 
-  controllerWrapper(playlistController.deleteMovieInPlaylist));
+router.use("/movie", moviesRouter);
+router.use("/auth", authRouter);
+router.use("/review", reviewsRouter);
+router.use("/rating", ratingsRouter);
+router.use("/view", viewsRouter);
+router.use("/profil", profileRouter);
+router.use("/playlist", playlistsRouter);
 
 export default router;
