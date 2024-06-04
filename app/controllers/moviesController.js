@@ -96,7 +96,6 @@ const moviesController = {
       averageRating = result;
     }
     const releaseDate = await findReleaseDate(id);
-    console.log("LA VRAIE RELEASE DATE",releaseDate);
     // restructered data to send to the client
     const data = {
       tmdb_id: movie.id,
@@ -152,7 +151,7 @@ const moviesController = {
   async getMovies(req, res, next) {
     // node function to convert the object to a query string u need to import querystring
     const query = querystring.stringify(req.query);
-    const moviesFetchFromTheApi = await fetchMovieTMDB(`/discover/movie?language=fr-FR&${query}`);
+    const moviesFetchFromTheApi = await fetchMovieTMDB(`/discover/movie?include_adult=false&include_video=false&language=fr-FR&${query}`);
     // if the response is an error, return a 400 response with the error message
     if (!moviesFetchFromTheApi.results) {
       return next(new ApiError(404, "No movie found"));
@@ -180,7 +179,7 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getUpcomingMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming?language=fr-FR");
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming?language=fr-FR&region=FR");
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
@@ -201,7 +200,7 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getNowPlayingMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/now_playing?language=fr-FR'");
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/now_playing?language=fr-FR&region=FR");
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
@@ -222,7 +221,7 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getPopularMovies (req, res){
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/popular?language=fr-FR'");
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/popular?language=fr-FR&region=FR");
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
@@ -243,7 +242,7 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getTopRatedMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/top_rated?language=fr-FR'");
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/top_rated?language=fr-FR&region=FR");
     const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {

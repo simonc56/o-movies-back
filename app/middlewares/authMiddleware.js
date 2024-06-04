@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import ApiError from "../errors/ApiError.js";
 
 function verifyToken (req, res, next) {
-  const token = req.headers["authorization"]?.slice(7); // get the token from the header    
+  const token = req.headers["authorization"]?.slice(7); // get the token from the header
   if (!token) {
     return next (new ApiError(403,"No token provided!" )); // if there isn't any token
   }
