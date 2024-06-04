@@ -3,6 +3,7 @@ import authController from "../../controllers/authController.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
 import validationMiddleware from "../../middlewares/validationMiddleware.js";
 import userSchema from "../../validation/userSchemas.js";
+import verifyToken from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -46,6 +47,9 @@ router.post("/login", validationMiddleware({ body: userSchema.signInSchema }),
 router.post("/register", validationMiddleware({ body: userSchema.registerSchema }), 
   controllerWrapper(authController.registerUser));
 
+
+router.post("/change/password", verifyToken, validationMiddleware({ body: userSchema.changePasswordSchema }),
+  controllerWrapper(authController.changePassword));
 
   
 export default router;

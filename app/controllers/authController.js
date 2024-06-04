@@ -1,9 +1,6 @@
 import { User } from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
-import transporter from "../services/nodemailer.js";
-import { Op } from "sequelize";
 import ApiError from "../errors/ApiError.js";
 
 const authController = {
@@ -56,12 +53,17 @@ const authController = {
     return res.json({ status: "success", data: dataUser });
   },
   async changePassword(req, res, next) {
-    const { oldPassword, newPassword } = req.body;
-    const user = await User.findByPk(req.user.id);
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const user = await User.findByPk(req.userId);
+
     const validPassword = await bcrypt.compare(oldPassword, user.password);
     if (!validPassword) {
       return next(new ApiError(400, "Old password is incorrect"));
     }
+    if (newPassword !== confirmPassword) {
+      return next(new ApiError(400, "Passwords do not match"));
+    }
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();

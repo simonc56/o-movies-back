@@ -15,8 +15,10 @@ const schema = {
     email: z.string().email(),
     password: z.string().regex(passwordRegex)
   }).required(),
-  requestPasswordResetSchema: z.object({
-    email: z.string().email(),
+  changePasswordSchema: z.object({
+    oldPassword: z.string().regex(passwordRegex),
+    newPassword: z.string().regex(passwordRegex),
+    confirmPassword: z.string().regex(passwordRegex)
   }).required(),
 };
 
