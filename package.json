@@ -6,9 +6,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --watch index.js",
-    "db:data": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/data.sql'",
-    "db:seeding": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/seeding.sql'",
-    "db:function": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/function.sql'",
+    "db:data": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/01.data.sql'",
+    "db:index": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/03.indexOnTmdb_id.sql'",
+    "db:function": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/02.function.sql'",
+    "db:seeding": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/04.seeding.sql'",
     "test": "jest"
   },
   "keywords": [],
