@@ -24,14 +24,6 @@ User.init({
   birthdate: {
     type: DataTypes.DATEONLY,
     allowNull: false,
-  },
-  reset_password_token: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  reset_password_expires: {
-    type: DataTypes.TEXT,
-    allowNull: true,
   }},
 {
   sequelize,

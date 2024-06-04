@@ -55,66 +55,18 @@ const authController = {
       // return the user
     return res.json({ status: "success", data: dataUser });
   },
-
-  async requestPasswordReset(req, res, next) {
-    const { email } = req.body;
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return next(new ApiError(404, "Account not found"));
-    }
-
-    const token = crypto.randomBytes(32).toString("hex");
-    const tokenExpiration = Date.now() + 3600000; // 1 hour
-
-    user.reset_password_token = token;
-    user.reset_password_expires = tokenExpiration;
-
-    await user.save();
-
-    const resetLink = `http://${req.headers.host}/reset-password/${token}`;
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: "Password Reset",
-      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.
-            Please click on the following link, or paste this into your browser to complete the process:
-            ${resetLink}
-            If you did not request this, please ignore this email and your password will remain unchanged.`,
-    };
-    console.log(mailOptions);
-
-    transporter.sendMail(mailOptions, (error) => {
-      if (error) {
-        return next(new ApiError(500, "Error sending email"));
-      }
-      return res.json({ status: "success", message: "Password reset email sent" });
-    });
-  },
-
-  async resetPassword(req, res, next) {
-    const { token } = req.params;
-    const { newPassword } = req.body;
-
-    const user = await User.findOne({
-      where: {
-        reset_password_token: token,
-        reset_password_expires: { [Op.gt]: Date.now() },
-      },
-    });
-
-    if (!user) {
-      return next(new ApiError(400, "Password reset token is invalid or has expired"));
+  async changePassword(req, res, next) {
+    const { oldPassword, newPassword } = req.body;
+    const user = await User.findByPk(req.user.id);
+    const validPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!validPassword) {
+      return next(new ApiError(400, "Old password is incorrect"));
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
-    user.reset_password_token = null;
-    user.reset_password_expires = null;
-
     await user.save();
-
-    return res.json({ status: "success", message: "Password has been reset" });
-  },
+    return res.json({ status: "success", message: "Password has been changed" });
+  }
 };
 
 export default authController;

@@ -46,31 +46,6 @@ router.post("/login", validationMiddleware({ body: userSchema.signInSchema }),
 router.post("/register", validationMiddleware({ body: userSchema.registerSchema }), 
   controllerWrapper(authController.registerUser));
 
-/**
- * POST /api/auth/request/password/reset
- * @summary Request a password reset
- * @tags Auth
- * @param {string} request.body.required - user email
- * @return {ApiSuccess} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
 
-router.post("/request/password/reset", validationMiddleware({ body: userSchema.requestPasswordResetSchema }), 
-  controllerWrapper(authController.requestPasswordReset));
-
-/**
- * POST /api/auth/reset/password/:token
- * @summary Reset a password
- * @tags Auth
- * @param {string} token.path.required - password reset token
- * @param {string} request.body.required - new password
- * @return {ApiSuccess} 200 - success response
- * @return {ApiError} 400 - bad input response
- * @return {ApiError} 500 - internal server error response
- */
-
-router.post("/reset/password/:token", validationMiddleware({ body: userSchema.resetPasswordSchema, params: userSchema.resetPasswordTokenSchema }), 
-  controllerWrapper(authController.resetPassword));
-
+  
 export default router;
