@@ -64,13 +64,15 @@ Media.belongsToMany(User, {
 Playlist.belongsToMany(Media,{
   as: "medias",
   through:"playlist_has_media",
-  foreignKey: "playlist_id"
+  foreignKey: "playlist_id",
+  onDelete: "CASCADE"
 });
 
 Media.belongsToMany(Playlist,{
   as:"playlists",
   through:"playlist_has_media",
-  foreignKey: "media_id"
+  foreignKey: "media_id",
+  onDelete: "CASCADE"
 });
 
 

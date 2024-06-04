@@ -38,7 +38,7 @@ CREATE TABLE "media" (
 
 CREATE TABLE "playlist_has_media" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-     "playlist_id" int NOT NULL REFERENCES "playlist"("id"),
+     "playlist_id" int NOT NULL REFERENCES "playlist"("id") ON DELETE CASCADE,
      "media_id" int NOT NULL REFERENCES "media"("id"),
      "created_at" TIMESTAMPTZ NOT NULL default(now()),
      "updated_at" TIMESTAMPTZ   
