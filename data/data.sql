@@ -16,8 +16,6 @@ CREATE TABLE "user" (
      "password" TEXT NOT NULL,
      "email" TEXT NOT NULL UNIQUE,
      "birthdate" DATE NOT NULL,
-     "reset_password_token" TEXT,
-     "reset_password_expires" TEXT,
      "role_id" int NOT NULL REFERENCES "role"("id"),
      "created_at" TIMESTAMPTZ NOT NULL default(now()),
      "updated_at" TIMESTAMPTZ   

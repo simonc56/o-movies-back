@@ -63,7 +63,7 @@ const authController = {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
-    return res.json({ status: "success", message: "Password has been changed" });
+    return res.json({ status: "success", data: true });
   }
 };
 

@@ -24,6 +24,13 @@ const router = express.Router();
  * @property {string} birthdate - The user birthdate
  */
 
+/**
+ * A user object
+ * @typedef {object} UserChangePassword
+ * @property {string} oldPassword - The user old password
+ * @property {string} newPassword - The user new password
+ */
+
 /** POST /api/auth/login
  * @summary Login a user
  * @tags Auth
