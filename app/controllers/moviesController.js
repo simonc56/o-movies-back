@@ -5,6 +5,7 @@ import ApiError from "../errors/ApiError.js";
 import { Media, User, sequelize } from "../models/associations.js";
 import { fetchMovieTMDB } from "../services/axios.js";
 import functionSqL from "../utils/functionSql.js";
+import findReleaseDate from "../utils/findReleaseDate.js";
 
 const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
 
@@ -93,7 +94,9 @@ const moviesController = {
     if (movieInDb) {           
       const result = await functionSqL.averageRating(movieInDb.id);
       averageRating = result;
-    }     
+    }
+    const releaseDate = await findReleaseDate(id);
+    console.log("LA VRAIE RELEASE DATE",releaseDate);
     // restructered data to send to the client
     const data = {
       tmdb_id: movie.id,
@@ -105,7 +108,7 @@ const moviesController = {
       // i check if the average rating is not null and i assign the value to the variable
       average_rating: averageRating ? averageRating.movie_average_rating : null,
       original_language: movie.original_language,               
-      release_date: movie.release_date,
+      release_date: releaseDate,
       runtime: movie.runtime,
       budget: movie.budget,
       popularity: movie.popularity,

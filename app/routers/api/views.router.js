@@ -39,4 +39,3 @@ router.delete("/:id", verifyToken, validationMiddleware({ params: genericSchema.
   controllerWrapper(viewsController.deleteMediaAsViewed));
 
 export default router;
-
