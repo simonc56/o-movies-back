@@ -151,7 +151,7 @@ const moviesController = {
   async getMovies(req, res, next) {
     // node function to convert the object to a query string u need to import querystring
     const query = querystring.stringify(req.query);
-    const moviesFetchFromTheApi = await fetchMovieTMDB(`/discover/movie?include_adult=false&include_video=false&language=fr-FR&${query}`);
+    const moviesFetchFromTheApi = await fetchMovieTMDB(`/discover/movie?include_adult=false&include_video=false&language=fr-FR&region=fr&${query}`);
     // if the response is an error, return a 400 response with the error message
     if (!moviesFetchFromTheApi.results) {
       return next(new ApiError(404, "No movie found"));

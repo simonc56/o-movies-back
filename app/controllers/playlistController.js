@@ -138,9 +138,9 @@ const playlistController = {
       playlist.medias.map(async (media) => {
         const fetchedMedia = await fetchMovieTMDB(`/movie/${media.tmdb_id}?language=fr-FR`);
         return {
-          media_id: media.id,
+          id: media.id,
           tmdb_id: media.tmdb_id,
-          title: fetchedMedia.original_title,
+          title_fr: fetchedMedia.title,
           poster_path: `${IMAGE_BASEURL}/w300_and_h450_bestv2/${fetchedMedia.poster_path}`,
           release_date: fetchedMedia.release_date
         };
