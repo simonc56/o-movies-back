@@ -63,7 +63,6 @@ const authController = {
     if (newPassword !== confirmPassword) {
       return next(new ApiError(400, "Passwords do not match"));
     }
-
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
