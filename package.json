@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --watch index.js",
+    "db:init": "npm run db:data && npm run db:function && npm run db:index && npm run db:seeding",
     "db:data": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/01.data.sql'",
     "db:index": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/03.indexOnTmdb_id.sql'",
     "db:function": "npx dotenv -e .env -- sh -c 'psql \"$PG_URL\" -f data/02.function.sql'",
