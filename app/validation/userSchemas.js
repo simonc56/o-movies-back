@@ -18,7 +18,6 @@ const schema = {
   changePasswordSchema: z.object({
     oldPassword: z.string().regex(passwordRegex),
     newPassword: z.string().regex(passwordRegex),
-    confirmPassword: z.string().regex(passwordRegex)
   }).required(),
 };
 

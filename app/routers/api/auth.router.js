@@ -59,5 +59,4 @@ router.post("/register", validationMiddleware({ body: userSchema.registerSchema 
 router.post("/change/password", verifyToken, validationMiddleware({ body: userSchema.changePasswordSchema }),
   controllerWrapper(authController.changePassword));
 
-  
 export default router;
