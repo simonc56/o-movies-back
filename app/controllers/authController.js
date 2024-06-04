@@ -51,6 +51,19 @@ const authController = {
     };
       // return the user
     return res.json({ status: "success", data: dataUser });
+  },
+  async changePassword(req, res, next) {
+    const { oldPassword, newPassword } = req.body;
+    const user = await User.findByPk(req.userId);
+
+    const validPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!validPassword) {
+      return next(new ApiError(400, "Old password is incorrect"));
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+    return res.json({ status: "success", data: true });
   }
 };
 

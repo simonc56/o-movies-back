@@ -3,6 +3,7 @@ import authController from "../../controllers/authController.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
 import validationMiddleware from "../../middlewares/validationMiddleware.js";
 import userSchema from "../../validation/userSchemas.js";
+import verifyToken from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -21,6 +22,13 @@ const router = express.Router();
  * @property {string} firstname - The user firstname
  * @property {string} lastname - The user lastname
  * @property {string} birthdate - The user birthdate
+ */
+
+/**
+ * A user object
+ * @typedef {object} UserChangePassword
+ * @property {string} oldPassword - The user old password
+ * @property {string} newPassword - The user new password
  */
 
 /** POST /api/auth/login
@@ -45,5 +53,17 @@ router.post("/login", validationMiddleware({ body: userSchema.signInSchema }),
  */
 router.post("/register", validationMiddleware({ body: userSchema.registerSchema }), 
   controllerWrapper(authController.registerUser));
+
+/**
+ * POST /api/auth/change/password
+ * @summary Change the password of the user
+ * @tags Auth
+ * @param {UserChangePassword} request.body.required - user info
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.post("/change/password", verifyToken, validationMiddleware({ body: userSchema.changePasswordSchema }),
+  controllerWrapper(authController.changePassword));
 
 export default router;

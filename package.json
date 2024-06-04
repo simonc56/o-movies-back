@@ -1,7 +1,7 @@
 {
   "name": "projet-o-movies-back",
   "version": "1.0.0",
-  "description": "",
+  "description": "#Conseil d'utilisation",
   "type": "module",
   "main": "index.js",
   "scripts": {
