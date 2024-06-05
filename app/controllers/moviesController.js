@@ -273,6 +273,16 @@ const moviesController = {
     });
     return res.json({ status: "success", data: movies });
   },
+  async getMovieGenres(  req, res){
+    const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
+    const categories = categoriesFetchFromTheapi.genres.map((category) => {
+      return {
+        id: category.id,
+        name: category.name,
+      };
+    });
+    return res.json({ status: "success", data: categories });
+  }
 };
 
 export default moviesController;

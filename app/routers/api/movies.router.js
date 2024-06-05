@@ -24,6 +24,18 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
+
+
+/**
+ * GET /api/movie/genre
+ * @summary Get movie genres
+ * @tags Movies
+ * @return {Array<string>} 200 - success response
+ * @return {ApiError} 500 - internal server error response
+ * @return {ApiError} 400 - bad input response
+ */
+router.get("/genre", controllerWrapper(moviesController.getMovieGenres));
+
 /**
  * GET /api/movie/search
  * @summary To search movies
