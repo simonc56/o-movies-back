@@ -60,6 +60,17 @@ describe("User Schema Validation", () => {
       };
       expect(() => schema.registerSchema.parse(invalidData)).to.throw();
     });
+
+    it("should invalidate an invalid birthdate", () => {
+      const invalidData = {
+        email: "test@example.com",
+        password: "Password123!",
+        firstname: "John",
+        lastname: "Doe",
+        birthdate: "01-01-199"
+      };
+      expect(() => schema.registerSchema.parse(invalidData)).to.throw();
+    });
   });
 
   // Sign In Schema Tests
