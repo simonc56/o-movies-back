@@ -24,6 +24,18 @@ const router = express.Router();
  * @property {string} crew - The movie crew
  */
 
+
+
+/**
+ * GET /api/movie/genre
+ * @summary Get movie genres
+ * @tags Movies
+ * @return {Array<string>} 200 - success response
+ * @return {ApiError} 500 - internal server error response
+ * @return {ApiError} 400 - bad input response
+ */
+router.get("/genre", controllerWrapper(moviesController.getMovieGenres));
+
 /**
  * GET /api/movie/search
  * @summary To search movies
@@ -99,8 +111,8 @@ router.get("/:id", validationMiddleware({ params: genericSchema.paramsId }),
  *          'primary_release_date.desc', 'title.asc', 'title.desc',
  *           'vote_average.asc', 'vote_average.desc', 'vote_count.asc', 'vote_count.desc']
  * @param {string} page.query - movie page
- * @param {string} include_adult.query - include adult movie
- *        ['true', 'false']
+ * @param {string} with_genres.query - movie genres
+ *        'with_genres' must be a list of positive integers separated by commas
  * @return {Array<Movie>} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
