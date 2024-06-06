@@ -96,6 +96,7 @@ const moviesController = {
       averageRating = result;
     }
     const releaseDate = await findReleaseDate(id);
+    console.log(releaseDate); 
     // restructered data to send to the client
     const data = {
       tmdb_id: movie.id,
@@ -106,8 +107,8 @@ const moviesController = {
       adult: movie.adult,
       // i check if the average rating is not null and i assign the value to the variable
       average_rating: averageRating ? averageRating.movie_average_rating : null,
-      original_language: movie.original_language,               
-      release_date: releaseDate,
+      original_language: movie.original_language,              
+      release_date: releaseDate ? releaseDate : "1997-04-10",
       runtime: movie.runtime,
       budget: movie.budget,
       popularity: movie.popularity,
