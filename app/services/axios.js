@@ -6,7 +6,7 @@ const instanceAxios = axios.create({
   baseURL: "https://api.themoviedb.org/3",
 });
 
-const instanceAxiosCached = setupCache(instanceAxios, { storage: redisStorage });
+// const instanceAxiosCached = setupCache(instanceAxios, { storage: redisStorage });
 
 export async function fetchMovieTMDB(url) {
   const options = {
@@ -18,7 +18,7 @@ export async function fetchMovieTMDB(url) {
     },
   };
   try {
-    const response = await instanceAxiosCached.request(options);
+    const response = await instanceAxios.request(options);
     return response.data;
   } catch (error) {
     console.error(error);
