@@ -19,6 +19,11 @@ export default (err, req, res, next) => {
       message,
     });
   }
+  // TokenExpiredError from jsonwebtoken
+  if (err.name === "TokenExpiredError") {
+    status = 401;
+    message = "Token expired";
+  }
   // return the error message in json format
   return res.status(status).json({status :"fail", error: message });  
 };
