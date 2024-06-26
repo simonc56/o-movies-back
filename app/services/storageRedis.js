@@ -16,28 +16,41 @@ client.on("error", (err) => {
 });
 
 const redisStorage = buildStorage({
-  find(key) {
-    return client.get(`axios-cache-${key}`).then((result) => result && JSON.parse(result));
-  },
-  set(key, value, req) {
-    let expirationTime;
-
-    if (value.state === "loading") {
-      expirationTime = Date.now() + (req?.cache && typeof req.cache.ttl === "number" ? req.cache.ttl : 60000);
-    } else if (value.state === "stale" && value.ttl) {
-      expirationTime = value.createdAt + value.ttl;
-    } else if (value.state === "cached" && !canStale(value)) {
-      expirationTime = value.createdAt + (value.ttl || DEFAULT_TTL);
-    } else {
-      expirationTime = Date.now() + DEFAULT_TTL;
+  async find(key) {
+    try {
+      const result = await client.get(`axios-cache-${key}`);
+      return result ? JSON.parse(result) : null;
+    } catch (err) {
+      console.error(`Error finding key: axios-cache-${key}`, err);
+      throw err;
     }
-
-    return client.set(`axios-cache-${key}`, JSON.stringify(value), {
-      PXAT: expirationTime,
-    });
   },
-  remove(key) {
-    return client.del(`axios-cache-${key}`);
+  async set(key, value, req) {
+    try {
+      let ttl;
+      if (value.state === "loading") {
+        ttl = req?.cache && typeof req.cache.ttl === "number" ? req.cache.ttl : DEFAULT_TTL;
+      } else if (value.state === "stale" && value.ttl) {
+        ttl = value.ttl / 1000;
+      } else if (value.state === "cached" && !canStale(value)) {
+        ttl = (value.ttl || DEFAULT_TTL) / 1000;
+      } else {
+        ttl = DEFAULT_TTL;
+      }
+
+      await client.set(`axios-cache-${key}`, JSON.stringify(value), "EX", ttl);
+    } catch (err) {
+      console.error(`Error setting key: axios-cache-${key}`, err);
+      throw err;
+    }
+  },
+  async remove(key) {
+    try {
+      await client.del(`axios-cache-${key}`);
+    } catch (err) {
+      console.error(`Error removing key: axios-cache-${key}`, err);
+      throw err;
+    }
   },
 });
 
