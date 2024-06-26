@@ -96,7 +96,6 @@ const moviesController = {
       averageRating = result;
     }
     const releaseDate = await findReleaseDate(id);
-    console.log(releaseDate); 
     // restructered data to send to the client
     const data = {
       tmdb_id: movie.id,
