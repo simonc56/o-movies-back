@@ -38,7 +38,7 @@ const redisStorage = buildStorage({
         ttl = DEFAULT_TTL;
       }
 
-      await client.set(`axios-cache-${key}`, JSON.stringify(value), "EX", ttl);
+      await client.set(`axios-cache-${key}`, JSON.stringify(value), { EX: ttl });
     } catch (err) {
       console.error(`Error setting key: axios-cache-${key}`, err);
       throw err;
