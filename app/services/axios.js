@@ -6,7 +6,12 @@ const instanceAxios = axios.create({
   baseURL: "https://api.themoviedb.org/3",
 });
 
-const instanceAxiosCached = setupCache(instanceAxios, { storage: redisStorage });
+let instanceAxiosCached;
+if (process.env.USE_REDIS_CACHE === "true") {
+  instanceAxiosCached = setupCache(instanceAxios, { storage: redisStorage });
+} else {
+  instanceAxiosCached = setupCache(instanceAxios);
+}
 
 export async function fetchMovieTMDB(url) {
   const options = {

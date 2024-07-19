@@ -41,7 +41,7 @@ const authController = {
       return next(new ApiError(401, "Account not found"));
     }
     // create a token
-    const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, { expiresIn: "24h" });
+    const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, { expiresIn: "30d" });
     // create the data user
     const dataUser = {
       firstname: user.firstname,

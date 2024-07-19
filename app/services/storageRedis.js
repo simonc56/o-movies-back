@@ -1,45 +1,59 @@
-import  { createClient } from "redis";
 import { buildStorage, canStale } from "axios-cache-interceptor";
+import { createClient } from "redis";
+
+const DEFAULT_TTL = 48 * 60 * 60 * 1000; // 48 heures en millisecondes
 
 const client = createClient({
   password: process.env.REDIS_PASSWORD,
   socket: {
     host: process.env.REDIS_URL,
-    port: 16260
-  }
+    port: process.env.REDIS_PORT,
+  },
+});
+
+client.on("error", (err) => {
+  console.error("Erreur de connexion au client Redis :", err);
 });
 
 const redisStorage = buildStorage({
-  find(key) {
-    return client
-      .get(`axios-cache-${key}`)
-      .then((result) => result && JSON.parse(result));
+  async find(key) {
+    try {
+      const result = await client.get(`axios-cache-${key}`);
+      return result ? JSON.parse(result) : null;
+    } catch (err) {
+      console.error(`Error finding key: axios-cache-${key}`, err);
+      throw err;
+    }
   },
-  set(key, value, req) {
-    return client.set(`axios-cache-${key}`, JSON.stringify(value), {
-      PXAT:
+  async set(key, value, req) {
+    try {
+      let ttl;
+      if (value.state === "loading") {
+        ttl = req?.cache && typeof req.cache.ttl === "number" ? req.cache.ttl : DEFAULT_TTL;
+      } else if (value.state === "stale" && value.ttl) {
+        ttl = value.ttl / 1000;
+      } else if (value.state === "cached" && !canStale(value)) {
+        ttl = (value.ttl || DEFAULT_TTL) / 1000;
+      } else {
+        ttl = DEFAULT_TTL;
+      }
 
-        value.state === "loading"
-          ? Date.now() +
-                (req?.cache && typeof req.cache.ttl === "number"
-                  ? req.cache.ttl
-                  : 
-                  60000)
-          : 
-          (value.state === "stale" && value.ttl) ||
-                (value.state === "cached" && !canStale(value))
-            ?
-            value.createdAt + (value.ttl || 0)
-            : 
-            undefined
-    });
-  },  
-  remove(key) {
-    return client.del(`axios-cache-${key}`);
-  }
+      await client.set(`axios-cache-${key}`, JSON.stringify(value), { EX: ttl });
+    } catch (err) {
+      console.error(`Error setting key: axios-cache-${key}`, err);
+      throw err;
+    }
+  },
+  async remove(key) {
+    try {
+      await client.del(`axios-cache-${key}`);
+    } catch (err) {
+      console.error(`Error removing key: axios-cache-${key}`, err);
+      throw err;
+    }
+  },
 });
 
 await client.connect();
 
-export default redisStorage; 
-
+export default redisStorage;
