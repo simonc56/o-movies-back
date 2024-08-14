@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 export default (err, req, res, next) => {
   let { status, message } = err;
-  const { code } = err;   
+  const { code } = err;
   if (code === "23505") {
     status = 400;
     message = "Resource already exists";
@@ -9,8 +9,8 @@ export default (err, req, res, next) => {
   if (!status) {
     status = 500;
   }
-  if (status === 500) {   
-    console.error(err); 
+  if (status === 500) {
+    console.error(err);
     message = "Internal Server Error";
   }
   if (res.format === "html") {
@@ -25,5 +25,5 @@ export default (err, req, res, next) => {
     message = "Token expired";
   }
   // return the error message in json format
-  return res.status(status).json({status :"fail", error: message });  
+  return res.status(status).json({ status: "fail", error: message });
 };
