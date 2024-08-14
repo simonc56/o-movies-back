@@ -8,7 +8,7 @@ module.exports = {
     {
       "env": {
         "node": true,
-        "es6": true
+        "es6": true,
       },
       "files": [".eslintrc.{js,cjs}"],
       "parserOptions": {
@@ -23,9 +23,5 @@ module.exports = {
   "globals": {
     "process": "readonly",
   },
-  "rules": {
-    "indent": ["error", 2],
-    "quotes": ["error", "double"],
-    "semi": ["error", "always"],
-  },
+  "rules": {},
 };
