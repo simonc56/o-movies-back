@@ -1,6 +1,6 @@
 import express from "express";
 import authController from "../../controllers/authController.js";
-import { optionalToken, verifyToken } from "../../middlewares/authMiddleware.js";
+import { verifyToken } from "../../middlewares/authMiddleware.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
 import validationMiddleware from "../../middlewares/validationMiddleware.js";
 import userSchema from "../../validation/userSchemas.js";
@@ -68,7 +68,7 @@ router.post(
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/refresh-token", optionalToken, controllerWrapper(authController.refreshToken));
+router.post("/refresh-token", controllerWrapper(authController.refreshToken));
 
 /**
  * POST /api/auth/change/password

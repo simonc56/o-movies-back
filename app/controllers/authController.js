@@ -66,7 +66,7 @@ const authController = {
       return next(new ApiError(401, "Refresh token not found or invalid, user has to login again"));
     }
     // req.userId is set in optionalToken middleware
-    const { token: newToken, fingerprint, refresh: newRefresh } = generateTokens(req.userId);
+    const { token: newToken, fingerprint, refresh: newRefresh } = generateTokens(decoded.id);
     // update cookies with the fingerprint and refresh token
     setCookies(req, res, fingerprint, newRefresh);
     // return the new token
