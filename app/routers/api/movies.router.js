@@ -26,6 +26,30 @@ const router = express.Router();
  */
 
 /**
+ * A rating object
+ * @typedef {object} Rating
+ * @property {number} rating_id - The rating id
+ * @property {number} value - The rating value
+ */
+
+/**
+ * A review object
+ * @typedef {object} Review
+ * @property {number} review_id - The review id
+ * @property {string} content - The review content
+ */
+
+/**
+ * A movie userdata object
+ * @typedef {object} MovieUserdata
+ * @property {number} user_id - The user id
+ * @property {Rating} rating - The rating object
+ * @property {Review} review - The review object
+ * @property {boolean} viewed - The viewed status
+ * @property {Array<number>} in_playlists - The list of playlists id where the movie is
+ */
+
+/**
  * GET /api/movie/genre
  * @summary Get movie genres
  * @tags Movies
@@ -110,7 +134,7 @@ router.get(
  * @summary Get userdata about a movie
  * @tags Movies
  * @param {string} id.params.required - movie id
- * @return {Movie} 200 - success response
+ * @return {MovieUserdata} 200 - success response
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
