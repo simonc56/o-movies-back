@@ -34,6 +34,63 @@ const moviesController = {
       }
     );
     const movieInDb = await Media.findOne({ where: { tmdb_id: id } });
+    // i initialize the average rating to null and if the function return a result i assign the value to the variable
+    let averageRating = null;
+    if (movieInDb) {
+      const result = await functionSqL.averageRating(movieInDb.id);
+      averageRating = result;
+    }
+    const releaseDate = await findReleaseDate(id);
+    // restructered data to send to the client
+    const data = {
+      tmdb_id: movie.id,
+      id: reviews.length > 0 ? reviews[0].id : null,
+      title_fr: movie.title,
+      status: movie.status,
+      original_title: movie.original_title,
+      adult: movie.adult,
+      // i check if the average rating is not null and i assign the value to the variable
+      average_rating: averageRating ? averageRating.media_average_rating : null,
+      original_language: movie.original_language,
+      release_date: releaseDate ? releaseDate : "1997-04-10",
+      runtime: movie.runtime,
+      budget: movie.budget,
+      popularity: movie.popularity,
+      rating: movie.vote_average,
+      country: movie.origin_country,
+      genres: movie.genres,
+      tagline: movie.tagline,
+      overview: movie.overview,
+      poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2/${movie.poster_path}` : null,
+      cast: cast.cast
+        .map((actor) => {
+          return {
+            id: actor.cast_id,
+            name: actor.name,
+            character: actor.character,
+            profile_path: actor.profile_path ? `${IMAGE_BASEURL}/w300_and_h300_bestv2${actor.profile_path}` : null,
+          };
+        })
+        .slice(0, 5),
+      crew: cast.crew
+        // i filter for getting only the director of the movie
+        .filter((crew) => crew.job === "Director")
+        .map((crew) => {
+          return {
+            id: crew.id,
+            name: crew.name,
+            job: crew.job,
+            profile_path: crew.profile_path ? `${IMAGE_BASEURL}/w300_and_h300_bestv2${crew.profile_path}` : null,
+          };
+        }),
+      reviews: reviews,
+    };
+    // return the data to the client
+    return res.json({ status: "success", data: data });
+  },
+  async getUserdataAboutMovieById(req, res) {
+    const id = parseInt(req.params.id);
+    const movieInDb = await Media.findOne({ where: { tmdb_id: id } });
     let userData = null;
     // if the user is authenticated and the movie is in the database, get the user's rating and review of the movie
     if (req.userId && movieInDb) {
@@ -86,60 +143,7 @@ const moviesController = {
         in_playlists: alreadyInPlaylist,
       };
     }
-    // i initialize the average rating to null and if the function return a result i assign the value to the variable
-    let averageRating = null;
-    if (movieInDb) {
-      const result = await functionSqL.averageRating(movieInDb.id);
-      averageRating = result;
-    }
-    const releaseDate = await findReleaseDate(id);
-    // restructered data to send to the client
-    const data = {
-      tmdb_id: movie.id,
-      id: reviews.length > 0 ? reviews[0].id : null,
-      title_fr: movie.title,
-      status: movie.status,
-      original_title: movie.original_title,
-      adult: movie.adult,
-      // i check if the average rating is not null and i assign the value to the variable
-      average_rating: averageRating ? averageRating.media_average_rating : null,
-      original_language: movie.original_language,
-      release_date: releaseDate ? releaseDate : "1997-04-10",
-      runtime: movie.runtime,
-      budget: movie.budget,
-      popularity: movie.popularity,
-      rating: movie.vote_average,
-      country: movie.origin_country,
-      genres: movie.genres,
-      tagline: movie.tagline,
-      overview: movie.overview,
-      poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2/${movie.poster_path}` : null,
-      cast: cast.cast
-        .map((actor) => {
-          return {
-            id: actor.cast_id,
-            name: actor.name,
-            character: actor.character,
-            profile_path: actor.profile_path ? `${IMAGE_BASEURL}/w300_and_h300_bestv2${actor.profile_path}` : null,
-          };
-        })
-        .slice(0, 5),
-      crew: cast.crew
-        // i filter for getting only the director of the movie
-        .filter((crew) => crew.job === "Director")
-        .map((crew) => {
-          return {
-            id: crew.id,
-            name: crew.name,
-            job: crew.job,
-            profile_path: crew.profile_path ? `${IMAGE_BASEURL}/w300_and_h300_bestv2${crew.profile_path}` : null,
-          };
-        }),
-      reviews: reviews,
-      user_data: userData,
-    };
-    // return the data to the client
-    return res.json({ status: "success", data: data });
+    return res.json({ status: "success", data: userData });
   },
   async getMovies(req, res, next) {
     // node function to convert the object to a query string u need to import querystring

@@ -107,6 +107,22 @@ router.get(
 );
 
 /**
+ * GET /api/movie/:id/userdata
+ * @summary Get userdata about a movie
+ * @tags Movies
+ * @param {string} id.params.required - movie id
+ * @return {Movie} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get(
+  "/:id/userdata",
+  verifyToken,
+  validationMiddleware({ params: genericSchema.paramsId }),
+  controllerWrapper(moviesController.getUserdataAboutMovieById)
+);
+
+/**
  * GET /api/movie
  * @summary Get movies with parameters
  * @tags Movies
