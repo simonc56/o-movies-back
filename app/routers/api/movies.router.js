@@ -1,6 +1,6 @@
 import express from "express";
 import moviesController from "../../controllers/moviesController.js";
-import { optionalToken } from "../../middlewares/authMiddleware.js";
+import { verifyToken } from "../../middlewares/authMiddleware.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
 import validationMiddleware from "../../middlewares/validationMiddleware.js";
 import genericSchema from "../../validation/genericSchemas.js";
@@ -101,7 +101,6 @@ router.get("/toprated", controllerWrapper(moviesController.getTopRatedMovies));
  */
 router.get(
   "/:id",
-  optionalToken,
   validationMiddleware({ params: genericSchema.paramsId }),
   controllerWrapper(moviesController.getMovieById)
 );

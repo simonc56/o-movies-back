@@ -28,31 +28,4 @@ async function verifyToken(req, _, next) {
   }
 }
 
-async function optionalToken(req, _, next) {
-  try {
-    const token = req.headers["authorization"]?.slice(7);
-    const fingerprint = req.cookies?.fingerprint;
-    if (!token || !fingerprint) {
-      console.log("No token or fingerprint provided!");
-      return next(); // If there's no token or fingerprint, just move on.
-    }
-    const decoded = jwt.decode(token, process.env.TOKEN_SECRET); // verify token
-    const hashedFingerprint = hashToken(fingerprint);
-    if (decoded.fingerprint !== hashedFingerprint) {
-      console.log("Invalid fingerprint");
-      return next(); // Invalid fingerprint, move on without error
-    }
-    req.userId = decoded.id; // add the user id to the request
-  } catch (error) {
-    // console.error(error);
-    // Handle specific JWT errors but do not throw them
-    if (error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) {
-      console.log("Invalid or expired token");
-      return next(); // Invalid token, move on without setting userId
-    }
-  }
-
-  next();
-}
-
-export { optionalToken, verifyToken };
+export { verifyToken };
