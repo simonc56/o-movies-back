@@ -1,6 +1,6 @@
 import express from "express";
 import viewsController from "../../controllers/viewsController.js";
-import verifyToken from "../../middlewares/authMiddleware.js";
+import { verifyToken } from "../../middlewares/authMiddleware.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
 import validationMiddleware from "../../middlewares/validationMiddleware.js";
 import viewSchemas from "../../validation/viewSchemas.js";

@@ -1,10 +1,10 @@
 import express from "express";
 import ratingsController from "../../controllers/ratingsController.js";
+import { verifyToken } from "../../middlewares/authMiddleware.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
 import validationMiddleware from "../../middlewares/validationMiddleware.js";
-import ratingSchema from "../../validation/ratingSchemas.js";
 import genericSchema from "../../validation/genericSchemas.js";
-import verifyToken from "../../middlewares/authMiddleware.js";
+import ratingSchema from "../../validation/ratingSchemas.js";
 
 const router = express.Router();
 
@@ -29,8 +29,12 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("", verifyToken, validationMiddleware({ body: ratingSchema.createRatingSchema }),
-  controllerWrapper(ratingsController.createRating));
+router.post(
+  "",
+  verifyToken,
+  validationMiddleware({ body: ratingSchema.createRatingSchema }),
+  controllerWrapper(ratingsController.createRating)
+);
 
 /**
  * PATCH /api/rating/:id
@@ -42,8 +46,12 @@ router.post("", verifyToken, validationMiddleware({ body: ratingSchema.createRat
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.patch("/:id", verifyToken, validationMiddleware({ body: ratingSchema.updateRatingSchema, params: genericSchema.paramsId }),
-  controllerWrapper(ratingsController.updateRating));
+router.patch(
+  "/:id",
+  verifyToken,
+  validationMiddleware({ body: ratingSchema.updateRatingSchema, params: genericSchema.paramsId }),
+  controllerWrapper(ratingsController.updateRating)
+);
 
 /**
  * DELETE /api/rating/:id
@@ -54,7 +62,11 @@ router.patch("/:id", verifyToken, validationMiddleware({ body: ratingSchema.upda
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.delete("/:id", verifyToken, validationMiddleware({ params: genericSchema.paramsId }),
-  controllerWrapper(ratingsController.deleteRating));
+router.delete(
+  "/:id",
+  verifyToken,
+  validationMiddleware({ params: genericSchema.paramsId }),
+  controllerWrapper(ratingsController.deleteRating)
+);
 
 export default router;

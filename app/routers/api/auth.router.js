@@ -1,21 +1,21 @@
 import express from "express";
 import authController from "../../controllers/authController.js";
+import { verifyToken } from "../../middlewares/authMiddleware.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
 import validationMiddleware from "../../middlewares/validationMiddleware.js";
 import userSchema from "../../validation/userSchemas.js";
-import verifyToken from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 /**
- * A user object 
+ * A user object
  * @typedef {object} UserLogin
  * @property {string} email - The user email
  * @property {string} password - The user password
  */
 
 /**
- * A user object 
+ * A user object
  * @typedef {object} UserRegister
  * @property {string} email - The user email
  * @property {string} password - The user password
@@ -39,8 +39,11 @@ const router = express.Router();
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/login", validationMiddleware({ body: userSchema.signInSchema }), 
-  controllerWrapper(authController.loginUser));
+router.post(
+  "/login",
+  validationMiddleware({ body: userSchema.signInSchema }),
+  controllerWrapper(authController.loginUser)
+);
 
 /**
  * POST /api/auth/register
@@ -51,8 +54,21 @@ router.post("/login", validationMiddleware({ body: userSchema.signInSchema }),
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/register", validationMiddleware({ body: userSchema.registerSchema }), 
-  controllerWrapper(authController.registerUser));
+router.post(
+  "/register",
+  validationMiddleware({ body: userSchema.registerSchema }),
+  controllerWrapper(authController.registerUser)
+);
+
+/**
+ * POST /api/auth/refresh-token
+ * @summary Refresh the access token of the user
+ * @tags Auth
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 400 - bad input response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.post("/refresh-token", controllerWrapper(authController.refreshToken));
 
 /**
  * POST /api/auth/change/password
@@ -63,7 +79,11 @@ router.post("/register", validationMiddleware({ body: userSchema.registerSchema 
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-router.post("/change/password", verifyToken, validationMiddleware({ body: userSchema.changePasswordSchema }),
-  controllerWrapper(authController.changePassword));
+router.post(
+  "/change/password",
+  verifyToken,
+  validationMiddleware({ body: userSchema.changePasswordSchema }),
+  controllerWrapper(authController.changePassword)
+);
 
 export default router;
