@@ -11,7 +11,7 @@ const app = express();
 // Initilise Swagger
 initSwagger(app);
 // autorise cors from the env variable
-app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true, maxAge: 600 }));
+app.use(cors({ origin: process.env.CORS_ORIGIN.split(",") || "", credentials: true, maxAge: 600 }));
 //parse json and urlencoded data and cookies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
