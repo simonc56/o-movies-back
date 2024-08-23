@@ -1,14 +1,12 @@
-# filmovies-back
+# O'Movies - back
 
 ![Express][express-badge] ![Zod][zod-badge] ![Postgres][postgres-badge] ![Redis][redis-badge] ![Swagger][swagger-badge]
 
-Site web pour cinéphiles _(partie back-end)_
+Site web, conçu en un mois, pour les passionnés de cinéma. Il permet de consulter les informations sur les films existants et à paraître, faire des recherches, commenter, noter et faire des listes personnalisées de films.
 
-Ce site, conçu en un mois, permet de consulter les informations sur les films existants et à paraître, faire des recherches, commenter, noter et faire des listes personnalisées de films.
+![image](https://raw.github.com/simonc56/o-movies-front/main/screenshot.png)
 
-![image](https://raw.github.com/simonc56/filmovies-front/main/screenshot.png)
-
-La partie front-end est disponible ici : https://github.com/simonc56/filmovies-front
+La partie front-end est disponible ici : https://github.com/simonc56/o-movies-front
 
 Source de données : [TMDB](https://www.themoviedb.org/)
 
