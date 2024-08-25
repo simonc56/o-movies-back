@@ -5,6 +5,8 @@ import { fetchMovieTMDB } from "../services/axios.js";
 import findReleaseDate from "../utils/findReleaseDate.js";
 import functionSqL from "../utils/functionSql.js";
 
+// base url and poster/profile sizes should be retrieved with https://api.themoviedb.org/3/configuration
+// see https://developer.themoviedb.org/reference/configuration-details
 const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
 const LANGUAGE = "fr-FR";
 const REGION = "FR";
