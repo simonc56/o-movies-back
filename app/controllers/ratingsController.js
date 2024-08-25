@@ -50,7 +50,7 @@ const ratingsController = {
       value: ratingContent.value
     });
     const result = await functionSqL.averageRating(rating.media_id);
-    return res.json({status:"success", data: result});      
+    return res.json({status:"success", data: {...result, rating_id: ratingId}});
   },
   async deleteRating(req, res,next ) {
     const ratingId = parseInt(req.params.id);
