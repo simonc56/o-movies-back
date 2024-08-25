@@ -11,9 +11,46 @@ const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
 const LANGUAGE = "fr-FR";
 const REGION = "FR";
 
+let moviesGenres = null;
 async function TMDBMoviesGenres() {
-  const response = await fetchMovieTMDB("/genre/movie/list", { language: LANGUAGE });
-  return response.genres;
+  if (!moviesGenres || moviesGenres.length === 0) {
+    const response = await fetchMovieTMDB("/genre/movie/list", { language: LANGUAGE });
+    moviesGenres = response?.genres || [];
+  }
+  return moviesGenres;
+}
+
+function fullPosterPath(poster_path) {
+  return poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${poster_path}` : null;
+}
+
+function fullProfilePath(profile_path) {
+  return profile_path ? `${IMAGE_BASEURL}/w300_and_h300_bestv2${profile_path}` : null;
+}
+
+async function cleanMoviesData(movies) {
+  const allGenres = await TMDBMoviesGenres();
+  // map the genre_ids to return the genre name and id
+  const populateGenres = (genre_ids) => {
+    if (!genre_ids) {
+      return null;
+    }
+    return genre_ids.map((genre_id) => {
+      const genre = allGenres.find((category) => category.id === genre_id);
+      return genre ? { id: genre.id, name: genre.name } : genre_id;
+    });
+  };
+  return movies.map((movie) => {
+    return {
+      tmdb_id: movie.id,
+      title_fr: movie.title,
+      release_date: movie.release_date,
+      poster_path: fullPosterPath(movie.poster_path),
+      genres: populateGenres(movie.genre_ids),
+      vote_average: movie.vote_average,
+      vote_count: movie.vote_count,
+    };
+  });
 }
 
 const moviesController = {
@@ -69,14 +106,14 @@ const moviesController = {
       genres: movie.genres,
       tagline: movie.tagline,
       overview: movie.overview,
-      poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2/${movie.poster_path}` : null,
+      poster_path: fullPosterPath(movie.poster_path),
       cast: cast.cast
         .map((actor) => {
           return {
             id: actor.cast_id,
             name: actor.name,
             character: actor.character,
-            profile_path: actor.profile_path ? `${IMAGE_BASEURL}/w300_and_h300_bestv2${actor.profile_path}` : null,
+            profile_path: fullProfilePath(actor.profile_path),
           };
         })
         .slice(0, 5),
@@ -88,7 +125,7 @@ const moviesController = {
             id: crew.id,
             name: crew.name,
             job: crew.job,
-            profile_path: crew.profile_path ? `${IMAGE_BASEURL}/w300_and_h300_bestv2${crew.profile_path}` : null,
+            profile_path: fullProfilePath(crew.profile_path),
           };
         }),
       reviews: reviews,
@@ -165,110 +202,27 @@ const moviesController = {
     if (!moviesFetchFromTheApi.results) {
       return next(new ApiError(404, "No movie found"));
     }
-    const allGenres = await TMDBMoviesGenres();
-    // if movies exist in the response, restructure the data to send to the client
-    const movies = moviesFetchFromTheApi.results.map((movie) => {
-      return {
-        tmdb_id: movie.id,
-        title_fr: movie.title,
-        release_date: movie.release_date,
-        poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
-        // i map the genre_ids to get the genre name and id
-        genres: movie.genre_ids
-          ? movie.genre_ids.map((genre_id) => {
-              // i find the genre with the genre_id
-              const genre = allGenres.find((category) => category.id === genre_id);
-              return { id: genre.id, name: genre.name };
-            })
-          : null,
-        vote_average: movie.vote_average,
-        vote_count: movie.vote_count,
-      };
-    });
+    const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getUpcomingMovies(req, res) {
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming", { language: LANGUAGE, region: REGION });
-    const allGenres = await TMDBMoviesGenres();
-    const movies = moviesFetchFromTheApi.results.map((movie) => {
-      return {
-        tmdb_id: movie.id,
-        title_fr: movie.title,
-        release_date: movie.release_date,
-        poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
-        genres: movie.genre_ids
-          ? movie.genre_ids.map((genre_id) => {
-              const genre = allGenres.find((category) => category.id === genre_id);
-              return { id: genre.id, name: genre.name };
-            })
-          : null,
-        vote_average: movie.vote_average,
-        vote_count: movie.vote_count,
-      };
-    });
+    const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getNowPlayingMovies(req, res) {
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/now_playing", { language: LANGUAGE, region: REGION });
-    const allGenres = await TMDBMoviesGenres();
-    const movies = moviesFetchFromTheApi.results.map((movie) => {
-      return {
-        tmdb_id: movie.id,
-        title_fr: movie.title,
-        release_date: movie.release_date,
-        poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
-        genres: movie.genre_ids
-          ? movie.genre_ids.map((genre_id) => {
-              const genre = allGenres.find((category) => category.id === genre_id);
-              return { id: genre.id, name: genre.name };
-            })
-          : null,
-        vote_average: movie.vote_average,
-        vote_count: movie.vote_count,
-      };
-    });
+    const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getPopularMovies(req, res) {
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/popular", { language: LANGUAGE, region: REGION });
-    const allGenres = await TMDBMoviesGenres();
-    const movies = moviesFetchFromTheApi.results.map((movie) => {
-      return {
-        tmdb_id: movie.id,
-        title_fr: movie.title,
-        release_date: movie.release_date,
-        poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
-        genres: movie.genre_ids
-          ? movie.genre_ids.map((genre_id) => {
-              const genre = allGenres.genres.find((category) => category.id === genre_id);
-              return { id: genre.id, name: genre.name };
-            })
-          : null,
-        vote_average: movie.vote_average,
-        vote_count: movie.vote_count,
-      };
-    });
+    const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getTopRatedMovies(req, res) {
     const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/top_rated", { language: LANGUAGE, region: REGION });
-    const allGenres = await TMDBMoviesGenres();
-    const movies = moviesFetchFromTheApi.results.map((movie) => {
-      return {
-        tmdb_id: movie.id,
-        title_fr: movie.title,
-        release_date: movie.release_date,
-        poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
-        genres: movie.genre_ids
-          ? movie.genre_ids.map((genre_id) => {
-              const genre = allGenres.find((category) => category.id === genre_id);
-              return { id: genre.id, name: genre.name };
-            })
-          : null,
-        vote_average: movie.vote_average,
-        vote_count: movie.vote_count,
-      };
-    });
+    const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getMovieBySearch(req, res) {
