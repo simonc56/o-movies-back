@@ -1,5 +1,4 @@
 import axios from "axios";
-import querystring from "node:querystring";
 import ApiError from "../errors/ApiError.js";
 import { Media, User, sequelize } from "../models/associations.js";
 import { fetchMovieTMDB } from "../services/axios.js";
@@ -7,18 +6,25 @@ import findReleaseDate from "../utils/findReleaseDate.js";
 import functionSqL from "../utils/functionSql.js";
 
 const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
+const LANGUAGE = "fr-FR";
+const REGION = "FR";
+
+async function TMDBMoviesGenres() {
+  const response = await fetchMovieTMDB("/genre/movie/list", { language: LANGUAGE });
+  return response.genres;
+}
 
 const moviesController = {
   async getMovieById(req, res, next) {
     const id = parseInt(req.params.id);
     // Fetch the movie from the TMDB API
-    const movie = await fetchMovieTMDB(`/movie/${id}?language=fr-FR`);
+    const movie = await fetchMovieTMDB(`/movie/${id}`, { language: LANGUAGE });
     // If the response is an error, return a 400 response with the error message
     if (axios.isAxiosError(movie)) {
       return next(new ApiError(400, movie.response.data.status_message));
     }
     // Fetch the cast of the movie from the TMDB API
-    const cast = await fetchMovieTMDB(`/movie/${id}/credits?language=fr-FR`);
+    const cast = await fetchMovieTMDB(`/movie/${id}/credits`, { language: LANGUAGE });
     // doing a query to get the reviews of the movie with user information
     const reviews = await sequelize.query(
       `
@@ -146,16 +152,18 @@ const moviesController = {
     return res.json({ status: "success", data: userData });
   },
   async getMovies(req, res, next) {
-    // node function to convert the object to a query string u need to import querystring
-    const query = querystring.stringify(req.query);
-    const moviesFetchFromTheApi = await fetchMovieTMDB(
-      `/discover/movie?include_adult=false&include_video=false&language=fr-FR&region=fr&${query}`
-    );
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/discover/movie", {
+      include_adult: false,
+      include_video: false,
+      language: LANGUAGE,
+      region: REGION,
+      ...req.query,
+    });
     // if the response is an error, return a 400 response with the error message
     if (!moviesFetchFromTheApi.results) {
       return next(new ApiError(404, "No movie found"));
     }
-    const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
+    const allGenres = await TMDBMoviesGenres();
     // if movies exist in the response, restructure the data to send to the client
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
@@ -167,7 +175,7 @@ const moviesController = {
         genres: movie.genre_ids
           ? movie.genre_ids.map((genre_id) => {
               // i find the genre with the genre_id
-              const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
+              const genre = allGenres.find((category) => category.id === genre_id);
               return { id: genre.id, name: genre.name };
             })
           : null,
@@ -178,8 +186,8 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getUpcomingMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming?language=fr-FR&region=FR");
-    const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming", { language: LANGUAGE, region: REGION });
+    const allGenres = await TMDBMoviesGenres();
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
         tmdb_id: movie.id,
@@ -188,7 +196,7 @@ const moviesController = {
         poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
         genres: movie.genre_ids
           ? movie.genre_ids.map((genre_id) => {
-              const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
+              const genre = allGenres.find((category) => category.id === genre_id);
               return { id: genre.id, name: genre.name };
             })
           : null,
@@ -199,8 +207,8 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getNowPlayingMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/now_playing?language=fr-FR&region=FR");
-    const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/now_playing", { language: LANGUAGE, region: REGION });
+    const allGenres = await TMDBMoviesGenres();
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
         tmdb_id: movie.id,
@@ -209,7 +217,7 @@ const moviesController = {
         poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
         genres: movie.genre_ids
           ? movie.genre_ids.map((genre_id) => {
-              const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
+              const genre = allGenres.find((category) => category.id === genre_id);
               return { id: genre.id, name: genre.name };
             })
           : null,
@@ -220,8 +228,8 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getPopularMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/popular?language=fr-FR&region=FR");
-    const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/popular", { language: LANGUAGE, region: REGION });
+    const allGenres = await TMDBMoviesGenres();
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
         tmdb_id: movie.id,
@@ -230,7 +238,7 @@ const moviesController = {
         poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
         genres: movie.genre_ids
           ? movie.genre_ids.map((genre_id) => {
-              const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
+              const genre = allGenres.genres.find((category) => category.id === genre_id);
               return { id: genre.id, name: genre.name };
             })
           : null,
@@ -241,8 +249,8 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getTopRatedMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/top_rated?language=fr-FR&region=FR");
-    const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/top_rated", { language: LANGUAGE, region: REGION });
+    const allGenres = await TMDBMoviesGenres();
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
         tmdb_id: movie.id,
@@ -251,7 +259,7 @@ const moviesController = {
         poster_path: movie.poster_path ? `${IMAGE_BASEURL}/w300_and_h450_bestv2${movie.poster_path}` : null,
         genres: movie.genre_ids
           ? movie.genre_ids.map((genre_id) => {
-              const genre = categoriesFetchFromTheapi.genres.find((category) => category.id === genre_id);
+              const genre = allGenres.find((category) => category.id === genre_id);
               return { id: genre.id, name: genre.name };
             })
           : null,
@@ -262,7 +270,7 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getMovieBySearch(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB(`/search/movie?query=${req.query.query}&language=fr-FR`);
+    const moviesFetchFromTheApi = await fetchMovieTMDB("/search/movie", { query: req.query.query, language: LANGUAGE });
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
         tmdb_id: movie.id,
@@ -273,8 +281,8 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getMovieGenres(req, res) {
-    const categoriesFetchFromTheapi = await fetchMovieTMDB("/genre/movie/list?language=fr");
-    const categories = categoriesFetchFromTheapi.genres.map((category) => {
+    const allGenres = await TMDBMoviesGenres();
+    const categories = allGenres.map((category) => {
       return {
         id: category.id,
         name: category.name,
