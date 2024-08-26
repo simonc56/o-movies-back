@@ -1,6 +1,6 @@
 # O'Movies - back
 
-![Express][express-badge] ![Zod][zod-badge] ![Postgres][postgres-badge] ![Redis][redis-badge] ![Swagger][swagger-badge]
+[![Express][express-badge]](https://expressjs.com/fr/) [![Zod][zod-badge]](https://zod.dev/) [![Postgres][postgres-badge]](https://www.postgresql.org/docs/) [![Redis][redis-badge]](https://redis.io/docs/latest/) [![Swagger][swagger-badge]](https://swagger.io/)
 
 Site web, conçu en un mois, pour les passionnés de cinéma. Il permet de consulter les informations sur les films existants et à paraître, faire des recherches, commenter, noter et faire des listes personnalisées de films.
 
