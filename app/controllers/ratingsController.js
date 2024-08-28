@@ -30,7 +30,7 @@ const ratingsController = {
       user_id: userId
     });
     const result = await functionSqL.averageRating(rating.media_id);
-    const newData = {rating_id: rating.id, ...result};
+    const newData = {...result, rating_id: rating.id, value: rating.value};
     res.json({status: "success", data : newData}); 
   },
   async updateRating(req, res,next) {
@@ -50,7 +50,7 @@ const ratingsController = {
       value: ratingContent.value
     });
     const result = await functionSqL.averageRating(rating.media_id);
-    return res.json({status:"success", data: {...result, rating_id: ratingId}});
+    return res.json({status:"success", data: {...result, rating_id: ratingId, value: ratingContent.value}});
   },
   async deleteRating(req, res,next ) {
     const ratingId = parseInt(req.params.id);
