@@ -136,7 +136,13 @@ const moviesController = {
   async getUserdataAboutMovieById(req, res) {
     const id = parseInt(req.params.id);
     const movieInDb = await Media.findOne({ where: { tmdb_id: id } });
-    let userData = null;
+    let userData = {
+      user_id: req.userId,
+      rating: null,
+      review: null,
+      viewed: false,
+      in_playlists: [],
+    };
     // if the user is authenticated and the movie is in the database, get the user's rating and review of the movie
     if (req.userId && movieInDb) {
       // get the user's rating and review of the movie
