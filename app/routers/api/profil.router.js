@@ -1,12 +1,12 @@
 import express from "express";
 import profilController from "../../controllers/profilController.js";
+import { verifyToken } from "../../middlewares/authMiddleware.js";
 import controllerWrapper from "../../middlewares/controllerWrapper.js";
-import verifyToken from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 /**
- * A user object 
+ * A user object
  * @typedef {object} User
  * @property {number} id - The user token
  * @property {string} firstname - The user firstname

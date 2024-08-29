@@ -5,6 +5,7 @@ import ApiError from "../errors/ApiError.js";
 import { fetchMovieTMDB } from "../services/axios.js";
 
 const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
+const LANGUAGE = "fr-FR";
 
 const playlistController = {
   async createPlaylist(req, res, next) {
@@ -136,7 +137,7 @@ const playlistController = {
     // We use Promise.all to wait for all the requests to finish
     const mediaDetails = await Promise.all(
       playlist.medias.map(async (media) => {
-        const fetchedMedia = await fetchMovieTMDB(`/movie/${media.tmdb_id}?language=fr-FR`);
+        const fetchedMedia = await fetchMovieTMDB(`/movie/${media.tmdb_id}`, { language: LANGUAGE });
         return {
           id: media.id,
           tmdb_id: media.tmdb_id,

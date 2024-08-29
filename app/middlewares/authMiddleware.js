@@ -1,21 +1,31 @@
 import jwt from "jsonwebtoken";
 import ApiError from "../errors/ApiError.js";
+import { hashToken } from "../utils/auth.js";
 
-function verifyToken (req, res, next) {
-  const token = req.headers["authorization"]?.slice(7); // get the token from the header
-  if (!token) {
-    return next (new ApiError(403,"No token provided!" )); // if there isn't any token
-  }
+async function verifyToken(req, _, next) {
   try {
+    const token = req.headers["authorization"]?.slice(7);
+    const fingerprint = req.cookies?.fingerprint;
+    if (!token || !fingerprint) {
+      return next(new ApiError(401, "No token or fingerprint provided!"));
+    }
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET); // verify token
+    const hashedFingerprint = hashToken(fingerprint);
+    if (decoded.fingerprint !== hashedFingerprint) {
+      return next(new ApiError(401, "Invalid fingerprint"));
+    }
     req.userId = decoded.id; // add the user id to the request
     next();
-  } catch (error){
-    if (error) {
-      console.error(error);
-      return next(new ApiError(401,"Unauthorized!" ));
+  } catch (error) {
+    console.error(error);
+    if (error instanceof jwt.JsonWebTokenError) {
+      return next(new ApiError(401, "Invalid token"));
+    } else if (error instanceof jwt.TokenExpiredError) {
+      return next(new ApiError(401, "Token expired"));
+    } else {
+      return next(new ApiError(500, "Internal server error"));
     }
   }
 }
 
-export default verifyToken;
+export { verifyToken };

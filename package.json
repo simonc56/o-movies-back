@@ -18,10 +18,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "axios-cache-interceptor": "^1.5.3",
     "bcrypt": "^5.1.1",
     "chai": "^5.1.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "email-validator": "^2.0.4",
@@ -37,6 +38,7 @@
     "sanitize-html": "^2.13.0",
     "sequelize": "^6.37.3",
     "sinon": "^18.0.0",
+    "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -13,10 +13,11 @@ if (process.env.USE_REDIS_CACHE === "true") {
   instanceAxiosCached = setupCache(instanceAxios);
 }
 
-export async function fetchMovieTMDB(url) {
+export async function fetchMovieTMDB(url, params = {}) {
   const options = {
     method: "GET",
-    url: url,
+    url,
+    params,
     headers: {
       accept: "application/json",
       Authorization: `Bearer ${process.env.TMDB_API_KEY}`,

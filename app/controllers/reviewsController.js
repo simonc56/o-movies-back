@@ -45,7 +45,7 @@ const reviewsController = {
     await review.update({
       content: reviewContent.content             
     });
-    return res.json({ status: "success", data: {content : review.content} });
+    return res.json({ status: "success", data: {review_id: reviewId, content : review.content} });
   },
   async deleteReview(req, res,next) {
     const reviewId = parseInt(req.params.id);

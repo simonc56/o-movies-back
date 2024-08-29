@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import ApiError from "../errors/ApiError.js";
 import { User } from "../models/User.js";
+import { generateTokens, hashToken, setCookies } from "../utils/auth.js";
 
 const authController = {
   async registerUser(req, res, next) {
@@ -41,7 +42,9 @@ const authController = {
       return next(new ApiError(401, "Account not found"));
     }
     // create a token
-    const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, { expiresIn: "30d" });
+    const { token, fingerprint, refresh } = generateTokens(user.id);
+    // add cookies with the fingerprint and refresh token
+    setCookies(req, res, fingerprint, refresh);
     // create the data user
     const dataUser = {
       firstname: user.firstname,
@@ -52,6 +55,24 @@ const authController = {
     // return the user
     return res.json({ status: "success", data: dataUser });
   },
+
+  async refreshToken(req, res, next) {
+    // token has not been checked in verifyToken middleware because it's probably expired
+    const refresh = req.cookies["refresh"] || undefined;
+    const JWTtoken = req.headers["authorization"]?.slice(7) || undefined;
+    const decoded = (JWTtoken && jwt.decode(JWTtoken, process.env.TOKEN_SECRET)) || undefined;
+    // check if the JWT token and the refresh cookie exist and are valid
+    if (!refresh || !decoded || hashToken(refresh) !== decoded.refresh) {
+      return next(new ApiError(401, "Refresh token not found or invalid, user has to login again"));
+    }
+    // req.userId is set in optionalToken middleware
+    const { token: newToken, fingerprint, refresh: newRefresh } = generateTokens(decoded.id);
+    // update cookies with the fingerprint and refresh token
+    setCookies(req, res, fingerprint, newRefresh);
+    // return the new token
+    return res.json({ status: "success", data: { token: newToken } });
+  },
+
   async changePassword(req, res, next) {
     const { oldPassword, newPassword } = req.body;
     const user = await User.findByPk(req.userId);
