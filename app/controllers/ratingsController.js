@@ -67,6 +67,14 @@ const ratingsController = {
     await rating.destroy();
     return res.json({ status: "success", data: true });
   },
+  async lastRatings(req, res) {
+    const reviews = await Rating.findAll({
+      order: [["created_at", "DESC"]],
+      limit: 5,
+      include: [{ model: Media, as: "media", attributes: ["tmdb_id"] }],
+    });
+    res.json({ status: "success", data: reviews });
+  },
 };
 
 export default ratingsController;

@@ -62,6 +62,14 @@ const reviewsController = {
     await review.destroy();
     return res.json({ status: "success", data: true });
   },
+  async lastReviews(req, res) {
+    const reviews = await Review.findAll({
+      order: [["created_at", "DESC"]],
+      limit: 5,
+      include: [{ model: Media, as: "media", attributes: ["tmdb_id"] }],
+    });
+    res.json({ status: "success", data: reviews });
+  },
 };
 
 export default reviewsController;
