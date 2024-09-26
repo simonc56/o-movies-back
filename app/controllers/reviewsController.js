@@ -3,6 +3,7 @@ import { Media } from "../models/Media.js";
 import ApiError from "../errors/ApiError.js";
 import { fetchMovieTMDB } from "../services/axios.js";
 import { LANGUAGE } from "./moviesController.js";
+import { User } from "../models/User.js";
 
 const reviewsController = {
   async createReview(req, res, next) {
@@ -70,7 +71,11 @@ const reviewsController = {
     const reviews = await Review.findAll({
       order: [["created_at", "DESC"]],
       limit: 5,
-      include: [{ model: Media, as: "media", attributes: ["tmdb_id", "title_fr"] }],
+      attributes: ["id", "content", "created_at"],
+      include: [
+        { model: Media, as: "media", attributes: ["id", "tmdb_id", "title_fr"] },
+        { model: User, as: "user", attributes: ["id", "firstname"] },
+      ],
     });
     res.json({ status: "success", data: reviews });
   },

@@ -4,6 +4,7 @@ import ApiError from "../errors/ApiError.js";
 import functionSqL from "../utils/functionSql.js";
 import { fetchMovieTMDB } from "../services/axios.js";
 import { LANGUAGE } from "./moviesController.js";
+import { User } from "../models/User.js";
 
 const ratingsController = {
   async createRating (req,res, next){
@@ -75,7 +76,11 @@ const ratingsController = {
     const reviews = await Rating.findAll({
       order: [["created_at", "DESC"]],
       limit: 5,
-      include: [{ model: Media, as: "media", attributes: ["tmdb_id", "title_fr"] }],
+      attributes: ["id", "value", "created_at"],
+      include: [
+        { model: Media, as: "media", attributes: ["id", "tmdb_id", "title_fr"] },
+        { model: User, as: "user", attributes: ["id", "firstname"] },
+      ],
     });
     res.json({ status: "success", data: reviews });
   },
