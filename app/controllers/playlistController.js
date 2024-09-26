@@ -3,9 +3,7 @@ import { Media } from "../models/Media.js";
 import { PlaylistHasMedia } from "../models/PlaylistHasMedia.js";
 import ApiError from "../errors/ApiError.js";
 import { fetchMovieTMDB } from "../services/axios.js";
-
-const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
-const LANGUAGE = "fr-FR";
+import { IMAGE_BASEURL, LANGUAGE } from "./moviesController.js";
 
 const playlistController = {
   async createPlaylist(req, res, next) {
@@ -64,8 +62,10 @@ const playlistController = {
     const userId = req.userId;
     let media = await Media.findOne({ where: { tmdb_id: tmdbId } });
     if (!media) {
+      const movie = await fetchMovieTMDB(`/movie/${tmdbId}`, { language: LANGUAGE });
       media = await Media.create({
         tmdb_id: tmdbId,
+        title_fr: movie?.title || "Unknown",
       });
     }
     const notThisUserPlaylist = await Playlist.findOne({ where: { id: playlistId, user_id: userId  } });

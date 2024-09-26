@@ -32,6 +32,7 @@ CREATE TABLE "playlist" (
 CREATE TABLE "media" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "tmdb_id" INT NOT NULL UNIQUE,
+    "title_fr" TEXT NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL default(now()),
     "updated_at" TIMESTAMPTZ   
 );

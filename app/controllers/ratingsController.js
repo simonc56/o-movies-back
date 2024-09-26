@@ -2,6 +2,8 @@ import {Rating} from "../models/Rating.js";
 import {Media} from "../models/Media.js";
 import ApiError from "../errors/ApiError.js";
 import functionSqL from "../utils/functionSql.js";
+import { fetchMovieTMDB } from "../services/axios.js";
+import { LANGUAGE } from "./moviesController.js";
 
 const ratingsController = {
   async createRating (req,res, next){
@@ -14,8 +16,10 @@ const ratingsController = {
       }
     });
     if (!media){
+      const movie = await fetchMovieTMDB(`/movie/${data.tmdb_id}`, { language: LANGUAGE });
       media = await Media.create({
-        tmdb_id : data.tmdb_id
+        tmdb_id : data.tmdb_id,
+        title_fr: movie?.title || "Unknown",
       });
     }
     const ratingAlreadyExist = await Rating.findOne({ where:{ media_id : media.id,
@@ -71,7 +75,7 @@ const ratingsController = {
     const reviews = await Rating.findAll({
       order: [["created_at", "DESC"]],
       limit: 5,
-      include: [{ model: Media, as: "media", attributes: ["tmdb_id"] }],
+      include: [{ model: Media, as: "media", attributes: ["tmdb_id", "title_fr"] }],
     });
     res.json({ status: "success", data: reviews });
   },
