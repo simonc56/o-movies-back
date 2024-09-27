@@ -1,6 +1,8 @@
 import ApiError from "../errors/ApiError.js";
 import { Media } from "../models/Media.js";
 import { View } from "../models/View.js";
+import { fetchMovieTMDB } from "../services/axios.js";
+import { LANGUAGE } from "./moviesController.js";
 
 const viewsController = {
   async createMediaAsViewed(req, res, next) {
@@ -12,8 +14,10 @@ const viewsController = {
       },
     });
     if (!media) {
+      const movie = await fetchMovieTMDB(`/movie/${data.tmdb_id}`, { language: LANGUAGE });
       media = await Media.create({
         tmdb_id: data.tmdb_id,
+        title_fr: movie?.title || "Unknown",
       });
     }
     const viewAlreadyExists = await View.findOne({

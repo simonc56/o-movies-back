@@ -7,8 +7,8 @@ import functionSqL from "../utils/functionSql.js";
 
 // base url and poster/profile sizes should be retrieved with https://api.themoviedb.org/3/configuration
 // see https://developer.themoviedb.org/reference/configuration-details
-const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
-const LANGUAGE = "fr-FR";
+export const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
+export const LANGUAGE = "fr-FR";
 const REGION = "FR";
 
 let moviesGenres = null;
@@ -67,7 +67,7 @@ const moviesController = {
     // doing a query to get the reviews of the movie with user information
     const reviews = await sequelize.query(
       `
-                SELECT "review".id AS review_id, "review".content,  "user".firstname AS user_firstname,"media".id
+                SELECT "review".id AS review_id, "review".content, "review".created_at, "user".firstname AS user_firstname,"media".id
                 FROM media
                 JOIN "review" ON "media".id = "review".media_id
                 JOIN "user" ON review.user_id = "user".id

@@ -47,6 +47,8 @@ Media.belongsToMany(User, {
   through:"rating",
   foreignKey:"media_id"
 });
+Rating.belongsTo(User, { foreignKey: "user_id", as: "user" });
+Rating.belongsTo(Media, { foreignKey: "media_id", as: "media" });
 
 //Review
 User.belongsToMany(Media, {
@@ -59,6 +61,8 @@ Media.belongsToMany(User, {
   through:"review",
   foreignKey:"media_id"
 });
+Review.belongsTo(User, { foreignKey: "user_id", as: "user" });
+Review.belongsTo(Media, { foreignKey: "media_id", as: "media" });
 
 //Playlist has media 
 Playlist.belongsToMany(Media,{
