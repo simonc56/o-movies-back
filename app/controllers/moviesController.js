@@ -67,7 +67,7 @@ const moviesController = {
     // doing a query to get the reviews of the movie with user information
     const reviews = await sequelize.query(
       `
-                SELECT "review".id AS review_id, "review".content,  "user".firstname AS user_firstname,"media".id
+                SELECT "review".id AS review_id, "review".content, "review".created_at, "user".firstname AS user_firstname,"media".id
                 FROM media
                 JOIN "review" ON "media".id = "review".media_id
                 JOIN "user" ON review.user_id = "user".id
