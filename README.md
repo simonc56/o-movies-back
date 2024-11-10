@@ -40,13 +40,13 @@ Si vous souhaitez mettre en place un cache local, installer aussi [Redis](https:
 Cloner le repo :
 
 ```
-git clone git@github.com:simonc56/filmovies-back.git
+git clone git@github.com:simonc56/o-movies-back.git
 ```
 
-Installer les dépendances (avec npm, yarn ou pnpm) :
+Installer les dépendances :
 
 ```
-cd projet-o-movies-back/
+cd o-movies-back/
 pnpm install
 ```
 
