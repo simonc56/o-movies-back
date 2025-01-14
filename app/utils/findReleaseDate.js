@@ -1,7 +1,7 @@
-import { fetchMovieTMDB } from "../services/axios.js";
+import { fetchTMDB } from "../services/axios.js";
 
 export default async function findReleaseDate(id) { 
-  const releaseDate = await fetchMovieTMDB(`/movie/${id}/release_dates`);
+  const releaseDate = await fetchTMDB(`/movie/${id}/release_dates`);
   if (!releaseDate.results || releaseDate.results.length === 0) {
     return null;
   }

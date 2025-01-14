@@ -2,6 +2,9 @@ import {Rating} from "../models/Rating.js";
 import {Media} from "../models/Media.js";
 import ApiError from "../errors/ApiError.js";
 import functionSqL from "../utils/functionSql.js";
+import { fetchTMDB } from "../services/axios.js";
+import { LANGUAGE } from "./moviesController.js";
+import { User } from "../models/User.js";
 
 const ratingsController = {
   async createRating (req,res, next){
@@ -14,8 +17,10 @@ const ratingsController = {
       }
     });
     if (!media){
+      const movie = await fetchTMDB(`/movie/${data.tmdb_id}`, { language: LANGUAGE });
       media = await Media.create({
-        tmdb_id : data.tmdb_id
+        tmdb_id : data.tmdb_id,
+        title_fr: movie?.title || "Unknown",
       });
     }
     const ratingAlreadyExist = await Rating.findOne({ where:{ media_id : media.id,
@@ -66,6 +71,18 @@ const ratingsController = {
     }
     await rating.destroy();
     return res.json({ status: "success", data: true });
+  },
+  async lastRatings(req, res) {
+    const reviews = await Rating.findAll({
+      order: [["created_at", "DESC"]],
+      limit: 5,
+      attributes: ["id", "value", "created_at"],
+      include: [
+        { model: Media, as: "media", attributes: ["id", "tmdb_id", "title_fr"] },
+        { model: User, as: "user", attributes: ["id", "firstname"] },
+      ],
+    });
+    res.json({ status: "success", data: reviews });
   },
 };
 

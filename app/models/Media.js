@@ -8,7 +8,12 @@ Media.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     unique: true
-  }},
+  },
+  title_fr: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+},
 {
   sequelize,
   tableName:"media"

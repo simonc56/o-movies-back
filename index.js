@@ -7,8 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 const httpServer = createServer(app);
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 HTTP Server launched at http://localhost:${PORT} 🎉`);
   console.log(`Swagger js doc at http://localhost:${PORT}/api-docs/`);
-  
 });

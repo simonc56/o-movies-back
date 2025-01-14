@@ -1,6 +1,9 @@
 import { Review } from "../models/Review.js";
 import { Media } from "../models/Media.js";
 import ApiError from "../errors/ApiError.js";
+import { fetchTMDB } from "../services/axios.js";
+import { LANGUAGE } from "./moviesController.js";
+import { User } from "../models/User.js";
 
 const reviewsController = {
   async createReview(req, res, next) {
@@ -14,8 +17,10 @@ const reviewsController = {
       }
     });            
     if (!media) {
+      const movie = await fetchTMDB(`/movie/${data.tmdb_id}`, { language: LANGUAGE });
       media = await Media.create({
         tmdb_id: data.tmdb_id,
+        title_fr: movie?.title || "Unknown",
       });
     }
     const reviewAlreadyExist = await Review.findOne({ where: { media_id: media.id, user_id: userId } });
@@ -61,6 +66,18 @@ const reviewsController = {
     }
     await review.destroy();
     return res.json({ status: "success", data: true });
+  },
+  async lastReviews(req, res) {
+    const reviews = await Review.findAll({
+      order: [["created_at", "DESC"]],
+      limit: 5,
+      attributes: ["id", "content", "created_at"],
+      include: [
+        { model: Media, as: "media", attributes: ["id", "tmdb_id", "title_fr"] },
+        { model: User, as: "user", attributes: ["id", "firstname"] },
+      ],
+    });
+    res.json({ status: "success", data: reviews });
   },
 };
 

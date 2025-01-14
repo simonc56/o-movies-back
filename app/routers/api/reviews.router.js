@@ -63,4 +63,13 @@ router.delete(
   controllerWrapper(reviewsController.deleteReview)
 );
 
+/**
+ * GET /api/review/last
+ * @summary Get last reviews
+ * @tags Reviews
+ * @return {ApiSuccess} 200 - success response
+ * @return {ApiError} 500 - internal server error response
+ */
+router.get("/last", controllerWrapper(reviewsController.lastReviews));
+
 export default router;

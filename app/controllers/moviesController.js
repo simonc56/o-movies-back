@@ -1,20 +1,20 @@
 import axios from "axios";
 import ApiError from "../errors/ApiError.js";
 import { Media, User, sequelize } from "../models/associations.js";
-import { fetchMovieTMDB } from "../services/axios.js";
+import { fetchTMDB } from "../services/axios.js";
 import findReleaseDate from "../utils/findReleaseDate.js";
 import functionSqL from "../utils/functionSql.js";
 
 // base url and poster/profile sizes should be retrieved with https://api.themoviedb.org/3/configuration
 // see https://developer.themoviedb.org/reference/configuration-details
-const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
-const LANGUAGE = "fr-FR";
+export const IMAGE_BASEURL = "https://image.tmdb.org/t/p";
+export const LANGUAGE = "fr-FR";
 const REGION = "FR";
 
 let moviesGenres = null;
 async function TMDBMoviesGenres() {
   if (!moviesGenres || moviesGenres.length === 0) {
-    const response = await fetchMovieTMDB("/genre/movie/list", { language: LANGUAGE });
+    const response = await fetchTMDB("/genre/movie/list", { language: LANGUAGE });
     moviesGenres = response?.genres || [];
   }
   return moviesGenres;
@@ -57,17 +57,17 @@ const moviesController = {
   async getMovieById(req, res, next) {
     const id = parseInt(req.params.id);
     // Fetch the movie from the TMDB API
-    const movie = await fetchMovieTMDB(`/movie/${id}`, { language: LANGUAGE });
+    const movie = await fetchTMDB(`/movie/${id}`, { language: LANGUAGE });
     // If the response is an error, return a 400 response with the error message
     if (axios.isAxiosError(movie)) {
       return next(new ApiError(400, movie.response.data.status_message));
     }
     // Fetch the cast of the movie from the TMDB API
-    const cast = await fetchMovieTMDB(`/movie/${id}/credits`, { language: LANGUAGE });
+    const cast = await fetchTMDB(`/movie/${id}/credits`, { language: LANGUAGE });
     // doing a query to get the reviews of the movie with user information
     const reviews = await sequelize.query(
       `
-                SELECT "review".id AS review_id, "review".content,  "user".firstname AS user_firstname,"media".id
+                SELECT "review".id AS review_id, "review".content, "review".created_at, "user".firstname AS user_firstname,"media".id
                 FROM media
                 JOIN "review" ON "media".id = "review".media_id
                 JOIN "user" ON review.user_id = "user".id
@@ -197,7 +197,7 @@ const moviesController = {
     return res.json({ status: "success", data: userData });
   },
   async getMovies(req, res, next) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/discover/movie", {
+    const moviesFetchFromTheApi = await fetchTMDB("/discover/movie", {
       include_adult: false,
       include_video: false,
       language: LANGUAGE,
@@ -212,27 +212,27 @@ const moviesController = {
     return res.json({ status: "success", data: movies });
   },
   async getUpcomingMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/upcoming", { language: LANGUAGE, region: REGION });
+    const moviesFetchFromTheApi = await fetchTMDB("/movie/upcoming", { language: LANGUAGE, region: REGION });
     const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getNowPlayingMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/now_playing", { language: LANGUAGE, region: REGION });
+    const moviesFetchFromTheApi = await fetchTMDB("/movie/now_playing", { language: LANGUAGE, region: REGION });
     const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getPopularMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/popular", { language: LANGUAGE, region: REGION });
+    const moviesFetchFromTheApi = await fetchTMDB("/movie/popular", { language: LANGUAGE, region: REGION });
     const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getTopRatedMovies(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/movie/top_rated", { language: LANGUAGE, region: REGION });
+    const moviesFetchFromTheApi = await fetchTMDB("/movie/top_rated", { language: LANGUAGE, region: REGION });
     const movies = await cleanMoviesData(moviesFetchFromTheApi.results);
     return res.json({ status: "success", data: movies });
   },
   async getMovieBySearch(req, res) {
-    const moviesFetchFromTheApi = await fetchMovieTMDB("/search/movie", { query: req.query.query, language: LANGUAGE });
+    const moviesFetchFromTheApi = await fetchTMDB("/search/movie", { query: req.query.query, language: LANGUAGE });
     const movies = moviesFetchFromTheApi.results.map((movie) => {
       return {
         tmdb_id: movie.id,
