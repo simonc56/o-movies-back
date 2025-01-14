@@ -120,7 +120,7 @@ router.post(
   "/:id/addmovie",
   verifyToken,
   validationMiddleware({ body: playlistSchema.movieSchema, params: genericSchema.paramsId }),
-  controllerWrapper(playlistController.addMovieInPlayist)
+  controllerWrapper(playlistController.addMovieInPlaylist)
 );
 
 /**

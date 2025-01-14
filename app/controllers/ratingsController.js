@@ -2,7 +2,7 @@ import {Rating} from "../models/Rating.js";
 import {Media} from "../models/Media.js";
 import ApiError from "../errors/ApiError.js";
 import functionSqL from "../utils/functionSql.js";
-import { fetchMovieTMDB } from "../services/axios.js";
+import { fetchTMDB } from "../services/axios.js";
 import { LANGUAGE } from "./moviesController.js";
 import { User } from "../models/User.js";
 
@@ -17,7 +17,7 @@ const ratingsController = {
       }
     });
     if (!media){
-      const movie = await fetchMovieTMDB(`/movie/${data.tmdb_id}`, { language: LANGUAGE });
+      const movie = await fetchTMDB(`/movie/${data.tmdb_id}`, { language: LANGUAGE });
       media = await Media.create({
         tmdb_id : data.tmdb_id,
         title_fr: movie?.title || "Unknown",

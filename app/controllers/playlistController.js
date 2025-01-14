@@ -2,7 +2,7 @@ import { Playlist } from "../models/Playlist.js";
 import { Media } from "../models/Media.js";
 import { PlaylistHasMedia } from "../models/PlaylistHasMedia.js";
 import ApiError from "../errors/ApiError.js";
-import { fetchMovieTMDB } from "../services/axios.js";
+import { fetchTMDB } from "../services/axios.js";
 import { IMAGE_BASEURL, LANGUAGE } from "./moviesController.js";
 
 const playlistController = {
@@ -56,13 +56,13 @@ const playlistController = {
     await playlist.destroy();
     return res.json({ status: "success", data: true });
   },
-  async addMovieInPlayist(req, res, next) {
+  async addMovieInPlaylist(req, res, next) {
     const tmdbId = req.body.tmdb_id;
     const playlistId = parseInt(req.params.id);
     const userId = req.userId;
     let media = await Media.findOne({ where: { tmdb_id: tmdbId } });
     if (!media) {
-      const movie = await fetchMovieTMDB(`/movie/${tmdbId}`, { language: LANGUAGE });
+      const movie = await fetchTMDB(`/movie/${tmdbId}`, { language: LANGUAGE });
       media = await Media.create({
         tmdb_id: tmdbId,
         title_fr: movie?.title || "Unknown",
@@ -137,7 +137,7 @@ const playlistController = {
     // We use Promise.all to wait for all the requests to finish
     const mediaDetails = await Promise.all(
       playlist.medias.map(async (media) => {
-        const fetchedMedia = await fetchMovieTMDB(`/movie/${media.tmdb_id}`, { language: LANGUAGE });
+        const fetchedMedia = await fetchTMDB(`/movie/${media.tmdb_id}`, { language: LANGUAGE });
         return {
           id: media.id,
           tmdb_id: media.tmdb_id,
