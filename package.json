@@ -4,6 +4,9 @@
   "description": "#Conseil d'utilisation",
   "type": "module",
   "main": "index.js",
+  "engines": {
+    "node": "^20.10.0"
+  },
   "scripts": {
     "dev": "node --watch index.js",
     "start": "node index.js",
