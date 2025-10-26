@@ -25,7 +25,7 @@ describe("Movie Schema Validation", () => {
       const invalidData = {
         with_genres: 1,
       };
-      expect(() => schema.getMoviesWithQueries.parse(invalidData)).to.throw("Expected string, received number");
+      expect(() => schema.getMoviesWithQueries.parse(invalidData)).to.throw(/expected string/i);
     });
 
     it("should invalidate an invalid sort_by value", () => {
