@@ -45,8 +45,10 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "dotenv-cli": "^11.0.0",
-    "eslint": "^9.38.0",
+    "eslint": "^10.0.2",
+    "globals": "^17.3.0",
     "prettier": "^3.6.2"
   }
 }
