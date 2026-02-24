@@ -31,7 +31,7 @@
     "email-validator": "^2.0.4",
     "express": "^5.1.0",
     "express-jsdoc-swagger": "^1.8.0",
-    "express-rate-limit": "^8.1.0",
+    "express-rate-limit": "^8.2.1",
     "jsdoc": "^4.0.5",
     "jsonwebtoken": "^9.0.2",
     "mocha": "^11.7.4",
