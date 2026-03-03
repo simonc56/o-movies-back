@@ -42,7 +42,7 @@
     "sequelize": "^6.37.7",
     "sinon": "^21.0.0",
     "uuid": "^13.0.0",
-    "zod": "^4.1.12"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
