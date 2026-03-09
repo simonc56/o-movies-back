@@ -12,8 +12,8 @@ importers:
         specifier: ^1.13.5
         version: 1.13.5
       axios-cache-interceptor:
-        specifier: ^1.11.4
-        version: 1.11.4(axios@1.13.5)
+        specifier: ^1.12.0
+        version: 1.12.0(axios@1.13.5)
       bcrypt:
         specifier: ^6.0.0
         version: 6.0.0
@@ -302,8 +302,8 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  axios-cache-interceptor@1.11.4:
-    resolution: {integrity: sha512-xZ4OZUxdpcFUpZjrqfYlGK0VglpPRKKSoE3vMHrstxolixQNs/MrbMezOAO5uS454hIEcWpnk75RZK26WkPW/g==}
+  axios-cache-interceptor@1.12.0:
+    resolution: {integrity: sha512-15XuJkdeJmQo/HY2b0xx3zim8DMx7Nu+G8R4z6OG2VZLtbIDnsfn4qZsLLvkPfK4SVNRzXnoG4jPR7dqdQznRA==}
     engines: {node: '>=12'}
     peerDependencies:
       axios: ^1
@@ -1797,7 +1797,7 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios-cache-interceptor@1.11.4(axios@1.13.5):
+  axios-cache-interceptor@1.12.0(axios@1.13.5):
     dependencies:
       axios: 1.13.5
       cache-parser: 1.2.6
