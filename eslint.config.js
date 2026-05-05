@@ -8,10 +8,7 @@ export default [
       ecmaVersion: "latest",
       sourceType: "module",
       globals: {
-        ...globals.browser,
-        ...globals.es2021,
         ...globals.node,
-        process: "readonly",
       },
     },
   },
