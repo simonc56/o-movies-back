@@ -2,8 +2,11 @@ import { createServer } from "node:http";
 import "dotenv/config";
 
 import app from "./app/index.app.js";
+import { testDbConnection } from "./app/models/sequelizeClient.js";
 
 const PORT = process.env.PORT || 3000;
+
+await testDbConnection();
 
 const httpServer = createServer(app);
 
